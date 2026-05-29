@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profil - ActNow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&amp;family=Atkinson+Hyperlegible+Next:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "primary": "#476500",
+                        "surface-container-highest": "#e5e2db",
+                        "tertiary-fixed": "#d7e8c6",
+                        "outline": "#747967",
+                        "on-primary-fixed-variant": "#364e00",
+                        "on-primary-fixed": "#131f00",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#2c4c4c",
+                        "on-tertiary-container": "#f9ffed",
+                        "inverse-surface": "#31312c",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#4a6a6a",
+                        "surface-container": "#f0eee7",
+                        "primary-container": "#5d7f13",
+                        "on-secondary-fixed": "#002020",
+                        "surface-bright": "#fcf9f2",
+                        "background": "#fcf9f2",
+                        "secondary-fixed-dim": "#abcdcd",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#add461",
+                        "surface-dim": "#dcdad3",
+                        "surface-container-high": "#ebe8e1",
+                        "on-primary-container": "#faffe7",
+                        "on-surface": "#1c1c18",
+                        "on-surface-variant": "#444939",
+                        "secondary": "#446464",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e5e2db",
+                        "surface-tint": "#496800",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#add461",
+                        "outline-variant": "#c4c9b4",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#bcccab",
+                        "on-tertiary-fixed": "#131f09",
+                        "secondary-container": "#c6e9e9",
+                        "tertiary": "#526045",
+                        "on-tertiary-fixed-variant": "#3d4b32",
+                        "surface": "#fcf9f2",
+                        "on-background": "#1c1c18",
+                        "surface-container-low": "#f6f3ec",
+                        "inverse-on-surface": "#f3f0ea",
+                        "tertiary-container": "#6a795d",
+                        "primary-fixed": "#c8f17a",
+                        "secondary-fixed": "#c6e9e9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "lg": "48px",
+                        "base": "8px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "h2-mobile": ["Montserrat"],
+                        "h1-mobile": ["Montserrat"],
+                        "label-md": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        "h3": ["Montserrat"],
+                        "h1": ["Montserrat"],
+                        "body-lg": ["Atkinson Hyperlegible Next"],
+                        "h2": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "h2-mobile": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "h1-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "h3": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "h1": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "h2": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col pb-[80px] md:pb-0">
+<!-- TopNavBar (Web) -->
+<nav class="hidden md:flex justify-between items-center w-full px-md md:px-xl py-sm max-w-container-max mx-auto bg-surface shadow-sm sticky top-0 z-50">
+<div class="font-h2 text-h2 font-bold text-primary">ActNow</div>
+<div class="flex items-center gap-md">
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Discover</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Calendar</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Messages</a>
+</div>
+<div class="flex items-center">
+<!-- Active Profile Icon -->
+<button aria-label="Profile" class="text-primary border-b-2 border-primary pb-1 flex items-center justify-center scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl">account_circle</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-gutter md:px-xl py-xl">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Left Column: Profile Summary (Asymmetric Focus) -->
+<aside class="md:col-span-4 flex flex-col gap-md">
+<!-- Main Profile Card -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(47,79,79,0.08)] flex flex-col items-center text-center relative group">
+<div class="relative mb-sm">
+<img alt="Profile Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-surface" data-alt="A professional, warm, and well-lit studio portrait of a young adult looking directly at the camera with a friendly, welcoming smile. The lighting is soft and high-key, creating a modern, optimistic mood typical of a trusted community platform. The background is a slightly blurred, light neutral tone that complements the subject's casual yet neat attire. The overall aesthetic is approachable, human, and reliable." src="https://lh3.googleusercontent.com/aida-public/AB6AXuANlfZTdYpDdfPRaHS7vqAjWMKmxy0Xu3J976hV-3yBTsFq8-ur5VTPSutY02T1iVpP7EyR0mWd4Hj3fIRfzUGf2LE-mUzANk7oYIuBt9qJDasMXCc15cgai7hAUZ0iTH8sgvzrwPH35Qu21aqtvSu5-f_Ud6lg3n-SFnw8VefKdXR2ZCtcR1qluGb-M5vR7bDtcPofGImdX2SMoTpv2W9Uc20lMaI7vH1E5IknsYn37Af1mvPzqAuhPNtBEsKTLielyMOokFhdnr8"/>
+<button aria-label="Avatar bearbeiten" class="absolute bottom-0 right-0 bg-primary text-on-primary rounded-full p-2 shadow-lg hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-sm" data-weight="fill">edit</span>
+</button>
+</div>
+<h1 class="font-h2-mobile text-h2-mobile md:font-h2 md:text-h2 text-on-surface mb-xs">Sarah Weidner</h1>
+<div class="flex items-center gap-xs text-primary mb-md">
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">star_half</span>
+<span class="font-label-md text-label-md text-on-surface-variant ml-1">4.8 (12 Einsätze)</span>
+</div>
+<div class="w-full text-left bg-surface-container-low rounded-lg p-sm relative group/bio">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Passionierte Helferin mit Schwerpunkt auf Umweltschutz und lokaler Nachbarschaftshilfe. Immer bereit, mit anzupacken und Neues zu lernen.
+                        </p>
+<button aria-label="Bio bearbeiten" class="absolute top-sm right-sm text-outline hover:text-primary opacity-0 group-hover/bio:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<button class="w-full mt-md bg-outline border border-outline text-on-surface rounded-lg px-md py-sm font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-base">settings</span>
+                        Profil bearbeiten
+                    </button>
+</div>
+</aside>
+<!-- Right Column: Details & Documents (Bento Grid) -->
+<div class="md:col-span-8 flex flex-col gap-lg">
+<!-- Skills & Interests -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(47,79,79,0.08)]">
+<div class="flex justify-between items-center mb-md">
+<h2 class="font-h3 text-h3 text-on-surface">Fähigkeiten &amp; Interessen</h2>
+<button aria-label="Fähigkeiten bearbeiten" class="text-primary hover:text-primary-container">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+</div>
+<div class="flex flex-wrap gap-sm">
+<span class="bg-secondary-container text-on-secondary-container px-sm py-xs rounded-full font-label-md text-label-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">nature</span>
+                            Umweltschutz
+                        </span>
+<span class="bg-secondary-container text-on-secondary-container px-sm py-xs rounded-full font-label-md text-label-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">local_hospital</span>
+                            Erste Hilfe
+                        </span>
+<span class="bg-surface-container-high text-on-surface-variant px-sm py-xs rounded-full font-label-md text-label-md border border-outline-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">directions_car</span>
+                            Führerschein B
+                        </span>
+<span class="bg-surface-container-high text-on-surface-variant px-sm py-xs rounded-full font-label-md text-label-md border border-outline-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">group</span>
+                            Teamleitung
+                        </span>
+</div>
+</section>
+<!-- Documents Section -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(47,79,79,0.08)]">
+<div class="flex justify-between items-center mb-md">
+<div>
+<h2 class="font-h3 text-h3 text-on-surface">Meine Dokumente</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mt-xs">Für Organisationen zur Verifizierung freigeben.</p>
+</div>
+<button class="bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary px-sm py-xs rounded-lg font-label-md text-label-md transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">upload</span>
+                            Upload
+                        </button>
+</div>
+<div class="flex flex-col gap-sm">
+<!-- Document Item 1 -->
+<div class="flex items-center justify-between p-sm bg-surface rounded-lg border border-surface-container-highest hover:shadow-sm transition-shadow">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">description</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Erweitertes Führungszeugnis</p>
+<p class="text-xs text-on-surface-variant">PDF • 2.4 MB • Geprüft</p>
+</div>
+</div>
+<label class="flex items-center gap-xs cursor-pointer">
+<input checked="" class="form-checkbox h-5 w-5 text-primary rounded border-outline-variant focus:ring-primary focus:ring-offset-surface" type="checkbox"/>
+<span class="text-sm font-label-md text-label-md text-on-surface-variant">Freigeben</span>
+</label>
+</div>
+<!-- Document Item 2 -->
+<div class="flex items-center justify-between p-sm bg-surface rounded-lg border border-surface-container-highest hover:shadow-sm transition-shadow">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary">workspace_premium</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Erste-Hilfe-Zertifikat</p>
+<p class="text-xs text-on-surface-variant">JPG • 1.1 MB • Gültig bis 2025</p>
+</div>
+</div>
+<label class="flex items-center gap-xs cursor-pointer">
+<input checked="" class="form-checkbox h-5 w-5 text-primary rounded border-outline-variant focus:ring-primary focus:ring-offset-surface" type="checkbox"/>
+<span class="text-sm font-label-md text-label-md text-on-surface-variant">Freigeben</span>
+</label>
+</div>
+</div>
+</section>
+<!-- Past Deployments (Horizontal Scroll/Cards) -->
+<section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(47,79,79,0.08)] overflow-hidden">
+<h2 class="font-h3 text-h3 text-on-surface mb-md">Frühere Einsätze</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-sm">
+<!-- Deployment Card 1 -->
+<div class="bg-surface-container-low rounded-lg p-sm border-l-4 border-primary flex flex-col gap-xs">
+<div class="flex justify-between items-start">
+<h3 class="font-label-md text-label-md text-on-surface">Stadtwald Aufräumaktion</h3>
+<span class="text-xs font-semibold text-primary bg-primary-container/20 px-2 py-1 rounded">2023</span>
+</div>
+<p class="text-sm text-on-surface-variant">GreenCity e.V.</p>
+<div class="flex items-center gap-xs text-tertiary mt-xs">
+<span class="material-symbols-outlined text-sm">thumb_up</span>
+<span class="text-xs">Positives Feedback erhalten</span>
+</div>
+</div>
+<!-- Deployment Card 2 -->
+<div class="bg-surface-container-low rounded-lg p-sm border-l-4 border-secondary flex flex-col gap-xs">
+<div class="flex justify-between items-start">
+<h3 class="font-label-md text-label-md text-on-surface">Lebensmittel-Sortierung</h3>
+<span class="text-xs font-semibold text-secondary bg-secondary-container/20 px-2 py-1 rounded">2022</span>
+</div>
+<p class="text-sm text-on-surface-variant">Tafel Lokal</p>
+<div class="flex items-center gap-xs text-on-surface-variant mt-xs">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-xs">15 Stunden gesamt</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter py-sm md:hidden bg-surface shadow-[0px_-4px_20px_rgba(47,79,79,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label-md text-label-md-mobile mt-1">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-md text-label-md-mobile mt-1">Calendar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="font-label-md text-label-md-mobile mt-1">Messages</span>
+</a>
+<!-- Active Profile Tab -->
+<a class="flex flex-col items-center justify-center bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full px-4 py-1 scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-md text-label-md-mobile mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

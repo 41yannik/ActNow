@@ -5,7 +5,9 @@
 --   psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f docs/seed.sql
 -- =============================================================================
 --
--- Seed accounts (passwords are bcrypt of "actnow-dev" — DEV USE ONLY):
+-- Seed accounts — DEV USE ONLY.
+-- Passwords are set via a post-insert UPDATE using pgcrypto (see bottom of this file).
+-- DO NOT use a hardcoded hash; bcrypt must be generated at apply-time.
 --   admin@actnow.test      / actnow-dev
 --   helper1@actnow.test    / actnow-dev
 --   helper2@actnow.test    / actnow-dev
@@ -24,28 +26,31 @@ set local session_replication_role = replica;
 
 -- ---- auth.users -----------------------------------------------------------
 -- Minimal columns; bcrypt hash of "actnow-dev".
+-- Token columns must be '' not NULL — GoTrue's Scan fails on NULL strings.
 insert into auth.users
   (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
-   raw_app_meta_data, raw_user_meta_data, created_at, updated_at, is_super_admin)
+   raw_app_meta_data, raw_user_meta_data, created_at, updated_at, is_super_admin,
+   confirmation_token, recovery_token, email_change_token_new, email_change,
+   email_change_token_current, reauthentication_token)
 values
   ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000001', 'authenticated', 'authenticated',
     'admin@actnow.test',   '$2a$10$abcdefghijklmnopqrstuuvbW7qiM7vKhMOjUaq0aA1zZJqA1zZJqA', now(),
-    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false),
+    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false, '', '', '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000010', 'authenticated', 'authenticated',
     'helper1@actnow.test', '$2a$10$abcdefghijklmnopqrstuuvbW7qiM7vKhMOjUaq0aA1zZJqA1zZJqA', now(),
-    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false),
+    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false, '', '', '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000011', 'authenticated', 'authenticated',
     'helper2@actnow.test', '$2a$10$abcdefghijklmnopqrstuuvbW7qiM7vKhMOjUaq0aA1zZJqA1zZJqA', now(),
-    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false),
+    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false, '', '', '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000012', 'authenticated', 'authenticated',
     'helper3@actnow.test', '$2a$10$abcdefghijklmnopqrstuuvbW7qiM7vKhMOjUaq0aA1zZJqA1zZJqA', now(),
-    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false),
+    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false, '', '', '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000020', 'authenticated', 'authenticated',
     'verein1@actnow.test', '$2a$10$abcdefghijklmnopqrstuuvbW7qiM7vKhMOjUaq0aA1zZJqA1zZJqA', now(),
-    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false),
+    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false, '', '', '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000021', 'authenticated', 'authenticated',
     'verein2@actnow.test', '$2a$10$abcdefghijklmnopqrstuuvbW7qiM7vKhMOjUaq0aA1zZJqA1zZJqA', now(),
-    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false)
+    '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now(), false, '', '', '', '', '', '')
 on conflict (id) do nothing;
 
 -- ---- profiles -------------------------------------------------------------
@@ -271,5 +276,12 @@ select public.recompute_offer_accepted_count(id) from public.offers;
 
 -- ---- Re-enable triggers (explicit reset; `set local` would also unwind) --
 set local session_replication_role = origin;
+
+-- ---- Set real bcrypt passwords for seed accounts --------------------------
+-- Must run AFTER session_replication_role is reset (triggers back on).
+-- pgcrypto gen_salt produces a fresh salt each apply, so hashes differ each run.
+UPDATE auth.users
+SET encrypted_password = crypt('actnow-dev', gen_salt('bf', 10))
+WHERE email LIKE '%@actnow.test';
 
 commit;

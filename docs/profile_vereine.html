@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ActNow - Vereinsrpofil</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Atkinson+Hyperlegible+Next:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error": "#ffffff",
+                        "primary": "#476500",
+                        "surface-container-highest": "#e5e2db",
+                        "tertiary-fixed": "#d7e8c6",
+                        "outline": "#747967",
+                        "on-primary-fixed-variant": "#364e00",
+                        "on-primary-fixed": "#131f00",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#2c4c4c",
+                        "on-tertiary-container": "#f9ffed",
+                        "inverse-surface": "#31312c",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#4a6a6a",
+                        "surface-container": "#f0eee7",
+                        "primary-container": "#5d7f13",
+                        "on-secondary-fixed": "#002020",
+                        "surface-bright": "#fcf9f2",
+                        "background": "#fcf9f2",
+                        "secondary-fixed-dim": "#abcdcd",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#add461",
+                        "surface-dim": "#dcdad3",
+                        "surface-container-high": "#ebe8e1",
+                        "on-primary-container": "#faffe7",
+                        "on-surface": "#1c1c18",
+                        "on-surface-variant": "#444939",
+                        "secondary": "#446464",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e5e2db",
+                        "surface-tint": "#496800",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#add461",
+                        "outline-variant": "#c4c9b4",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#bcccab",
+                        "on-tertiary-fixed": "#131f09",
+                        "secondary-container": "#c6e9e9",
+                        "tertiary": "#526045",
+                        "on-tertiary-fixed-variant": "#3d4b32",
+                        "surface": "#fcf9f2",
+                        "on-background": "#1c1c18",
+                        "surface-container-low": "#f6f3ec",
+                        "inverse-on-surface": "#f3f0ea",
+                        "tertiary-container": "#6a795d",
+                        "primary-fixed": "#c8f17a",
+                        "secondary-fixed": "#c6e9e9"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        xl: "80px",
+                        xs: "4px",
+                        sm: "12px",
+                        lg: "48px",
+                        base: "8px",
+                        gutter: "24px",
+                        md: "24px",
+                        "container-max": "1280px"
+                    },
+                    fontFamily: {
+                        "h2-mobile": ["Montserrat"],
+                        "h1-mobile": ["Montserrat"],
+                        "label-md": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        h3: ["Montserrat"],
+                        h1: ["Montserrat"],
+                        "body-lg": ["Atkinson Hyperlegible Next"],
+                        h2: ["Montserrat"]
+                    },
+                    fontSize: {
+                        "h2-mobile": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
+                        "h1-mobile": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "label-md": ["14px", { lineHeight: "1.2", letterSpacing: "0.01em", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        h3: ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+                        h1: ["40px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        h2: ["32px", { lineHeight: "1.3", fontWeight: "600" }]
+                    }
+                }
+            }
+        };
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar (Desktop/Tablet) -->
+<nav class="hidden md:flex fixed left-0 top-0 h-full flex flex-col p-md z-40 bg-surface-container-low dark:bg-surface-container-high w-64">
+<div class="mb-lg">
+<h1 class="font-h2 text-h2 font-bold text-primary dark:text-primary-fixed-dim">ActNow</h1>
+</div>
+<div class="flex items-center gap-sm mb-lg">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="Organization Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a person representing a modern non-profit organization. The lighting is warm and inviting, suitable for a corporate humanist style. The background is slightly blurred to keep focus on the person. The color palette features natural tones to align with the olive green and moss aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7jamCepYM06fJOD9q2O7zkkVwfjx5n5d5mUn2608LMuRSHk8GO6IiYabuaqiMnLQsXw1N3zW8dUPUKnh9ZE23LEu9NIOzznRRYcECvFgtGtyU4Y8I3WJtCe171eaylXENbydkP_umbizFRTIZucSDux4pAlNfmFls5pGzJdDuZ0sbnl4lH-_DoKgw08VilwfS4XSsJxI_o6s8BYRSS1QhARyAMdi_o96XUydUcghjLl73tnPCrWolDYjBQn2UiR4NalVAW-FwMHM"/>
+</div>
+<div>
+<div class="font-label-md text-label-md font-bold">ActNow Org</div>
+<div class="font-body-md text-sm text-on-surface-variant">Partner Dashboard</div>
+</div>
+</div>
+<ul class="flex flex-col gap-xs flex-grow">
+<li>
+<a class="flex items-center gap-base text-on-surface-variant dark:text-outline-variant px-md py-sm hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-all font-label-md text-label-md rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-base text-on-surface-variant dark:text-outline-variant px-md py-sm hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-all font-label-md text-label-md rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">volunteer_activism</span>
+                    Offers
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-base text-on-surface-variant dark:text-outline-variant px-md py-sm hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-all font-label-md text-label-md rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">assignment_ind</span>
+                    Applications
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-base text-on-surface-variant dark:text-outline-variant px-md py-sm hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-all font-label-md text-label-md rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">mail</span>
+                    Messages
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-base bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-lg px-md py-sm font-label-md text-label-md translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+                    Profile
+                </a>
+</li>
+</ul>
+</nav>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter py-sm md:hidden bg-surface dark:bg-surface-container-high shadow-[0px_-4px_20px_rgba(47,79,79,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant font-label-md text-label-md-mobile hover:bg-surface-container dark:hover:bg-surface-variant rounded-full p-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">explore</span>
+<span>Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant font-label-md text-label-md-mobile hover:bg-surface-container dark:hover:bg-surface-variant rounded-full p-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">calendar_today</span>
+<span>Calendar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant font-label-md text-label-md-mobile hover:bg-surface-container dark:hover:bg-surface-variant rounded-full p-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat</span>
+<span>Messages</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-tertiary-fixed dark:bg-tertiary-container text-on-tertiary-fixed-variant dark:text-on-tertiary-container rounded-full px-4 py-1 font-label-md text-label-md-mobile scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span>Profile</span>
+</a>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow md:ml-64 p-md md:p-xl max-w-container-max pb-32 md:pb-xl">
+<!-- Header Section (Bento Style) -->
+<header class="grid grid-cols-1 lg:grid-cols-3 gap-md mb-xl">
+<!-- Organization Identity Card -->
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-lg shadow-[0px_4px_20px_rgba(47,79,79,0.08)] flex flex-col md:flex-row items-center md:items-start gap-lg relative overflow-hidden">
+<!-- Decorative background subtle gradient -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-tertiary-fixed rounded-full blur-3xl opacity-30 -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-surface shadow-sm overflow-hidden flex-shrink-0 relative z-10">
+<img alt="Grüne Erde e.V. Logo" class="w-full h-full object-cover" data-alt="A modern, abstract logo for an environmental non-profit organization. The design features soft, organic shapes resembling leaves or hands in shades of olive green and moss. The background is pure white. The overall feel is warm, professional, and humanist, suitable for a light-mode corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9pJTMskq2asMm-yesim8DCYADAxGP7lMGsNFHiSsF7Iz1aUCPx7LtfV9XeWIzuzhKp27l3n5D189LQLt34CiL6jX5T2DOne3_zWSDU_v1rfTqnzckIuMQYnJrDJflg7tfIrCaiFd6U50BLyVgMPTJIOG6GbqIh7McxIxYs-OW94bUaGZZl9GBqAQz6qMiijpANK8znTRRJEN63vG3W6Gu7V3B5p4nAscaJr0s350IEnmGLI1x0qJrYrSPmVMLZeje4D3wbIjH4gs"/>
+</div>
+<div class="flex flex-col text-center md:text-left z-10 w-full">
+<div class="flex flex-col md:flex-row justify-between items-center md:items-start mb-sm">
+<h2 class="font-h1-mobile md:font-h1 text-on-surface">Grüne Erde e.V.</h2>
+<button class="mt-sm md:mt-0 flex items-center gap-xs bg-surface-container text-on-surface-variant hover:bg-surface-container-highest px-4 py-2 rounded-lg font-label-md transition-colors border border-outline-variant">
+<span class="material-symbols-outlined text-lg">edit</span>
+                            Profil bearbeiten
+                        </button>
+</div>
+<p class="font-body-lg text-on-surface-variant mb-md max-w-2xl">Gemeinsam für eine nachhaltige Zukunft. Wir setzen uns für den lokalen Naturschutz und umweltpädagogische Projekte in städtischen Räumen ein.</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-sm mb-md">
+<span class="inline-flex items-center gap-xs bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-sm">
+<span class="material-symbols-outlined text-sm">nature</span> Umwelt
+                        </span>
+<span class="inline-flex items-center gap-xs bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-sm">
+<span class="material-symbols-outlined text-sm">school</span> Bildung
+                        </span>
+<span class="inline-flex items-center gap-xs bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-label-md text-sm border border-outline-variant">
+<span class="material-symbols-outlined text-sm">location_on</span> Berlin, DE
+                        </span>
+</div>
+</div>
+</div>
+<!-- Rating & Stats Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0px_4px_20px_rgba(47,79,79,0.08)] flex flex-col justify-center items-center text-center">
+<div class="font-label-md text-on-surface-variant mb-2 uppercase tracking-wider">Helfer-Bewertung</div>
+<div class="flex items-center gap-1 mb-2 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<div class="font-h1 text-primary mb-1">4.8</div>
+<div class="font-body-md text-sm text-on-surface-variant">Basierend auf 124 Einsätzen</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Left Column: Description & Details -->
+<div class="lg:col-span-2 space-y-lg">
+<!-- About Section -->
+<section class="bg-surface-container-lowest rounded-xl p-lg shadow-[0px_4px_20px_rgba(47,79,79,0.08)]">
+<h3 class="font-h3 text-on-surface mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">info</span>
+                        Über uns
+                    </h3>
+<div class="font-body-md text-on-surface-variant space-y-4 max-w-[720px]">
+<p>Grüne Erde e.V. wurde 2010 mit dem Ziel gegründet, städtische Freiflächen in blühende Oasen zu verwandeln und das Bewusstsein für lokale Biodiversität zu stärken. Wir glauben daran, dass Umweltschutz direkt vor der eigenen Haustür beginnt.</p>
+<p>Unsere Projekte reichen von der Anlage von Gemeinschaftsgärten bis hin zu Bildungs-Workshops für Kindergärten und Schulen. Wir arbeiten eng mit lokalen Behörden und anderen Initiativen zusammen, um nachhaltige, langfristige Veränderungen in unserem städtischen Ökosystem zu bewirken.</p>
+</div>
+</section>
+<!-- Archive: Completed Missions -->
+<section class="bg-surface-container-lowest rounded-xl p-lg shadow-[0px_4px_20px_rgba(47,79,79,0.08)]">
+<h3 class="font-h3 text-on-surface mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">history</span>
+                        Abgeschlossene Einsätze
+                    </h3>
+<div class="space-y-sm">
+<!-- Mission Item 1 -->
+<div class="flex items-start md:items-center gap-md p-md bg-surface rounded-lg border border-surface-container-highest hover:shadow-md hover:border-primary-fixed-dim transition-all group">
+<div class="w-16 h-16 rounded-lg bg-tertiary-fixed flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-3xl">forest</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-md text-lg text-on-surface group-hover:text-primary transition-colors">Stadtpark Aufforstung</h4>
+<div class="font-body-md text-sm text-on-surface-variant flex items-center gap-xs mt-1">
+<span class="material-symbols-outlined text-[16px]">calendar_month</span> Oktober 2023
+                                    <span class="mx-2">•</span>
+<span class="material-symbols-outlined text-[16px]">group</span> 45 Helfer
+                                </div>
+</div>
+<div class="hidden md:flex items-center text-primary font-label-md">
+                                Erfolgreich <span class="material-symbols-outlined ml-1 text-sm">check_circle</span>
+</div>
+</div>
+<!-- Mission Item 2 -->
+<div class="flex items-start md:items-center gap-md p-md bg-surface rounded-lg border border-surface-container-highest hover:shadow-md hover:border-primary-fixed-dim transition-all group">
+<div class="w-16 h-16 rounded-lg bg-secondary-container flex items-center justify-center text-secondary flex-shrink-0">
+<span class="material-symbols-outlined text-3xl">water_drop</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-md text-lg text-on-surface group-hover:text-primary transition-colors">Spree-Ufer Reinigung</h4>
+<div class="font-body-md text-sm text-on-surface-variant flex items-center gap-xs mt-1">
+<span class="material-symbols-outlined text-[16px]">calendar_month</span> September 2023
+                                    <span class="mx-2">•</span>
+<span class="material-symbols-outlined text-[16px]">group</span> 120 Helfer
+                                </div>
+</div>
+<div class="hidden md:flex items-center text-primary font-label-md">
+                                Erfolgreich <span class="material-symbols-outlined ml-1 text-sm">check_circle</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sidebar info & Testimonials -->
+<div class="space-y-lg">
+<!-- Contact & Location Box -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0px_4px_20px_rgba(47,79,79,0.08)]">
+<h3 class="font-h3 text-on-surface mb-md">Kontakt &amp; Standort</h3>
+<div class="w-full h-48 bg-surface-container rounded-lg mb-md overflow-hidden relative" data-location="Berlin" style="">
+<!-- Placeholder for Map -->
+<div class="absolute inset-0 bg-secondary-fixed-dim opacity-20"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-4xl">map</span>
+</div>
+</div>
+<ul class="space-y-sm font-body-md text-on-surface-variant">
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary mt-1">location_on</span>
+<span>Musterstraße 123<br/>10115 Berlin</span>
+</li>
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">mail</span>
+<a class="hover:text-primary transition-colors" href="#">hallo@gruene-erde.ev</a>
+</li>
+<li class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">language</span>
+<a class="hover:text-primary transition-colors" href="#">www.gruene-erde.ev</a>
+</li>
+</ul>
+</div>
+<!-- Testimonials -->
+<div class="bg-surface-container-lowest rounded-xl p-lg shadow-[0px_4px_20px_rgba(47,79,79,0.08)]">
+<h3 class="font-h3 text-on-surface mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">forum</span>
+                        Stimmen
+                    </h3>
+<div class="space-y-md">
+<!-- Testimonial 1 -->
+<div class="bg-surface p-md rounded-lg border border-surface-container-highest relative">
+<span class="material-symbols-outlined absolute top-4 right-4 text-surface-container-highest text-4xl">format_quote</span>
+<div class="flex items-center gap-xs text-primary mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-md text-on-surface-variant italic mb-sm text-sm relative z-10">"Großartige Organisation! Die Einsätze sind super organisiert und man sieht sofort, was man gemeinsam geschafft hat. Tolles Team!"</p>
+<div class="font-label-md text-on-surface text-sm">— Anna K., Helferin bei 'Stadtpark'</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-surface p-md rounded-lg border border-surface-container-highest relative">
+<span class="material-symbols-outlined absolute top-4 right-4 text-surface-container-highest text-4xl">format_quote</span>
+<div class="flex items-center gap-xs text-primary mb-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<p class="font-body-md text-on-surface-variant italic mb-sm text-sm relative z-10">"Die Bildungsangebote für Kinder sind sehr wertvoll. Meine Tochter redet noch immer von der Bienen-Rettungs-Aktion."</p>
+<div class="font-label-md text-on-surface text-sm">— Thomas M., Teilnehmer</div>
+</div>
+</div>
+<button class="mt-md w-full py-2 text-center text-primary font-label-md hover:bg-surface-container rounded-lg transition-colors">
+                        Alle Bewertungen lesen
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="light" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ActNow - Registrieren</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&amp;family=Montserrat:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config injected from instructions -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "primary": "#476500",
+                    "surface-container-highest": "#e5e2db",
+                    "tertiary-fixed": "#d7e8c6",
+                    "outline": "#747967",
+                    "on-primary-fixed-variant": "#364e00",
+                    "on-primary-fixed": "#131f00",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#2c4c4c",
+                    "on-tertiary-container": "#f9ffed",
+                    "inverse-surface": "#31312c",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#4a6a6a",
+                    "surface-container": "#f0eee7",
+                    "primary-container": "#5d7f13",
+                    "on-secondary-fixed": "#002020",
+                    "surface-bright": "#fcf9f2",
+                    "background": "#fcf9f2",
+                    "secondary-fixed-dim": "#abcdcd",
+                    "on-error-container": "#93000a",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed-dim": "#add461",
+                    "surface-dim": "#dcdad3",
+                    "surface-container-high": "#ebe8e1",
+                    "on-primary-container": "#faffe7",
+                    "on-surface": "#1c1c18",
+                    "on-surface-variant": "#444939",
+                    "secondary": "#446464",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e5e2db",
+                    "surface-tint": "#496800",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#add461",
+                    "outline-variant": "#c4c9b4",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#bcccab",
+                    "on-tertiary-fixed": "#131f09",
+                    "secondary-container": "#c6e9e9",
+                    "tertiary": "#526045",
+                    "on-tertiary-fixed-variant": "#3d4b32",
+                    "surface": "#fcf9f2",
+                    "on-background": "#1c1c18",
+                    "surface-container-low": "#f6f3ec",
+                    "inverse-on-surface": "#f3f0ea",
+                    "tertiary-container": "#6a795d",
+                    "primary-fixed": "#c8f17a",
+                    "secondary-fixed": "#c6e9e9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "80px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "base": "8px",
+                    "gutter": "24px",
+                    "md": "24px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "h2-mobile": ["Montserrat"],
+                    "h1-mobile": ["Montserrat"],
+                    "label-md": ["Atkinson Hyperlegible Next"],
+                    "body-md": ["Atkinson Hyperlegible Next"],
+                    "h3": ["Montserrat"],
+                    "h1": ["Montserrat"],
+                    "body-lg": ["Atkinson Hyperlegible Next"],
+                    "h2": ["Montserrat"]
+            },
+            "fontSize": {
+                    "h2-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "h1-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Base styles derived from tokens */
+        body {
+            font-family: 'Atkinson Hyperlegible Next', sans-serif;
+            background-color: theme('colors.surface');
+            color: theme('colors.on-surface');
+        }
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* Smooth scrolling and transitions */
+        html { scroll-behavior: smooth; }
+        
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: theme('colors.surface-variant'); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: theme('colors.outline'); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- Minimal Header (Transactional Page - Global Nav Suppressed) -->
+<header class="w-full py-md px-md md:px-xl flex items-center justify-between absolute top-0 left-0 z-20">
+<a class="flex items-center gap-2 group" href="#">
+<div class="w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+</div>
+<span class="font-h3 text-h3 text-primary tracking-tight">ActNow</span>
+</a>
+</header>
+<main class="flex-1 flex flex-col lg:flex-row w-full min-h-screen">
+<!-- Left Side: Hero / Brand Area (Hidden on small screens) -->
+<div class="hidden lg:flex lg:w-[45%] relative bg-surface-container-high flex-col justify-center px-xl py-xl overflow-hidden">
+<!-- Atmospheric Background Image -->
+<div class="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-luminosity" data-alt="A warm, professional photograph of diverse volunteers working together in a sunlit community space. The lighting is bright and optimistic, bathed in soft morning sun. The scene embodies a 'Humanist Professional' aesthetic, reflecting a modern, reliable, yet deeply personal approach to community service. The color palette incorporates earthy tones and soft greens, matching the ActNow brand identity." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC7WMkjmH4l4d_ZRjyVm7v5HbGc6FWaTHJ926cS0KQ1TJl__aDgUJGmGDZpeNuDzKeo-mZZ7MrZMaNTC2_AJ_ktELGnph1x7ailUMSx8thcoN2zBKxWDGcB5a2Yk_U3SmV01hEksN0UcAAdH5IpCW7jVwmkrAcii8IRoEiX32aGKfanDtfR3f48WI7VTrZy9eKr-x6DjlyXxtj1FC8j9nucxl67xAGh5hkatQVXx7BABp8EJlho2XkNmW9rfySlI0QpH2K7pddMnEg');">
+</div>
+<!-- Tonal overlay to ensure text readability while keeping it bright -->
+<div class="absolute inset-0 bg-gradient-to-br from-surface/90 to-surface-container-high/80"></div>
+<div class="relative z-10 max-w-md">
+<h1 class="font-h1 text-h1 text-primary mb-md">Ehrenamt verbindet.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-lg">
+                    Werde Teil einer wachsenden Community. Entdecke Projekte, die zu deinen Fähigkeiten passen, oder finde engagierte Helfer für deinen Verein. Gemeinsam gestalten wir eine bessere Zukunft.
+                </p>
+<!-- Trust indicators -->
+<div class="flex items-center gap-sm mt-xl pt-lg border-t border-outline-variant/30">
+<div class="flex -space-x-3">
+<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-surface object-cover" data-alt="A close-up portrait of a smiling young woman with dark hair in a professional yet approachable setting. The lighting is soft and flattering, emphasizing a welcoming and trustworthy mood consistent with a modern community platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8vQE-_IBojI2QzlBfUp1_UZdchRqNedNO-ZOSjLsx_Q3ctwQeaLgpAsHFF5a5yB6H9yW6I1HG3H5omhXWtA2WCBqMohUIWwp1CAFgjYaKr_W-_2Vu2O5XfcJ6gGx9OU9bxXTcLEac0RX5I3LaC6gBvz7ya9HbqNZ3nkatTn-0dgvdHIbp_FAkMuH_R_10Xrc7ke3Pe776YFsCDozffLYUVbPrGg_PBAEWkBVGrFK7nnthMprhd5smdXN5G2DAeWjbemDntWSrPMY"/>
+<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-surface object-cover" data-alt="A close-up portrait of a middle-aged man with glasses, smiling warmly. The background is slightly blurred but suggests a bright, modern office or community center. The image conveys reliability and professional warmth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5t4q-U1wDaGrD13oB2w4cRs3mOW-zVJQNtumvxT79tHXwOj2CYzCdPbY1kRykNwO6PbO8HLAoR2B00pPa83orl_20TWRaQgE2H4qzF9R9kIad74TAUO85jtda_L2uEMPzHnNZPmWxgmDWX0Yu2dkyOhNypFyXv0WT6ykj0nVAt7_rd0cS1nbPSKAV-Wz2qESgVEm7opb813t-9K5AgBmxrwwJRR2a6Kef1F0NFk6DsW-TG1lC4hY3rOeKLEaoX-dgYZiA5uw0EAQ"/>
+<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-surface object-cover" data-alt="A close-up portrait of a young person smiling enthusiastically. The lighting is bright, creating an optimistic and energetic mood. The visual style is clean and professional, fitting for a modern volunteer network." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2MNk6b29gyU2t3TqjSbnMUmE3RMGto6wEeoSXdl3DZ8uC8vz1aLhROPiziGrB3pMysl4DmWm2NbAL7P6-Ii-7I0bS3SnXwEgzj9sXnjyxLHHGPjDl_9J47xT_4cWSuC43N_d5okq10deCBUEqZjpCFQ2zIpgw3k69nXFib4P5gQ0069wsahqKz62iVbUYMHwJOnC2mfKaKr5gd-CGS_wK9tDTVCN4o3b5AhB2PPCIHQ0RJf7j-FS8QkJiryBh4IFu2qNLBp789ds"/>
+</div>
+<div class="text-sm font-label-md text-on-surface-variant ml-2">
+                        Bereits <span class="font-bold text-primary">10.000+</span> Aktive
+                    </div>
+</div>
+</div>
+</div>
+<!-- Right Side: Form Area -->
+<div class="w-full lg:w-[55%] bg-surface-bright flex items-center justify-center p-md md:p-xl pt-24 lg:pt-xl relative overflow-y-auto">
+<!-- Soft ambient blob in background for depth -->
+<div class="absolute top-0 right-0 w-96 h-96 bg-primary-fixed/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+<div class="w-full max-w-[480px] relative z-10">
+<div class="mb-lg">
+<h2 class="font-h2-mobile md:font-h2 text-h2-mobile md:text-h2 text-on-surface mb-xs">Konto erstellen</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Willkommen! Bitte wähle deine Rolle und gib deine Daten ein, um dich zu registrieren.
+                    </p>
+</div>
+<form class="space-y-lg" id="registrationForm">
+<!-- Role Selection (Bento Style Cards) -->
+<div>
+<legend class="font-label-md text-label-md text-on-surface mb-sm">Wie möchtest du ActNow nutzen?</legend>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-sm">
+<!-- Option 1: Volunteer -->
+<label class="relative flex flex-col p-sm rounded-xl border-2 border-outline-variant bg-surface cursor-pointer hover:border-primary/50 transition-all focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 has-[:checked]:border-primary has-[:checked]:bg-primary-container/5 group">
+<input checked="" class="sr-only" name="userRole" onchange="handleRoleChange()" type="radio" value="volunteer"/>
+<div class="flex items-center justify-between mb-xs">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant group-has-[:checked]:bg-primary group-has-[:checked]:text-on-primary transition-colors">
+<span class="material-symbols-outlined">person_raised_hand</span>
+</div>
+<!-- Custom Radio Indicator -->
+<div class="w-5 h-5 rounded-full border-2 border-outline-variant group-has-[:checked]:border-primary group-has-[:checked]:bg-primary flex items-center justify-center transition-colors">
+<div class="w-2 h-2 rounded-full bg-on-primary opacity-0 group-has-[:checked]:opacity-100 transition-opacity"></div>
+</div>
+</div>
+<div>
+<span class="block font-label-md text-label-md text-on-surface">Ich möchte helfen</span>
+<span class="block font-body-md text-sm text-on-surface-variant mt-1 leading-tight">Als Einzelperson ehrenamtlich aktiv werden.</span>
+</div>
+</label>
+<!-- Option 2: Organization -->
+<label class="relative flex flex-col p-sm rounded-xl border-2 border-outline-variant bg-surface cursor-pointer hover:border-primary/50 transition-all focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 has-[:checked]:border-primary has-[:checked]:bg-primary-container/5 group">
+<input class="sr-only" name="userRole" onchange="handleRoleChange()" type="radio" value="organization"/>
+<div class="flex items-center justify-between mb-xs">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant group-has-[:checked]:bg-primary group-has-[:checked]:text-on-primary transition-colors">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<!-- Custom Radio Indicator -->
+<div class="w-5 h-5 rounded-full border-2 border-outline-variant group-has-[:checked]:border-primary group-has-[:checked]:bg-primary flex items-center justify-center transition-colors">
+<div class="w-2 h-2 rounded-full bg-on-primary opacity-0 group-has-[:checked]:opacity-100 transition-opacity"></div>
+</div>
+</div>
+<div>
+<span class="block font-label-md text-label-md text-on-surface">Ich suche Helfer</span>
+<span class="block font-body-md text-sm text-on-surface-variant mt-1 leading-tight">Als Verein oder Organisation Projekte einstellen.</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Personal Info Fields -->
+<div class="space-y-sm bg-surface-container-lowest p-md rounded-xl border border-surface-container-low shadow-[0px_4px_20px_rgba(47,79,79,0.03)]">
+<div class="hidden animate-[fadeIn_0.3s_ease-out]" id="orgNameContainer">
+<label class="block font-label-md text-label-md text-on-surface mb-xs" for="orgName">Name der Organisation / des Vereins</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</span>
+<input class="w-full bg-surface border border-outline-variant rounded-lg pl-10 pr-sm py-3 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow placeholder:text-outline" id="orgName" placeholder="z.B. Nachbarschaftshilfe e.V." type="text"/>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs" for="fullName">Vollständiger Name</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</span>
+<input class="w-full bg-surface border border-outline-variant rounded-lg pl-10 pr-sm py-3 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow placeholder:text-outline" id="fullName" placeholder="Max Mustermann" required="" type="text"/>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs" for="email">E-Mail Adresse</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+</span>
+<input class="w-full bg-surface border border-outline-variant rounded-lg pl-10 pr-sm py-3 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow placeholder:text-outline" id="email" placeholder="max@beispiel.de" required="" type="email"/>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs" for="password">Passwort</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-sm flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</span>
+<input class="w-full bg-surface border border-outline-variant rounded-lg pl-10 pr-10 py-3 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow placeholder:text-outline" id="password" placeholder="Mindestens 8 Zeichen" required="" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-sm flex items-center text-on-surface-variant hover:text-primary transition-colors focus:outline-none" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined text-[20px]" id="passwordIcon">visibility_off</span>
+</button>
+</div>
+<p class="font-body-md text-[13px] text-on-surface-variant mt-1">Muss mindestens 8 Zeichen lang sein.</p>
+</div>
+</div>
+<!-- Terms and Submit -->
+<div class="space-y-md pt-sm">
+<label class="flex items-start gap-sm cursor-pointer group">
+<div class="relative flex items-center justify-center mt-1">
+<input class="peer appearance-none w-5 h-5 border-2 border-outline-variant rounded bg-surface checked:bg-primary checked:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface-bright transition-all cursor-pointer" required="" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-on-primary text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+</div>
+<span class="font-body-md text-[14px] text-on-surface-variant leading-snug">
+                                Ich stimme den <a class="text-primary hover:underline" href="#">Nutzungsbedingungen</a> und der <a class="text-primary hover:underline" href="#">Datenschutzerklärung</a> zu.
+                            </span>
+</label>
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary rounded-full py-4 px-md font-label-md text-label-md hover:bg-surface-tint shadow-[0px_4px_20px_rgba(47,79,79,0.08)] hover:shadow-[0px_8px_30px_rgba(47,79,79,0.12)] transition-all transform active:scale-[0.98]" type="submit">
+                            Registrieren
+                            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</form>
+<div class="mt-lg text-center pb-xl">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Ich habe bereits ein Konto. 
+                        <a class="font-label-md text-primary hover:text-surface-tint hover:underline transition-colors ml-1" href="#">Hier anmelden</a>
+</p>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Inline script for micro-interactions
+        
+        function handleRoleChange() {
+            const orgRadio = document.querySelector('input[name="userRole"][value="organization"]');
+            const orgContainer = document.getElementById('orgNameContainer');
+            const orgInput = document.getElementById('orgName');
+            
+            if (orgRadio.checked) {
+                orgContainer.classList.remove('hidden');
+                orgInput.setAttribute('required', 'true');
+                // Small animation effect
+                orgContainer.style.opacity = '0';
+                orgContainer.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    orgContainer.style.transition = 'all 0.3s ease-out';
+                    orgContainer.style.opacity = '1';
+                    orgContainer.style.transform = 'translateY(0)';
+                }, 10);
+            } else {
+                orgContainer.classList.add('hidden');
+                orgInput.removeAttribute('required');
+                orgInput.value = ''; // clear value when hiding
+            }
+        }
+
+        function togglePassword() {
+            const pwdInput = document.getElementById('password');
+            const pwdIcon = document.getElementById('passwordIcon');
+            
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                pwdIcon.textContent = 'visibility';
+            } else {
+                pwdInput.type = 'password';
+                pwdIcon.textContent = 'visibility_off';
+            }
+        }
+
+        // Prevent default submission for demonstration
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            // Loading state
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span> Wird verarbeitet...';
+            btn.classList.add('opacity-90', 'pointer-events-none');
+            
+            // Simulate network request
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">check_circle</span> Erfolgreich';
+                btn.classList.replace('bg-primary', 'bg-tertiary');
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.replace('bg-tertiary', 'bg-primary');
+                    btn.classList.remove('opacity-90', 'pointer-events-none');
+                }, 2000);
+            }, 1500);
+        });
+    </script>
+</body></html>
