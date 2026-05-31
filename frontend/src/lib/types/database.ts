@@ -187,6 +187,13 @@ export interface HelperDocumentRow {
   updated_at: ISODateTime;
 }
 
+export interface SavedOfferRow {
+  id: UUID;
+  helper_profile_id: UUID;
+  offer_id: UUID;
+  created_at: ISODateTime;
+}
+
 // Result row of search_offers() RPC.
 export interface SearchOfferResult {
   id: UUID;
