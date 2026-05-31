@@ -14,6 +14,7 @@ export { default as OrgLogo } from './components/ui/OrgLogo.svelte';
 export { default as RatingStars } from './components/ui/RatingStars.svelte';
 export { default as Badge } from './components/ui/Badge.svelte';
 export { default as Tag } from './components/ui/Tag.svelte';
+export { default as CategoryBadge } from './components/ui/CategoryBadge.svelte';
 
 // Feedback
 export { default as EmptyState } from './components/ui/EmptyState.svelte';

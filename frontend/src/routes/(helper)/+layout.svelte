@@ -23,25 +23,30 @@
 
 	const path = $derived(page.url.pathname as string);
 	const topItems = $derived([
-		{ label: 'Discover', href: '/discover', active: path.startsWith('/discover') },
-		{ label: 'Calendar', href: '/calendar', active: path.startsWith('/calendar') },
-		{ label: 'Messages', href: '/messages', active: path.startsWith('/messages') }
+		{ label: 'Start', href: '/discover', active: path.startsWith('/discover') },
+		{ label: 'Community', href: '/community', active: path.startsWith('/community') },
+		{ label: 'Rewards', href: '/rewards', active: path.startsWith('/rewards') },
+		{ label: 'Favoriten', href: '/favorites', active: path.startsWith('/favorites') },
+		{ label: 'Kalender', href: '/calendar', active: path.startsWith('/calendar') }
 	]);
+	// 5-Tab Navigation aus der Vorlage: Social · Rewards · Start (Mitte) · Favoriten · Profil.
 	const bottomItems = $derived([
+		{ label: 'Social', href: '/community', icon: 'group', active: path.startsWith('/community') },
+		{ label: 'Rewards', href: '/rewards', icon: 'star', active: path.startsWith('/rewards') },
 		{
-			label: 'Discover',
+			label: 'Start',
 			href: '/discover',
-			icon: 'explore',
+			icon: 'home',
+			center: true,
 			active: path.startsWith('/discover')
 		},
 		{
-			label: 'Calendar',
-			href: '/calendar',
-			icon: 'calendar_today',
-			active: path.startsWith('/calendar')
+			label: 'Favoriten',
+			href: '/favorites',
+			icon: 'favorite',
+			active: path.startsWith('/favorites')
 		},
-		{ label: 'Messages', href: '/messages', icon: 'chat', active: path.startsWith('/messages') },
-		{ label: 'Profile', href: '/profile', icon: 'person', active: path.startsWith('/profile') }
+		{ label: 'Profil', href: '/profile', icon: 'person', active: path.startsWith('/profile') }
 	]);
 </script>
 
@@ -52,7 +57,8 @@
 {:else}
 	<AppShell>
 		{#snippet top()}
-			<TopNavBar items={topItems} />
+			<!-- Desktop-Top-Navigation; auf Mobile übernimmt der SageHeader jeder Seite. -->
+			<TopNavBar items={topItems} class="hidden md:block" />
 		{/snippet}
 		{#snippet main()}
 			{@render children()}

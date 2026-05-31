@@ -23,6 +23,12 @@
     bufferSize?: number;
     onswipe?: (e: SwipeEvent) => void;
     onempty?: () => void;
+    /** Saved offer ids — toggles the bookmark state on the top card. */
+    savedIds?: Set<string>;
+    /** Toggle save for an offer (bookmark button on the top card). */
+    ontogglesave?: (offerId: string) => void;
+    /** Open the detail view for an offer (tap on the top card). */
+    onopendetail?: (offerId: string) => void;
     class?: string;
   }
   let {
@@ -32,6 +38,9 @@
     bufferSize = 3,
     onswipe,
     onempty,
+    savedIds,
+    ontogglesave,
+    onopendetail,
     class: klass = ''
   }: Props = $props();
 
@@ -154,7 +163,7 @@
 
 <div
   bind:this={cardEl}
-  class="relative w-full max-w-md mx-auto h-[600px] flex items-center justify-center select-none {klass}"
+  class="relative w-full max-w-md mx-auto h-[58vh] min-h-[420px] max-h-[560px] flex items-center justify-center select-none {klass}"
   role="application"
   tabindex="0"
   aria-roledescription="card stack"
@@ -170,7 +179,7 @@
     {#if i === 0}
       <!-- Active (top) card -->
       <div
-        class="absolute w-full h-[520px] z-30 touch-none cursor-grab active:cursor-grabbing"
+        class="absolute w-full h-full z-30 touch-none cursor-grab active:cursor-grabbing"
         style="transform: {transform}; transition: {transition}; opacity: {opacity};"
         role="button"
         tabindex="-1"
@@ -180,12 +189,20 @@
         onpointerup={onPointerUp}
         onpointercancel={onPointerUp}
       >
-        <SwipeCard {offer} dragX={dragX} threshold={swipeThreshold} class="h-full" />
+        <SwipeCard
+          {offer}
+          dragX={dragX}
+          threshold={swipeThreshold}
+          saved={savedIds?.has(offer.id) ?? false}
+          ontogglesave={() => ontogglesave?.(offer.id)}
+          onopen={() => onopendetail?.(offer.id)}
+          class="h-full"
+        />
       </div>
     {:else}
       <!-- Depth cards (visual only) -->
       <div
-        class="absolute w-full h-[500px] rounded-3xl bg-surface-container-high shadow"
+        class="absolute w-full h-[96%] rounded-card bg-surface-container-high shadow"
         style="
           transform: scale({1 - i * 0.04}) translateY({i * 12}px);
           z-index: {30 - i};

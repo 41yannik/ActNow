@@ -17,7 +17,7 @@
   {#if top}{@render top()}{/if}
   <div class="flex flex-1">
     {#if side}{@render side()}{/if}
-    <main class="flex-1 {docked ? 'md:ml-64' : ''} pb-[80px] md:pb-0">
+    <main class="min-w-0 flex-1 {docked ? 'md:ml-64' : ''} pb-[80px] md:pb-0">
       {@render main()}
     </main>
   </div>
