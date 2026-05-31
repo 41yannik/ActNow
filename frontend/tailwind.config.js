@@ -11,58 +11,71 @@ export default {
     extend: {
       colors: {
         'on-error': '#ffffff',
-        primary: '#476500',
-        'surface-container-highest': '#e5e2db',
-        'tertiary-fixed': '#d7e8c6',
-        outline: '#747967',
-        'on-primary-fixed-variant': '#364e00',
-        'on-primary-fixed': '#131f00',
-        'on-tertiary': '#ffffff',
-        'on-secondary-fixed-variant': '#2c4c4c',
-        'on-tertiary-container': '#f9ffed',
-        'inverse-surface': '#31312c',
-        'error-container': '#ffdad6',
-        'on-secondary-container': '#4a6a6a',
-        'surface-container': '#f0eee7',
-        'primary-container': '#5d7f13',
-        'on-secondary-fixed': '#002020',
-        'surface-bright': '#fcf9f2',
-        background: '#fcf9f2',
-        'secondary-fixed-dim': '#abcdcd',
-        'on-error-container': '#93000a',
-        'on-secondary': '#ffffff',
-        'primary-fixed-dim': '#add461',
-        'surface-dim': '#dcdad3',
-        'surface-container-high': '#ebe8e1',
-        'on-primary-container': '#faffe7',
-        'on-surface': '#1c1c18',
-        'on-surface-variant': '#444939',
-        secondary: '#446464',
+        primary: '#7E8F6B',                      // Dunkles Salbei (Primäraktionen)
+        'primary-container': '#9DAD93',           // Salbei (Header-Band)
         'on-primary': '#ffffff',
-        'surface-variant': '#e5e2db',
-        'surface-tint': '#496800',
-        'surface-container-lowest': '#ffffff',
+        'on-primary-container': '#ffffff',
+        'on-primary-fixed': '#131f00',
+        'on-primary-fixed-variant': '#364e00',
+        'primary-fixed': '#c8f17a',
+        'primary-fixed-dim': '#add461',
         'inverse-primary': '#add461',
-        'outline-variant': '#c4c9b4',
-        error: '#ba1a1a',
+        
+        secondary: '#5F6E4D',                    // Olive (Akzent, stärkere Linien)
+        'on-secondary': '#ffffff',
+        'secondary-container': '#B7C2AE',        // Helles Salbei
+        'on-secondary-container': '#3F4837',     // Oliven-Text
+        'secondary-fixed': '#c6e9e9',
+        'secondary-fixed-dim': '#abcdcd',
+        'on-secondary-fixed': '#002020',
+        'on-secondary-fixed-variant': '#2c4c4c',
+
+        tertiary: '#E2945A',                     // SOS Orange (Warnfarbe der Vorlage)
+        'on-tertiary': '#ffffff',
+        'tertiary-container': '#FAF8F2',
+        'on-tertiary-container': '#3F4837',
+        'tertiary-fixed': '#B7C2AE',
         'tertiary-fixed-dim': '#bcccab',
         'on-tertiary-fixed': '#131f09',
-        'secondary-container': '#c6e9e9',
-        tertiary: '#526045',
         'on-tertiary-fixed-variant': '#3d4b32',
-        surface: '#fcf9f2',
-        'on-background': '#1c1c18',
-        'surface-container-low': '#f6f3ec',
-        'inverse-on-surface': '#f3f0ea',
-        'tertiary-container': '#6a795d',
-        'primary-fixed': '#c8f17a',
-        'secondary-fixed': '#c6e9e9'
+
+        background: '#F5F2EA',                   // Warmes Creme (Hintergrund)
+        'on-background': '#1F2520',              // Tintenschwarz (Fließtext)
+
+        surface: '#FFFFFF',                      // Reinweiß für Karten & Oberflächen
+        'on-surface': '#1F2520',
+        'on-surface-variant': '#737872',         // Muted/Faint Grau
+        'surface-variant': '#FAF8F2',
+        'surface-bright': '#FFFFFF',
+        'surface-dim': '#FAF8F2',
+        
+        'surface-container-lowest': '#FFFFFF',
+        'surface-container-low': '#FAF8F2',      // Weiches Creme für schwebende Container
+        'surface-container': '#FAF8F2',
+        'surface-container-high': '#EFEBE0',     // Haarlinie Soft-Hintergründe
+        'surface-container-highest': '#E6E2D7',
+
+        'inverse-surface': '#1F2520',
+        'inverse-on-surface': '#F5F2EA',
+        
+        outline: '#E6E2D7',                      // Haarlinie-Rahmen (faint/hair)
+        'outline-variant': '#EFEBE0',            // Weichere Haarlinie (hairSoft)
+        
+        error: '#ba1a1a',
+        'error-container': '#ffdad6',
+        'on-error-container': '#93000a',
+        
+        'surface-tint': '#7E8F6B',
+        'blue-dot': '#5B7AAE'                    // Blau für Kalender-Dots oder Socials
       },
       borderRadius: {
         DEFAULT: '0.25rem',
         lg: '0.5rem',
         xl: '0.75rem',
-        full: '9999px'
+        full: '9999px',
+        btn: '14px',                             // Ecken der Buttons in der Vorlage
+        card: '22px',                            // Ecken der Swipe-Karten
+        header: '28px'                           // Ecken des SageHeaders unten
       },
       spacing: {
         xs: '4px',
@@ -75,14 +88,14 @@ export default {
         'container-max': '1280px'
       },
       fontFamily: {
-        'h1-mobile': ['Montserrat', 'sans-serif'],
-        'h2-mobile': ['Montserrat', 'sans-serif'],
-        h1: ['Montserrat', 'sans-serif'],
-        h2: ['Montserrat', 'sans-serif'],
-        h3: ['Montserrat', 'sans-serif'],
-        'body-md': ['"Atkinson Hyperlegible Next"', 'sans-serif'],
-        'body-lg': ['"Atkinson Hyperlegible Next"', 'sans-serif'],
-        'label-md': ['"Atkinson Hyperlegible Next"', 'sans-serif']
+        'h1-mobile': ['Inter', 'sans-serif'],
+        'h2-mobile': ['Inter', 'sans-serif'],
+        h1: ['Inter', 'sans-serif'],
+        h2: ['Inter', 'sans-serif'],
+        h3: ['Inter', 'sans-serif'],
+        'body-md': ['Inter', 'sans-serif'],
+        'body-lg': ['Inter', 'sans-serif'],
+        'label-md': ['Inter', 'sans-serif']
       },
       fontSize: {
         'h1-mobile': ['32px', { lineHeight: '1.2', fontWeight: '700' }],
