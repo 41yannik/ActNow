@@ -19,15 +19,40 @@ const state = $state<AuthState>({
 });
 
 let initialized = false;
+const AUTH_INIT_TIMEOUT_MS = 3_000;
+const PROFILE_TIMEOUT_MS = 5_000;
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+  });
+
+  return Promise.race([promise, timeout]).finally(() => {
+    if (timeoutId) clearTimeout(timeoutId);
+  });
+}
 
 export async function initAuth() {
   if (initialized) return;
   initialized = true;
-  const { data } = await supabase.auth.getSession();
-  await applySession(data.session);
   supabase.auth.onAuthStateChange((_event, session) => {
     void applySession(session);
   });
+
+  try {
+    const { data } = await withTimeout(
+      supabase.auth.getSession(),
+      AUTH_INIT_TIMEOUT_MS,
+      'Supabase auth session'
+    );
+    await applySession(data.session);
+  } catch (err) {
+    console.error('[auth] failed to initialize', err);
+    await applySession(null);
+  }
 }
 
 async function applySession(session: Session | null) {
@@ -35,7 +60,11 @@ async function applySession(session: Session | null) {
   state.user = session?.user ?? null;
   if (session?.user) {
     try {
-      state.profile = await getOwnProfile(session.user.id);
+      state.profile = await withTimeout(
+        getOwnProfile(session.user.id),
+        PROFILE_TIMEOUT_MS,
+        'Supabase profile lookup'
+      );
     } catch (err) {
       console.error('[auth] failed to load profile', err);
       state.profile = null;

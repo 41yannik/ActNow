@@ -4,40 +4,36 @@
   import EmptyState from '$lib/components/ui/EmptyState.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
   import PageHeader from '$lib/components/layout/PageHeader.svelte';
-  import { listConversationsForProfile } from '$lib/services/supabase/messages';
-  import { supabase } from '$lib/services/supabase/client';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { listCommunityConversations } from '$lib/services/supabase/messages';
   import { toasts } from '$lib/stores/toasts.svelte';
-  import type { ConversationRow, ProfileRow } from '$lib/types/database';
-
-  interface Row {
-    conv: ConversationRow;
-    counterparty: Pick<ProfileRow, 'id' | 'display_name' | 'avatar_url'>;
-  }
+  import type { CommunityConversationRow, ConversationRow } from '$lib/types/database';
 
   let loading = $state(true);
-  let rows = $state<Row[]>([]);
+  let rows = $state<CommunityConversationRow[]>([]);
+
+  function asConversation(row: CommunityConversationRow): ConversationRow {
+    return {
+      id: row.conversation_id,
+      application_id: row.application_id,
+      offer_id: row.offer_id,
+      helper_profile_id: row.helper_profile_id,
+      organization_profile_id: row.organization_profile_id,
+      last_message_at: row.last_message_at,
+      created_at: row.created_at,
+      updated_at: row.updated_at
+    };
+  }
+
+  function preview(row: CommunityConversationRow) {
+    return row.last_message_body
+      ? `${row.offer_title} · ${row.last_message_body}`
+      : `${row.offer_title} · Noch keine Nachricht`;
+  }
 
   async function load() {
-    if (!auth.profile) return;
     loading = true;
     try {
-      const convs = await listConversationsForProfile(auth.profile.id);
-      const otherIds = convs.map((c) =>
-        c.helper_profile_id === auth.profile!.id ? c.organization_profile_id : c.helper_profile_id
-      );
-      const { data: profiles, error } = await supabase
-        .from('profiles')
-        .select('id, display_name, avatar_url')
-        .in('id', otherIds);
-      if (error) throw error;
-      const byId = new Map<string, any>((profiles ?? []).map((p: any) => [p.id, p]));
-      rows = convs.map((c) => ({
-        conv: c,
-        counterparty: byId.get(
-          c.helper_profile_id === auth.profile!.id ? c.organization_profile_id : c.helper_profile_id
-        ) ?? { id: '', display_name: 'Unbekannt', avatar_url: null }
-      }));
+      rows = await listCommunityConversations(50);
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Konnte Nachrichten nicht laden');
     } finally {
@@ -58,12 +54,17 @@
     <EmptyState icon="chat_bubble_outline" title="Noch keine Nachrichten" />
   {:else}
     <ul class="flex flex-col gap-1">
-      {#each rows as r (r.conv.id)}
+      {#each rows as row (row.conversation_id)}
         <li>
           <ConversationListItem
-            conversation={r.conv}
-            counterparty={r.counterparty}
-            href={`/messages/${r.conv.id}`}
+            conversation={asConversation(row)}
+            counterparty={{
+              display_name: row.counterparty_display_name,
+              avatar_url: row.counterparty_avatar_url
+            }}
+            lastMessage={preview(row)}
+            unread={row.unread_count > 0}
+            href={`/messages/${row.conversation_id}`}
           />
         </li>
       {/each}

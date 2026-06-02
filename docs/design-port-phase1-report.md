@@ -8,9 +8,10 @@ language, screens, and features** into the real **SvelteKit + Supabase** app.
 
 Two hard constraints were respected throughout:
 
-1. **Backend stays the same.** No changes to the Supabase schema (`docs/schema.sql`). Features
-   the prototype shows but the backend can't support yet are built as **front-end design
-   shells driven by mock data**, each flagged in code with `// TODO(backend)`.
+1. **Backend stayed the same for Phase 1.** No schema changes were needed for the Discover
+   slice. Features the prototype shows but the backend still can't support are built as
+   **front-end design shells driven by mock data**, each flagged in code with
+   `// TODO(backend)`.
 2. **Foundations stay the same.** SvelteKit, the `$lib/components/*` library, services,
    stores, and types are reused and extended — not rewritten.
 
@@ -53,23 +54,33 @@ tracked in **issue #1**.
 ### Real backend wiring (no schema change)
 - **`frontend/src/lib/services/supabase/savedOffers.ts`** *(new)* — `list / save / unsave`
   against the existing `saved_offers` table; **`SavedOfferRow`** added to `types/database.ts`.
+- **`(helper)/favorites`** now reads the existing `saved_offers` table, displays compact saved
+  offer cards, marks unavailable saved offers in red, and supports secure remove/open actions.
 
 ### Placeholders (built out in later phases)
-- `(helper)/community`, `(helper)/rewards`, `(helper)/favorites` — minimal pages so the new
-  5-tab nav never 404s.
+- `(helper)/rewards` — minimal page so the new 5-tab nav never 404s.
+
+### Community / Chat v1 (implemented after Phase 1)
+- `(helper)/community` now uses real Supabase `conversations`, `messages`, and
+  `notifications` data.
+- Community has Chats + Activity tabs, real unread counts, Realtime refreshes, and links into
+  `/messages/[id]`.
+- The backend now includes Community RPCs for conversation lists, unread summary, and
+  marking conversations read.
 
 ## Backend flag
 
 Prototype-only, **mock** data lives in
 **`frontend/src/lib/features/offers/mockEnrich.ts`** (friends, distance/km, SOS, calendar-fit),
-all marked `// TODO(backend)`. Rewards, social/community, org-follow, and onboarding
-verification are likewise design shells. **None of this is connected to real data yet.**
+all marked `// TODO(backend)`. Rewards, org-follow, and onboarding verification remain
+design shells. Community/Chat and offer Favorites are no longer design shells and are connected
+to real Supabase data.
 
 ## New backend issue
 
 Filed **[#1 — Backend: support features introduced by the prototype design port](https://github.com/dmu1981/ActNow/issues/1)**
 to track matching the backend to these front-end changes (urgent-offer flag, rewards model,
-social/follow model, calendar integration).
+follow model, calendar integration).
 
 ## Incidental bug fixes
 - `TopNavBar` and `CategoryBadge` accepted a `class` / `style` prop but never applied it.
@@ -82,5 +93,5 @@ social/follow model, calendar integration).
 
 ## Not in scope (Phase 1)
 - Backend/schema changes (tracked in #1).
-- Phases 2–4: full Favorites, Community/Chat, Rewards, Profile, Calendar, Onboarding.
+- Phases 2–4: organization Favorites, Rewards, Profile, Calendar, Onboarding.
 - The prototype's iOS device frame.

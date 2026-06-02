@@ -59,7 +59,7 @@
     try {
       savedIds = await listSavedOfferIds(auth.profile.id);
     } catch {
-      // non-fatal — bookmark state just starts empty
+      // non-fatal — favorite state just starts empty
     }
   }
 
@@ -192,11 +192,6 @@
         onundo={() => deck?.undoLast()}
         {canUndo}
       />
-      <div class="mt-2 flex justify-between px-2 text-[11px] font-medium text-on-surface-variant">
-        <span>← Nein</span>
-        <span>♥ Merken</span>
-        <span>Bewerben →</span>
-      </div>
     </div>
   {/if}
 </section>
