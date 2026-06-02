@@ -926,5 +926,6 @@ Für einen ersten MVP reichen wahrscheinlich diese Tabellen:
 10. `ratings`
 11. `notifications`
 12. `admin_audit_log`
+13. `saved_offers`
 
-Die Tabellen `offer_swipes`, `saved_offers`, `offer_history_items`, `reports` und `organization_memberships` können bei Bedarf im zweiten Schritt ergänzt werden.
+Die Tabellen `offer_swipes`, `offer_history_items`, `reports` und `organization_memberships` können bei Bedarf im zweiten Schritt ergänzt werden.
