@@ -4,6 +4,7 @@ Before implementing, editing, refactoring, or deleting code, always read and fol
 
 The canonical project files are:
 
+- [Road map](../docs/road-map.md)
 - [Problem statement](../docs/problem-statement.md)
 - [User roles](../docs/user-roles.md)
 - [Core user stories](../docs/user-stories.md)

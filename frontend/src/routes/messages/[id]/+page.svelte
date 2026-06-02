@@ -6,7 +6,12 @@
   import DateSeparator from '$lib/features/chat/components/DateSeparator.svelte';
   import MessageComposer from '$lib/features/chat/components/MessageComposer.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
-  import { getConversation, listMessages, sendMessage } from '$lib/services/supabase/messages';
+  import {
+    getConversation,
+    listMessages,
+    markConversationRead,
+    sendMessage
+  } from '$lib/services/supabase/messages';
   import { supabase } from '$lib/services/supabase/client';
   import { subscribeChanges, unsubscribe } from '$lib/utils/realtime';
   import { auth } from '$lib/stores/auth.svelte';
@@ -48,7 +53,10 @@
 
   async function onSend(text: string) {
     if (!auth.profile || !conversation) return;
-    await sendMessage(conversation.id, auth.profile.id, text);
+    const created = await sendMessage(conversation.id, auth.profile.id, text);
+    if (!messages.find((m) => m.id === created.id)) {
+      messages = [...messages, created];
+    }
   }
 
   function isSameDay(a: string, b: string) {
@@ -64,6 +72,11 @@
   onMount(async () => {
     await load();
     if (conversation) {
+      try {
+        await markConversationRead(conversation.id);
+      } catch {
+        // non-fatal; the message thread itself is still usable
+      }
       channel = subscribeChanges<Record<string, unknown>>(
         `messages:${conversation.id}`,
         { table: 'messages', filter: `conversation_id=eq.${conversation.id}` },
@@ -73,8 +86,16 @@
             if (!messages.find((x) => x.id === m.id)) {
               messages = [...messages, m];
             }
+            if (auth.profile && m.sender_profile_id !== auth.profile.id) {
+              void markConversationRead(conversation!.id);
+            }
           }
-        }
+          if (payload.eventType === 'UPDATE' && payload.new) {
+            const m = payload.new as unknown as MessageRow;
+            messages = messages.map((x) => (x.id === m.id ? m : x));
+          }
+        },
+        '*'
       );
     }
   });

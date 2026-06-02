@@ -170,6 +170,18 @@ export interface MessageRow {
   updated_at: ISODateTime;
 }
 
+export interface NotificationRow {
+  id: UUID;
+  recipient_profile_id: UUID;
+  type: string;
+  title: string;
+  body: string | null;
+  entity_type: string | null;
+  entity_id: UUID | null;
+  read_at: ISODateTime | null;
+  created_at: ISODateTime;
+}
+
 export interface HelperDocumentRow {
   id: UUID;
   helper_profile_id: UUID;
@@ -192,6 +204,34 @@ export interface SavedOfferRow {
   helper_profile_id: UUID;
   offer_id: UUID;
   created_at: ISODateTime;
+}
+
+export interface SavedOfferWithOffer extends SavedOfferRow {
+  offer: OfferRow | null;
+}
+
+export interface CommunityConversationRow {
+  conversation_id: UUID;
+  application_id: UUID;
+  offer_id: UUID;
+  offer_title: string;
+  helper_profile_id: UUID;
+  organization_profile_id: UUID;
+  counterparty_profile_id: UUID;
+  counterparty_display_name: string;
+  counterparty_avatar_url: string | null;
+  last_message_body: string | null;
+  last_message_sender_profile_id: UUID | null;
+  last_message_at: ISODateTime | null;
+  unread_count: number;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+export interface CommunitySummary {
+  unread_messages: number;
+  unread_notifications: number;
+  total_unread: number;
 }
 
 // Result row of search_offers() RPC.

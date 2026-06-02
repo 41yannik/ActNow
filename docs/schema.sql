@@ -81,6 +81,9 @@ drop function if exists public.tg_offers_validate_status_change()         cascad
 drop function if exists public.tg_profiles_protect_columns()              cascade;
 drop function if exists public.tg_validate_document_share()               cascade;
 drop function if exists public.tg_ensure_conversation_for_application()   cascade;
+drop function if exists public.tg_validate_conversation_consistency()     cascade;
+drop function if exists public.tg_messages_guard_update()                 cascade;
+drop function if exists public.tg_messages_after_insert_side_effects()    cascade;
 drop function if exists public.search_offers(text, timestamptz, timestamptz, offer_type, text[], int, int) cascade;
 drop function if exists public.accept_application(uuid)                   cascade;
 drop function if exists public.reject_application(uuid, text)             cascade;
@@ -88,6 +91,9 @@ drop function if exists public.withdraw_application(uuid)                 cascad
 drop function if exists public.complete_application(uuid)                 cascade;
 drop function if exists public.publish_offer(uuid)                        cascade;
 drop function if exists public.create_conversation_for_application(uuid)  cascade;
+drop function if exists public.list_community_conversations(int, int)     cascade;
+drop function if exists public.get_community_summary()                    cascade;
+drop function if exists public.mark_conversation_read(uuid)               cascade;
 
 -- Enum types
 drop type if exists public.recurrence_frequency cascade;
@@ -434,6 +440,9 @@ create table public.messages (
 
 create index messages_conversation_created_idx on public.messages(conversation_id, created_at asc);
 create index messages_sender_idx                on public.messages(sender_profile_id);
+create index messages_unread_conversation_sender_idx
+  on public.messages(conversation_id, sender_profile_id)
+  where read_at is null and status <> 'deleted';
 
 create trigger messages_set_updated_at
   before update on public.messages
@@ -902,6 +911,130 @@ create trigger applications_ensure_conversation
   after insert on public.applications
   for each row execute function public.tg_ensure_conversation_for_application();
 
+-- ---- 5.9 Validate conversation consistency --------------------------------
+create or replace function public.tg_validate_conversation_consistency()
+returns trigger
+language plpgsql
+as $$
+declare
+  v_app public.applications;
+  v_org uuid;
+begin
+  select * into v_app from public.applications where id = new.application_id;
+  if not found then
+    raise exception 'application not found for conversation' using errcode = '23503';
+  end if;
+
+  select organization_profile_id into v_org from public.offers where id = v_app.offer_id;
+  if v_org is null then
+    raise exception 'offer not found for conversation application' using errcode = '23503';
+  end if;
+
+  if new.offer_id <> v_app.offer_id then
+    raise exception 'conversation offer does not match application offer' using errcode = '23514';
+  end if;
+  if new.helper_profile_id <> v_app.helper_profile_id then
+    raise exception 'conversation helper does not match application helper' using errcode = '23514';
+  end if;
+  if new.organization_profile_id <> v_org then
+    raise exception 'conversation organization does not match offer owner' using errcode = '23514';
+  end if;
+
+  return new;
+end;
+$$;
+
+create trigger conversations_validate_consistency
+  before insert or update on public.conversations
+  for each row execute function public.tg_validate_conversation_consistency();
+
+-- ---- 5.10 Guard message updates -------------------------------------------
+create or replace function public.tg_messages_guard_update()
+returns trigger
+language plpgsql
+as $$
+begin
+  if public.is_admin() then
+    return new;
+  end if;
+
+  if new.conversation_id <> old.conversation_id
+     or new.sender_profile_id <> old.sender_profile_id
+     or new.body <> old.body then
+    raise exception 'message content and ownership fields are immutable' using errcode = '42501';
+  end if;
+
+  if new.status <> 'read' or new.read_at is null then
+    raise exception 'participants may only mark messages as read' using errcode = '42501';
+  end if;
+
+  return new;
+end;
+$$;
+
+create trigger messages_guard_update
+  before update on public.messages
+  for each row execute function public.tg_messages_guard_update();
+
+-- ---- 5.11 Message side effects --------------------------------------------
+create or replace function public.tg_messages_after_insert_side_effects()
+returns trigger
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_conv public.conversations;
+  v_recipient uuid;
+  v_sender_name text;
+begin
+  select * into v_conv from public.conversations where id = new.conversation_id;
+  if not found then
+    raise exception 'conversation not found for message' using errcode = '23503';
+  end if;
+
+  if new.sender_profile_id = v_conv.helper_profile_id then
+    v_recipient := v_conv.organization_profile_id;
+  elsif new.sender_profile_id = v_conv.organization_profile_id then
+    v_recipient := v_conv.helper_profile_id;
+  else
+    raise exception 'message sender is not a conversation participant' using errcode = '42501';
+  end if;
+
+  update public.conversations
+    set last_message_at = new.created_at,
+        updated_at = now()
+    where id = new.conversation_id;
+
+  select display_name into v_sender_name from public.profiles where id = new.sender_profile_id;
+
+  insert into public.notifications (
+    recipient_profile_id,
+    type,
+    title,
+    body,
+    entity_type,
+    entity_id,
+    created_at
+  )
+  values (
+    v_recipient,
+    'message',
+    left('Neue Nachricht von ' || coalesce(v_sender_name, 'ActNow'), 160),
+    left(new.body, 1000),
+    'conversation',
+    new.conversation_id,
+    new.created_at
+  );
+
+  return new;
+end;
+$$;
+
+create trigger messages_after_insert_side_effects
+  after insert on public.messages
+  for each row execute function public.tg_messages_after_insert_side_effects();
+
 -- =============================================================================
 -- 6. VIEWS
 -- =============================================================================
@@ -1243,6 +1376,185 @@ begin
 end;
 $$;
 
+-- ---- 7.8 list_community_conversations -------------------------------------
+create or replace function public.list_community_conversations(
+  p_limit  int default 50,
+  p_offset int default 0
+)
+returns table (
+  conversation_id                  uuid,
+  application_id                   uuid,
+  offer_id                         uuid,
+  offer_title                      text,
+  helper_profile_id                uuid,
+  organization_profile_id          uuid,
+  counterparty_profile_id          uuid,
+  counterparty_display_name        text,
+  counterparty_avatar_url          text,
+  last_message_body                text,
+  last_message_sender_profile_id   uuid,
+  last_message_at                  timestamptz,
+  unread_count                     integer,
+  created_at                       timestamptz,
+  updated_at                       timestamptz
+)
+language sql
+stable
+security definer
+set search_path = public, pg_temp
+as $$
+  with me as (
+    select public.current_profile_id() as profile_id, public.is_admin() as admin
+  ),
+  visible_conversations as (
+    select c.*, o.title as offer_title
+    from public.conversations c
+    join public.offers o on o.id = c.offer_id
+    cross join me
+    where me.admin
+       or c.helper_profile_id = me.profile_id
+       or c.organization_profile_id = me.profile_id
+  )
+  select
+    c.id as conversation_id,
+    c.application_id,
+    c.offer_id,
+    c.offer_title,
+    c.helper_profile_id,
+    c.organization_profile_id,
+    case
+      when c.helper_profile_id = me.profile_id then c.organization_profile_id
+      else c.helper_profile_id
+    end as counterparty_profile_id,
+    p.display_name as counterparty_display_name,
+    p.avatar_url as counterparty_avatar_url,
+    lm.body as last_message_body,
+    lm.sender_profile_id as last_message_sender_profile_id,
+    coalesce(lm.created_at, c.last_message_at) as last_message_at,
+    coalesce(uc.unread_count, 0)::integer as unread_count,
+    c.created_at,
+    c.updated_at
+  from visible_conversations c
+  cross join me
+  join public.profiles p
+    on p.id = case
+      when c.helper_profile_id = me.profile_id then c.organization_profile_id
+      else c.helper_profile_id
+    end
+  left join lateral (
+    select m.body, m.sender_profile_id, m.created_at
+    from public.messages m
+    where m.conversation_id = c.id
+      and m.status <> 'deleted'
+    order by m.created_at desc
+    limit 1
+  ) lm on true
+  left join lateral (
+    select count(*)::integer as unread_count
+    from public.messages m
+    where m.conversation_id = c.id
+      and m.sender_profile_id <> me.profile_id
+      and m.read_at is null
+      and m.status <> 'deleted'
+  ) uc on true
+  order by coalesce(lm.created_at, c.last_message_at, c.updated_at, c.created_at) desc
+  limit least(greatest(coalesce(p_limit, 50), 1), 100)
+  offset greatest(coalesce(p_offset, 0), 0);
+$$;
+
+-- ---- 7.9 get_community_summary --------------------------------------------
+create or replace function public.get_community_summary()
+returns table (
+  unread_messages       integer,
+  unread_notifications  integer,
+  total_unread          integer
+)
+language sql
+stable
+security definer
+set search_path = public, pg_temp
+as $$
+  with me as (
+    select public.current_profile_id() as profile_id, public.is_admin() as admin
+  ),
+  unread_messages as (
+    select count(*)::integer as n
+    from public.messages m
+    join public.conversations c on c.id = m.conversation_id
+    cross join me
+    where m.read_at is null
+      and m.status <> 'deleted'
+      and m.sender_profile_id <> me.profile_id
+      and (
+        me.admin
+        or c.helper_profile_id = me.profile_id
+        or c.organization_profile_id = me.profile_id
+      )
+  ),
+  unread_notifications as (
+    select count(*)::integer as n
+    from public.notifications n
+    cross join me
+    where n.recipient_profile_id = me.profile_id
+      and n.read_at is null
+  )
+  select
+    unread_messages.n,
+    unread_notifications.n,
+    unread_messages.n + unread_notifications.n
+  from unread_messages, unread_notifications;
+$$;
+
+-- ---- 7.10 mark_conversation_read ------------------------------------------
+create or replace function public.mark_conversation_read(p_conversation_id uuid)
+returns integer
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_me uuid := public.current_profile_id();
+  v_marked integer := 0;
+begin
+  if v_me is null then
+    raise exception 'authenticated profile not found' using errcode = '42501';
+  end if;
+
+  if not exists (
+    select 1
+    from public.conversations c
+    where c.id = p_conversation_id
+      and (
+        public.is_admin()
+        or c.helper_profile_id = v_me
+        or c.organization_profile_id = v_me
+      )
+  ) then
+    raise exception 'not authorized for this conversation' using errcode = '42501';
+  end if;
+
+  update public.messages
+    set status = 'read',
+        read_at = coalesce(read_at, now())
+    where conversation_id = p_conversation_id
+      and sender_profile_id <> v_me
+      and read_at is null
+      and status <> 'deleted';
+
+  get diagnostics v_marked = row_count;
+
+  update public.notifications
+    set read_at = coalesce(read_at, now())
+    where recipient_profile_id = v_me
+      and type = 'message'
+      and entity_type = 'conversation'
+      and entity_id = p_conversation_id
+      and read_at is null;
+
+  return v_marked;
+end;
+$$;
+
 -- Lock down RPC execution
 revoke execute on function public.search_offers(text, timestamptz, timestamptz, public.offer_type, text[], int, int) from public;
 revoke execute on function public.publish_offer(uuid)                          from public;
@@ -1251,6 +1563,9 @@ revoke execute on function public.reject_application(uuid, text)               f
 revoke execute on function public.withdraw_application(uuid)                   from public;
 revoke execute on function public.complete_application(uuid)                   from public;
 revoke execute on function public.create_conversation_for_application(uuid)    from public;
+revoke execute on function public.list_community_conversations(int, int)       from public;
+revoke execute on function public.get_community_summary()                      from public;
+revoke execute on function public.mark_conversation_read(uuid)                 from public;
 
 grant execute on function public.search_offers(text, timestamptz, timestamptz, public.offer_type, text[], int, int) to authenticated;
 grant execute on function public.publish_offer(uuid)                          to authenticated;
@@ -1259,6 +1574,9 @@ grant execute on function public.reject_application(uuid, text)               to
 grant execute on function public.withdraw_application(uuid)                   to authenticated;
 grant execute on function public.complete_application(uuid)                   to authenticated;
 grant execute on function public.create_conversation_for_application(uuid)    to authenticated;
+grant execute on function public.list_community_conversations(int, int)       to authenticated;
+grant execute on function public.get_community_summary()                      to authenticated;
+grant execute on function public.mark_conversation_read(uuid)                 to authenticated;
 
 -- =============================================================================
 -- 8. ROW LEVEL SECURITY
@@ -1539,18 +1857,10 @@ create policy conversations_insert_participants
     or organization_profile_id = public.current_profile_id()
   );
 
-create policy conversations_update_participants
+create policy conversations_update_admin
   on public.conversations for update
-  using (
-    public.is_admin()
-    or helper_profile_id       = public.current_profile_id()
-    or organization_profile_id = public.current_profile_id()
-  )
-  with check (
-    public.is_admin()
-    or helper_profile_id       = public.current_profile_id()
-    or organization_profile_id = public.current_profile_id()
-  );
+  using (public.is_admin())
+  with check (public.is_admin());
 
 -- ---- 8.10 messages ---------------------------------------------------------
 create policy messages_select_participants
@@ -1819,7 +2129,44 @@ create policy "helper_documents_delete_owner"
   );
 
 -- =============================================================================
--- 10. GRANTS (Supabase exposes `public` schema via PostgREST automatically)
+-- 10. REALTIME PUBLICATION
+-- =============================================================================
+
+do $$
+begin
+  if exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
+    if not exists (
+      select 1 from pg_publication_tables
+      where pubname = 'supabase_realtime'
+        and schemaname = 'public'
+        and tablename = 'messages'
+    ) then
+      alter publication supabase_realtime add table public.messages;
+    end if;
+
+    if not exists (
+      select 1 from pg_publication_tables
+      where pubname = 'supabase_realtime'
+        and schemaname = 'public'
+        and tablename = 'conversations'
+    ) then
+      alter publication supabase_realtime add table public.conversations;
+    end if;
+
+    if not exists (
+      select 1 from pg_publication_tables
+      where pubname = 'supabase_realtime'
+        and schemaname = 'public'
+        and tablename = 'notifications'
+    ) then
+      alter publication supabase_realtime add table public.notifications;
+    end if;
+  end if;
+end;
+$$;
+
+-- =============================================================================
+-- 11. GRANTS (Supabase exposes `public` schema via PostgREST automatically)
 -- =============================================================================
 
 grant usage on schema public to anon, authenticated, service_role;

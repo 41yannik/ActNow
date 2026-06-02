@@ -126,7 +126,7 @@
         canUndo={true}
         onundo={() => deck?.undoLast()}
         onreject={() => deck?.swipeLeft()}
-        onsave={() => log = ['Gemerkt → ' + (deck?.topOfferId() ?? '—'), ...log].slice(0, 6)}
+        onsave={() => log = ['Favorit → ' + (deck?.topOfferId() ?? '—'), ...log].slice(0, 6)}
         onaccept={() => deck?.swipeRight()}
       />
 
@@ -155,7 +155,7 @@
         <Button variant="danger">Danger</Button>
         <Button leadingIcon="add">Mit Icon</Button>
         <Button loading>Loading</Button>
-        <IconButton icon="favorite" label="Merken" />
+        <IconButton icon="favorite" label="Favoriten" />
         <IconButton icon="delete" label="Löschen" tone="danger" />
       </div>
 
