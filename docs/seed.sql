@@ -181,6 +181,12 @@ values
     'Bringe Transporter mit für Material.', null,
     now() - interval '2 days', now() - interval '12 hours', null),
 
+  -- helper1 -> offer2 (accepted, read community chat)
+  ('40000000-0000-0000-0000-000000000103', '20000000-0000-0000-0000-000000000002',
+    '10000000-0000-0000-0000-000000000010', 'accepted',
+    'Ich kann beim Kindertraining regelmäßig unterstützen.', 'Ich freue mich auf die erste Einheit.',
+    now() - interval '4 days', now() - interval '3 days', null),
+
   -- helper3 -> offer4 (completed, ready for ratings)
   ('40000000-0000-0000-0000-000000000204', '20000000-0000-0000-0000-000000000004',
     '10000000-0000-0000-0000-000000000012', 'completed',
@@ -209,6 +215,10 @@ values
     '20000000-0000-0000-0000-000000000001',
     '10000000-0000-0000-0000-000000000011', '10000000-0000-0000-0000-000000000020',
     now() - interval '6 hours'),
+  ('60000000-0000-0000-0000-000000000103', '40000000-0000-0000-0000-000000000103',
+    '20000000-0000-0000-0000-000000000002',
+    '10000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000020',
+    now() - interval '2 days'),
   ('60000000-0000-0000-0000-000000000204', '40000000-0000-0000-0000-000000000204',
     '20000000-0000-0000-0000-000000000004',
     '10000000-0000-0000-0000-000000000012', '10000000-0000-0000-0000-000000000021',
@@ -230,7 +240,15 @@ values
   ('70000000-0000-0000-0000-000000000003', '60000000-0000-0000-0000-000000000102',
     '10000000-0000-0000-0000-000000000020',
     'Hallo Bernd, der Transporter wäre super — bitte um 7 Uhr da sein.', 'sent', null,
-    now() - interval '6 hours')
+    now() - interval '6 hours'),
+  ('70000000-0000-0000-0000-000000000004', '60000000-0000-0000-0000-000000000103',
+    '10000000-0000-0000-0000-000000000010',
+    'Danke für die Zusage, ich bin nächste Woche dabei.', 'read', now() - interval '3 days',
+    now() - interval '3 days'),
+  ('70000000-0000-0000-0000-000000000005', '60000000-0000-0000-0000-000000000103',
+    '10000000-0000-0000-0000-000000000020',
+    'Super, wir haben dich eingeplant. Treffpunkt ist direkt am Vereinsheim.', 'read', now() - interval '1 day',
+    now() - interval '2 days')
 on conflict (id) do nothing;
 
 -- ---- ratings (only on completed application 204) --------------------------
@@ -252,18 +270,27 @@ on conflict (id) do nothing;
 -- ---- saved_offers ---------------------------------------------------------
 insert into public.saved_offers (id, helper_profile_id, offer_id)
 values
-  ('90000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000010', '20000000-0000-0000-0000-000000000002')
+  ('90000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000010', '20000000-0000-0000-0000-000000000002'),
+  ('90000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000010', '20000000-0000-0000-0000-000000000004')
 on conflict (id) do nothing;
 
 -- ---- notifications --------------------------------------------------------
-insert into public.notifications (id, recipient_profile_id, type, title, body, entity_type, entity_id)
+insert into public.notifications (id, recipient_profile_id, type, title, body, entity_type, entity_id, read_at)
 values
   ('a0000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000020',
     'application.submitted', 'Neue Bewerbung', 'Anna Helferin hat sich auf "Aufbau Sommerfest" beworben.',
-    'application', '40000000-0000-0000-0000-000000000101'),
+    'application', '40000000-0000-0000-0000-000000000101', null),
   ('a0000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000011',
     'application.accepted',  'Bewerbung angenommen', 'Deine Bewerbung für "Aufbau Sommerfest" wurde angenommen.',
-    'application', '40000000-0000-0000-0000-000000000102')
+    'application', '40000000-0000-0000-0000-000000000102', null),
+  ('a0000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000010',
+    'message', 'Neue Nachricht von SV Sonnenschein e.V.',
+    'Hi Anna, danke für die Bewerbung! Wir melden uns spätestens morgen.',
+    'conversation', '60000000-0000-0000-0000-000000000101', null),
+  ('a0000000-0000-0000-0000-000000000004', '10000000-0000-0000-0000-000000000010',
+    'message', 'Neue Nachricht von SV Sonnenschein e.V.',
+    'Super, wir haben dich eingeplant. Treffpunkt ist direkt am Vereinsheim.',
+    'conversation', '60000000-0000-0000-0000-000000000103', now() - interval '1 day')
 on conflict (id) do nothing;
 
 -- ---- System-managed aggregates (while triggers are still disabled) -------

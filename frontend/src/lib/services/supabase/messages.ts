@@ -1,6 +1,12 @@
 // Conversations + messages.
 import { supabase } from './client';
-import type { ConversationRow, MessageRow, UUID } from '$lib/types/database';
+import type {
+  CommunityConversationRow,
+  CommunitySummary,
+  ConversationRow,
+  MessageRow,
+  UUID
+} from '$lib/types/database';
 
 export async function listConversationsForProfile(profileId: UUID) {
   // Profile may be either helper or organization; the conversations table has both ids.
@@ -19,6 +25,37 @@ export async function listConversationsForProfile(profileId: UUID) {
     .order('last_message_at', { ascending: false, nullsFirst: false });
   if (error) throw error;
   return data ?? [];
+}
+
+export async function listCommunityConversations(
+  limit = 50,
+  offset = 0
+): Promise<CommunityConversationRow[]> {
+  const { data, error } = await supabase.rpc('list_community_conversations', {
+    p_limit: limit,
+    p_offset: offset
+  });
+  if (error) throw error;
+  return (data ?? []) as CommunityConversationRow[];
+}
+
+export async function getCommunitySummary(): Promise<CommunitySummary> {
+  const { data, error } = await supabase.rpc('get_community_summary');
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : data;
+  return {
+    unread_messages: row?.unread_messages ?? 0,
+    unread_notifications: row?.unread_notifications ?? 0,
+    total_unread: row?.total_unread ?? 0
+  };
+}
+
+export async function markConversationRead(conversationId: UUID): Promise<number> {
+  const { data, error } = await supabase.rpc('mark_conversation_read', {
+    p_conversation_id: conversationId
+  });
+  if (error) throw error;
+  return Number(data ?? 0);
 }
 
 export async function getConversation(id: UUID): Promise<ConversationRow | null> {

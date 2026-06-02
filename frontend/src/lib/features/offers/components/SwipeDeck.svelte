@@ -23,9 +23,9 @@
     bufferSize?: number;
     onswipe?: (e: SwipeEvent) => void;
     onempty?: () => void;
-    /** Saved offer ids — toggles the bookmark state on the top card. */
+    /** Saved offer ids — toggles the favorite state on the top card. */
     savedIds?: Set<string>;
-    /** Toggle save for an offer (bookmark button on the top card). */
+    /** Toggle save for an offer (favorite button on the top card). */
     ontogglesave?: (offerId: string) => void;
     /** Open the detail view for an offer (tap on the top card). */
     onopendetail?: (offerId: string) => void;

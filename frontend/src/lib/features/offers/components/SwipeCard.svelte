@@ -10,7 +10,7 @@
     dragX?: number;
     /** Distance threshold so overlay can fade in proportionally. */
     threshold?: number;
-    /** Whether the offer is bookmarked. */
+    /** Whether the offer is in favorites. */
     saved?: boolean;
     ontogglesave?: () => void;
     onopen?: () => void;
@@ -118,7 +118,7 @@
       </div>
     {/if}
 
-    <!-- Bookmark -->
+    <!-- Favorite -->
     <button
       type="button"
       onclick={toggleSave}
@@ -126,7 +126,7 @@
       class="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full
              border-none bg-white/95 text-secondary shadow-sm transition-transform active:scale-90"
     >
-      <Icon name="bookmark" filled={saved} size={18} />
+      <Icon name="favorite" filled={saved} size={20} />
     </button>
 
     <!-- Friends pill (mock) -->
