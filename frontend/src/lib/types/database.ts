@@ -148,6 +148,21 @@ export interface ApplicationRow {
   updated_at: ISODateTime;
 }
 
+export interface ApplicationOfferWithOrganization extends OfferRow {
+  organization: {
+    organization_type: OrganizationType;
+    is_verified: boolean;
+    profile: Pick<
+      ProfileRow,
+      'id' | 'display_name' | 'slug' | 'avatar_url' | 'average_rating' | 'rating_count'
+    >;
+  } | null;
+}
+
+export interface ApplicationWithOffer extends ApplicationRow {
+  offer: ApplicationOfferWithOrganization | null;
+}
+
 export interface ConversationRow {
   id: UUID;
   application_id: UUID;

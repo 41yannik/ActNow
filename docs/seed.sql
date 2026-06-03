@@ -138,6 +138,44 @@ values
     now() - interval '40 days')
 on conflict (id) do nothing;
 
+-- Additional Helper-MVP scenarios for the applications/assignments screen.
+insert into public.offers
+  (id, organization_profile_id, title, description, offer_type, status, category, skills_required,
+   max_helpers, city, postal_code, country_code, is_remote, starts_at, ends_at, application_deadline,
+   published_at, completed_at)
+values
+  ('20000000-0000-0000-0000-000000000005', '10000000-0000-0000-0000-000000000021',
+    'Tafel-Ausgabe am Freitag', 'Sortieren, Packen und Ausgeben von Lebensmittelkisten im Stadtteiltreff.',
+    'single_event', 'published', 'social', array['social','logistics'],
+    6, 'Hamburg', '20095', 'DE', false,
+    now() + interval '4 days', now() + interval '4 days 4 hours', now() + interval '2 days',
+    now() - interval '7 days', null),
+  ('20000000-0000-0000-0000-000000000006', '10000000-0000-0000-0000-000000000020',
+    'Park-Cleanup Kiezrunde', 'Gemeinsame Müllsammelaktion mit anschließender Materialrückgabe.',
+    'single_event', 'published', 'environment', array['outdoor','teamwork'],
+    12, 'Berlin', '10115', 'DE', false,
+    now() + interval '21 days', now() + interval '21 days 3 hours', now() + interval '18 days',
+    now() - interval '8 days', null),
+  ('20000000-0000-0000-0000-000000000007', '10000000-0000-0000-0000-000000000021',
+    'Lesepaten-Nachmittag', 'Vorlesen und kleine Sprachspiele für Grundschulkinder im offenen Treff.',
+    'recurring_event', 'published', 'education', array['teaching','children'],
+    4, 'Hamburg', '20095', 'DE', false,
+    now() + interval '10 days', now() + interval '10 days 2 hours', now() + interval '6 days',
+    now() - interval '9 days', null),
+  ('20000000-0000-0000-0000-000000000008', '10000000-0000-0000-0000-000000000020',
+    'Seniorencafé Begleitung', 'Gäste begrüßen, Kaffee ausgeben und beim Abbau unterstützen.',
+    'single_event', 'completed', 'social', array['social','hospitality'],
+    5, 'Berlin', '10115', 'DE', false,
+    now() - interval '18 days', now() - interval '17 days 22 hours', now() - interval '25 days',
+    now() - interval '32 days', now() - interval '18 days'),
+  ('20000000-0000-0000-0000-000000000009', '10000000-0000-0000-0000-000000000021',
+    'Morgen: Küchenteam im Stadtteiltreff', 'Essensausgabe vorbereiten, Gäste begrüßen und beim Aufräumen helfen.',
+    'single_event', 'published', 'social', array['kitchen','social'],
+    3, 'Hamburg', '20095', 'DE', false,
+    now() + interval '20 hours', now() + interval '24 hours', now() + interval '8 hours',
+    now() - interval '3 days', null)
+on conflict (id) do nothing;
+
 -- ---- offer_recurrences -----------------------------------------------------
 insert into public.offer_recurrences (id, offer_id, frequency, "interval", by_weekday, repeat_until)
 values
@@ -194,6 +232,41 @@ values
     now() - interval '35 days', now() - interval '34 days', now() - interval '20 days')
 on conflict (id) do nothing;
 
+insert into public.applications
+  (id, offer_id, helper_profile_id, status, motivation_text, helper_message,
+   submitted_at, accepted_at, rejected_at, withdrawn_at, completed_at)
+values
+  -- helper1 -> offer5 (shortlisted)
+  ('40000000-0000-0000-0000-000000000105', '20000000-0000-0000-0000-000000000005',
+    '10000000-0000-0000-0000-000000000010', 'shortlisted',
+    'Ich habe freitags frei und kenne die Abläufe bei Ausgaben.', 'Ich kann auch beim Packen helfen.',
+    now() - interval '3 days', null, null, null, null),
+
+  -- helper1 -> offer6 (rejected)
+  ('40000000-0000-0000-0000-000000000106', '20000000-0000-0000-0000-000000000006',
+    '10000000-0000-0000-0000-000000000010', 'rejected',
+    'Ich wäre gerne beim Cleanup dabei.', null,
+    now() - interval '9 days', null, now() - interval '7 days', null, null),
+
+  -- helper1 -> offer7 (withdrawn)
+  ('40000000-0000-0000-0000-000000000107', '20000000-0000-0000-0000-000000000007',
+    '10000000-0000-0000-0000-000000000010', 'withdrawn',
+    'Ich lese Kindern sehr gerne vor.', 'Leider kollidiert der Termin inzwischen.',
+    now() - interval '11 days', null, null, now() - interval '8 days', null),
+
+  -- helper1 -> offer8 (completed)
+  ('40000000-0000-0000-0000-000000000108', '20000000-0000-0000-0000-000000000008',
+    '10000000-0000-0000-0000-000000000010', 'completed',
+    'Ich habe Erfahrung in der Betreuung älterer Gäste.', 'Der Einsatz lief gut.',
+    now() - interval '35 days', now() - interval '30 days', null, null, now() - interval '18 days'),
+
+  -- helper1 -> offer9 (accepted, near-term reminder scenario)
+  ('40000000-0000-0000-0000-000000000109', '20000000-0000-0000-0000-000000000009',
+    '10000000-0000-0000-0000-000000000010', 'accepted',
+    'Ich kann morgen in der Küche unterstützen.', 'Ich bin pünktlich vor Ort.',
+    now() - interval '2 days', now() - interval '1 day', null, null, null)
+on conflict (id) do nothing;
+
 -- ---- application_document_shares ------------------------------------------
 insert into public.application_document_shares (id, application_id, document_id)
 values
@@ -225,6 +298,31 @@ values
     now() - interval '20 days')
 on conflict (id) do nothing;
 
+insert into public.conversations
+  (id, application_id, offer_id, helper_profile_id, organization_profile_id, last_message_at)
+values
+  ('60000000-0000-0000-0000-000000000105', '40000000-0000-0000-0000-000000000105',
+    '20000000-0000-0000-0000-000000000005',
+    '10000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000021',
+    now() - interval '1 day'),
+  ('60000000-0000-0000-0000-000000000106', '40000000-0000-0000-0000-000000000106',
+    '20000000-0000-0000-0000-000000000006',
+    '10000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000020',
+    now() - interval '7 days'),
+  ('60000000-0000-0000-0000-000000000107', '40000000-0000-0000-0000-000000000107',
+    '20000000-0000-0000-0000-000000000007',
+    '10000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000021',
+    now() - interval '8 days'),
+  ('60000000-0000-0000-0000-000000000108', '40000000-0000-0000-0000-000000000108',
+    '20000000-0000-0000-0000-000000000008',
+    '10000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000020',
+    now() - interval '18 days'),
+  ('60000000-0000-0000-0000-000000000109', '40000000-0000-0000-0000-000000000109',
+    '20000000-0000-0000-0000-000000000009',
+    '10000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000021',
+    now() - interval '1 hour')
+on conflict (id) do nothing;
+
 -- ---- messages --------------------------------------------------------------
 insert into public.messages
   (id, conversation_id, sender_profile_id, body, status, read_at, created_at)
@@ -249,6 +347,31 @@ values
     '10000000-0000-0000-0000-000000000020',
     'Super, wir haben dich eingeplant. Treffpunkt ist direkt am Vereinsheim.', 'read', now() - interval '1 day',
     now() - interval '2 days')
+on conflict (id) do nothing;
+
+insert into public.messages
+  (id, conversation_id, sender_profile_id, body, status, read_at, created_at)
+values
+  ('70000000-0000-0000-0000-000000000006', '60000000-0000-0000-0000-000000000105',
+    '10000000-0000-0000-0000-000000000021',
+    'Hallo Anna, wir haben dich in die Vorauswahl genommen und melden uns mit Details.', 'sent', null,
+    now() - interval '1 day'),
+  ('70000000-0000-0000-0000-000000000007', '60000000-0000-0000-0000-000000000106',
+    '10000000-0000-0000-0000-000000000020',
+    'Danke für deine Bewerbung. Dieses Mal ist das Team bereits voll.', 'read', now() - interval '6 days',
+    now() - interval '7 days'),
+  ('70000000-0000-0000-0000-000000000008', '60000000-0000-0000-0000-000000000107',
+    '10000000-0000-0000-0000-000000000010',
+    'Ich muss meine Bewerbung wegen einer Terminkollision zurückziehen.', 'read', now() - interval '8 days',
+    now() - interval '8 days'),
+  ('70000000-0000-0000-0000-000000000009', '60000000-0000-0000-0000-000000000108',
+    '10000000-0000-0000-0000-000000000020',
+    'Danke für deinen Einsatz im Seniorencafé, das war eine große Hilfe.', 'read', now() - interval '17 days',
+    now() - interval '18 days'),
+  ('70000000-0000-0000-0000-000000000010', '60000000-0000-0000-0000-000000000109',
+    '10000000-0000-0000-0000-000000000021',
+    'Danke für deine Zusage. Treffpunkt ist morgen am Seiteneingang des Stadtteiltreffs.', 'sent', null,
+    now() - interval '1 hour')
 on conflict (id) do nothing;
 
 -- ---- ratings (only on completed application 204) --------------------------
@@ -291,6 +414,30 @@ values
     'message', 'Neue Nachricht von SV Sonnenschein e.V.',
     'Super, wir haben dich eingeplant. Treffpunkt ist direkt am Vereinsheim.',
     'conversation', '60000000-0000-0000-0000-000000000103', now() - interval '1 day')
+on conflict (id) do nothing;
+
+insert into public.notifications (id, recipient_profile_id, type, title, body, entity_type, entity_id, read_at)
+values
+  ('a0000000-0000-0000-0000-000000000005', '10000000-0000-0000-0000-000000000010',
+    'application.shortlisted', 'In der Vorauswahl',
+    'Deine Bewerbung für "Tafel-Ausgabe am Freitag" ist in der engeren Auswahl.',
+    'application', '40000000-0000-0000-0000-000000000105', null),
+  ('a0000000-0000-0000-0000-000000000006', '10000000-0000-0000-0000-000000000010',
+    'application.rejected', 'Bewerbung abgesagt',
+    'Für "Park-Cleanup Kiezrunde" wurde das Team bereits besetzt.',
+    'application', '40000000-0000-0000-0000-000000000106', now() - interval '6 days'),
+  ('a0000000-0000-0000-0000-000000000007', '10000000-0000-0000-0000-000000000010',
+    'application.completed', 'Einsatz abgeschlossen',
+    'Dein Einsatz im Seniorencafé wurde abgeschlossen.',
+    'application', '40000000-0000-0000-0000-000000000108', now() - interval '17 days'),
+  ('a0000000-0000-0000-0000-000000000008', '10000000-0000-0000-0000-000000000010',
+    'application.accepted', 'Einsatz zugesagt',
+    'Deine Bewerbung für "Morgen: Küchenteam im Stadtteiltreff" wurde angenommen.',
+    'application', '40000000-0000-0000-0000-000000000109', now() - interval '23 hours'),
+  ('a0000000-0000-0000-0000-000000000009', '10000000-0000-0000-0000-000000000010',
+    'assignment.reminder.24h', 'Morgen ist dein Einsatz',
+    'Dein Einsatz im Küchenteam beginnt morgen. Bitte prüfe Treffpunkt und Uhrzeit.',
+    'application', '40000000-0000-0000-0000-000000000109', null)
 on conflict (id) do nothing;
 
 -- ---- System-managed aggregates (while triggers are still disabled) -------

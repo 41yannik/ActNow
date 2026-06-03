@@ -10,7 +10,7 @@
   }
   const { value, onchange, class: klass = '' }: Props = $props();
 
-  let group = $state<string>(value);
+  let group = $state<string>('');
   $effect(() => {
     group = value;
   });

@@ -12,6 +12,22 @@ export async function listNotifications(limit = 30): Promise<NotificationRow[]> 
   return data ?? [];
 }
 
+export async function listApplicationNotifications(
+  applicationIds: UUID[],
+  limit = 100
+): Promise<NotificationRow[]> {
+  if (applicationIds.length === 0) return [];
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('*')
+    .eq('entity_type', 'application')
+    .in('entity_id', applicationIds)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return data ?? [];
+}
+
 export async function markNotificationRead(id: UUID): Promise<void> {
   const { error } = await supabase
     .from('notifications')

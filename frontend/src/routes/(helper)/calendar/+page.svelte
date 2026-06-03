@@ -9,7 +9,7 @@
   import { auth } from '$lib/stores/auth.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import { APPLICATION_STATUS_LABEL } from '$lib/utils/labels';
-  import type { ApplicationRow, OfferRow, ProfileRow } from '$lib/types/database';
+  import type { ApplicationRow, ApplicationWithOffer, OfferRow, ProfileRow } from '$lib/types/database';
 
   interface Event {
     application: ApplicationRow;
@@ -35,12 +35,12 @@
     loading = true;
     try {
       const rows = await listApplicationsForHelper(auth.profile.id, ['accepted', 'completed']);
-      events = (rows as any[])
+      events = rows
         .filter((r) => r.offer?.starts_at)
-        .map((r) => ({
+        .map((r: ApplicationWithOffer) => ({
           application: r as ApplicationRow,
-          offer: r.offer,
-          org: null
+          offer: r.offer!,
+          org: r.offer?.organization?.profile ?? null
         }));
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Konnte Termine nicht laden');

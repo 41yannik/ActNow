@@ -1,6 +1,11 @@
 // Application queries + RPC wrappers.
 import { supabase } from './client';
-import type { ApplicationRow, ApplicationStatus, UUID } from '$lib/types/database';
+import type {
+  ApplicationRow,
+  ApplicationStatus,
+  ApplicationWithOffer,
+  UUID
+} from '$lib/types/database';
 
 export async function listApplicationsForOffer(
   offerId: UUID,
@@ -20,17 +25,29 @@ export async function listApplicationsForOffer(
 export async function listApplicationsForHelper(
   helperProfileId: UUID,
   status?: ApplicationStatus | ApplicationStatus[]
-) {
+): Promise<ApplicationWithOffer[]> {
   let q = supabase
     .from('applications')
-    .select('*, offer:offers!inner(*)')
+    .select(
+      `
+      *,
+      offer:offers!inner(
+        *,
+        organization:organization_profiles!inner(
+          organization_type,
+          is_verified,
+          profile:profiles!inner(id, display_name, slug, avatar_url, average_rating, rating_count)
+        )
+      )
+    `
+    )
     .eq('helper_profile_id', helperProfileId)
     .order('submitted_at', { ascending: false });
   if (Array.isArray(status)) q = q.in('status', status);
   else if (status) q = q.eq('status', status);
   const { data, error } = await q;
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []) as ApplicationWithOffer[];
 }
 
 export interface CreateApplicationInput {

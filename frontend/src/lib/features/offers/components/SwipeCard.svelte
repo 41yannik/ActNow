@@ -72,7 +72,7 @@
   }
 </script>
 
-<article
+<div
   class="relative flex h-full w-full flex-col overflow-hidden rounded-card border border-outline-variant/30 bg-surface
          shadow-[0_12px_36px_rgba(40,50,30,0.16),_0_2px_6px_rgba(40,50,30,0.06)] {klass}"
   role="button"
@@ -210,4 +210,4 @@
       </span>
     </div>
   </div>
-</article>
+</div>
