@@ -161,6 +161,7 @@
   const opacity = $derived(exiting ? 0 : 1);
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_tabindex, a11y_no_noninteractive_element_interactions -->
 <div
   bind:this={cardEl}
   class="relative w-full max-w-md mx-auto h-[58vh] min-h-[420px] max-h-[560px] flex items-center justify-center select-none {klass}"

@@ -18,9 +18,9 @@ Umsetzungsplanung der ActNow Web App.
 - [Seed SQL](./seed.sql) - lokale Entwicklungsdaten.
 - [Design Port Phase 1 Report](./design-port-phase1-report.md) - aktueller Design-Port-Stand und
   Backend-Flags.
-- [UI Screens](./ui-screens.md) - Platz fuer Screen-Spezifikation und UI-Akzeptanz.
-- [Acceptance Criteria](./acceptance-criteria.md) - Platz fuer Feature-Akzeptanzkriterien.
-- [Deployment](./deployment.md) - Platz fuer Deployment-Annahmen und Release-Prozess.
+- [UI Screens](./ui-screens.md) - Screen-Inventar, UI-Regeln und offene produktive Screens.
+- [Acceptance Criteria](./acceptance-criteria.md) - Feature-Gates und pruefbare Kriterien.
+- [Deployment](./deployment.md) - lokales Setup, Build-Gates und Deployment-Annahmen.
 
 ## Nutzung
 

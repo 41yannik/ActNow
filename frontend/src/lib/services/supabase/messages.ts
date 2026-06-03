@@ -68,6 +68,16 @@ export async function getConversation(id: UUID): Promise<ConversationRow | null>
   return data;
 }
 
+export async function getOrCreateConversationForApplication(
+  applicationId: UUID
+): Promise<ConversationRow> {
+  const { data, error } = await supabase.rpc('create_conversation_for_application', {
+    p_application_id: applicationId
+  });
+  if (error) throw error;
+  return data as ConversationRow;
+}
+
 export async function listMessages(conversationId: UUID, limit = 100): Promise<MessageRow[]> {
   const { data, error } = await supabase
     .from('messages')

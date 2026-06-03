@@ -15,8 +15,12 @@
   const { label, value, multiline = false, placeholder = '', onsave, class: klass = '' }: Props = $props();
 
   let editing = $state(false);
-  let draft = $state(value);
+  let draft = $state('');
   let saving = $state(false);
+
+  $effect(() => {
+    if (!editing) draft = value;
+  });
 
   function startEdit() {
     draft = value;

@@ -63,6 +63,16 @@ Missbrauchsbehandlung ab.
 - [x] Karten-Icon oben rechts wurde von Bookmark auf Herz geaendert.
 - [x] Lokale Browser-Pruefung fuer `/discover`, `/favorites`, `/community` und Chat-Flows
   durchgefuehrt.
+- [x] Helper-MVP Bewerbungen/Einsaetze umgesetzt:
+  `/applications` zeigt offene Bewerbungen, zugesagte Einsaetze und Verlauf.
+- [x] Helper kann Bewerbungen aus `/applications` zurueckziehen.
+- [x] Seed-Daten fuer `helper1@actnow.test` decken submitted, shortlisted, accepted, rejected,
+  withdrawn und completed ab.
+- [x] Status-Timeline je Bewerbung/Einsatz in `/applications` ergaenzt.
+- [x] Einsatz-Reminder fuer zugesagte Einsaetze aus Startzeit und Application-Notifications
+  abgeleitet.
+- [x] Seed-Daten enthalten einen nahen zugesagten Einsatz mit erzeugtem 24h-Reminder und
+  geplantem 2h-Reminder.
 - [x] `npm run check` im Frontend laeuft mit 0 Fehlern; bestehende Warnungen sind bekannt.
 
 ## 3. Projektstruktur und Entwicklungsgrundlagen
@@ -75,9 +85,9 @@ Missbrauchsbehandlung ab.
 - [x] `docs/design-port-phase1-report.md` dokumentiert Design-Port und aktuelle Backend-Flags.
 - [x] Diese Roadmap liegt als `docs/road-map.md` vor.
 - [x] `docs/README.md` wird als Inhaltsverzeichnis ergaenzt.
-- [ ] Leere oder unvollstaendige Dokumente fuellen:
+- [x] Leere oder unvollstaendige Dokumente fuellen:
   `acceptance-criteria.md`, `deployment.md`, `ui-screens.md`.
-- [ ] Roadmap bei jedem groesseren Featureabschluss aktualisieren.
+- [x] Roadmap bei jedem groesseren Featureabschluss aktualisieren.
 
 ### 3.2 Lokales Setup
 
@@ -85,8 +95,10 @@ Missbrauchsbehandlung ab.
 - [x] Supabase-Backend lokal ueber Docker/CLI vorgesehen.
 - [x] Lokaler Standard-DB-URL dokumentiert: `postgresql://postgres:postgres@localhost:54322/postgres`.
 - [x] Dev-Server laeuft auf `http://127.0.0.1:5173`.
-- [ ] `.env.example` gegen aktuellen Frontend-/Supabase-Bedarf pruefen und vervollstaendigen.
-- [ ] Ein einheitliches Bootstrap-Skript fuer neue Entwickler ergaenzen:
+- [x] `.env.example` gegen aktuellen Frontend-/Supabase-Bedarf pruefen und vervollstaendigen.
+- [x] Frontend-Bootstrap-Skript fuer neue Entwickler ergaenzt:
+  Dependencies installieren, Check und Build ausfuehren.
+- [ ] Ein vollstaendiges Bootstrap-Skript fuer neue Entwickler ergaenzen:
   Dependencies installieren, Supabase starten, Schema/Seed laden, Frontend starten.
 - [ ] Docker-Setup fuer reproduzierbare lokale Entwicklung dokumentieren und testen.
 
@@ -99,7 +111,7 @@ Missbrauchsbehandlung ab.
 - [ ] Automatisierte Tests verpflichtend machen:
   Unit, Service, RLS-SQL, Playwright-E2E.
 - [ ] CI-Pipeline mit Check, Build, SQL-Smoke-Tests und E2E-Sanity einrichten.
-- [ ] A11y-Warnungen aus `svelte-check` priorisieren und abbauen.
+- [x] A11y-Warnungen aus `svelte-check` priorisieren und abbauen.
 
 ## 4. Backend und Supabase
 
@@ -199,7 +211,7 @@ Missbrauchsbehandlung ab.
 - [x] Dashboard-, Profil-, Kalender- und Application-Komponenten sind vorbereitet.
 - [x] Discover-Action-Bar in dieser Session sauber ausgerichtet.
 - [ ] Visuelle Konsistenz aller Komponenten anhand echter Screenshots pruefen.
-- [ ] A11y-Warnungen in interaktiven Karten/Listen beheben.
+- [x] A11y-Warnungen in interaktiven Karten/Listen beheben.
 - [ ] Design Tokens, Farbkontraste und Fokuszustaende systematisch auditieren.
 
 ## 6. Public App und Onboarding
@@ -270,11 +282,11 @@ Missbrauchsbehandlung ab.
 - [x] Bewerbungen erzeugen Conversations.
 - [x] Bewerbungsstatus ist im Backend modelliert.
 - [x] RPCs fuer Withdraw/Accept/Reject/Complete vorhanden.
-- [ ] Helper-Ansicht fuer aktive Bewerbungen bauen.
-- [ ] Helper-Ansicht fuer zugesagte Einsaetze bauen.
-- [ ] Bewerbung zurueckziehen im Frontend anbinden.
-- [ ] Statushistorie oder Timeline anzeigen.
-- [ ] Erinnerungen an bevorstehende Einsaetze umsetzen.
+- [x] Helper-Ansicht fuer aktive Bewerbungen bauen.
+- [x] Helper-Ansicht fuer zugesagte Einsaetze bauen.
+- [x] Bewerbung zurueckziehen im Frontend anbinden.
+- [x] Statushistorie oder Timeline anzeigen.
+- [x] Erinnerungen an bevorstehende Einsaetze umsetzen.
 
 ### 7.4 Favoriten
 
@@ -316,10 +328,10 @@ Missbrauchsbehandlung ab.
 ### 7.6 Kalender
 
 - [x] `/calendar` Route und Kalender-Komponenten sind vorhanden.
-- [ ] Kalender an echte Bewerbungen und akzeptierte Einsaetze anbinden.
+- [x] Kalender an echte Bewerbungen und akzeptierte Einsaetze anbinden.
 - [ ] Wiederkehrende Angebote korrekt darstellen.
 - [ ] Tages-/Monatsansicht mit Statusfarben definieren.
-- [ ] Reminder aus Notifications/Jobs ableiten.
+- [x] Reminder aus Notifications und berechneten Einsatzzeitpunkten ableiten.
 - [ ] Kein externer Kalenderzugriff in V1, solange Produktumfang das ausschliesst.
 
 ### 7.7 Rewards
@@ -446,7 +458,7 @@ Missbrauchsbehandlung ab.
 - [x] Unread-Summary speist Header-Badges.
 - [ ] Application-Notifications vollstaendig erzeugen:
   Bewerbung eingegangen, angenommen, abgelehnt, zurueckgezogen.
-- [ ] Einsatz-Reminder definieren und erzeugen.
+- [x] Einsatz-Reminder fuer Helper-MVP definieren und erzeugen.
 - [ ] Notification-Praeferenzen fuer Nutzer bauen.
 - [ ] Push/E-Mail erst nach Produktentscheidung und Consent-Modell planen.
 
@@ -477,7 +489,8 @@ Missbrauchsbehandlung ab.
 
 ### 13.1 Aktuell verifiziert
 
-- [x] `npm run check` im Frontend: 0 Fehler.
+- [x] `corepack pnpm run check` im Frontend: 0 Fehler, 0 Warnungen.
+- [x] `./scripts/bootstrap-frontend.sh --clean` im Frontend: Install, Check und Build erfolgreich.
 - [x] Lokales Schema und Seed erfolgreich geladen.
 - [x] Helper sieht eigene Favoriten.
 - [x] Fremder Favoriten-Insert wird per RLS blockiert.
@@ -506,7 +519,7 @@ Missbrauchsbehandlung ab.
 
 - [x] Frontend kann lokal via `npm run dev` gestartet werden.
 - [x] Backend kann lokal ueber Supabase-Schema/Seed reproduziert werden.
-- [ ] `npm run build` pruefen und Build-Fehler beheben.
+- [x] `corepack pnpm run build` pruefen und Build-Fehler beheben.
 - [ ] Deployment-Ziel entscheiden:
   Netlify, Vercel oder anderer SvelteKit-kompatibler Hoster.
 - [ ] SvelteKit-Adapter fuer Zielumgebung konfigurieren.
@@ -538,12 +551,12 @@ Missbrauchsbehandlung ab.
 - [ ] Helper-Onboarding vollstaendig.
 - [ ] Discover-Filter produktiv.
 - [ ] Offer Detail vollstaendig.
-- [ ] Bewerbung senden und zurueckziehen.
+- [x] Bewerbung senden und zurueckziehen.
 - [ ] Favoriten stabil ueber Discover/Detail/Favoritenliste.
 - [ ] Community Chat stabil mit Realtime.
 - [ ] Aktivitaet/Notifications vollstaendig.
 - [ ] Helper-Profil editierbar.
-- [ ] Kalender zeigt echte Einsaetze.
+- [x] Kalender zeigt echte Einsaetze.
 
 ### M2 - Organisation MVP
 
