@@ -14,7 +14,6 @@
   import { getOffer } from '$lib/services/supabase/offers';
   import { supabase } from '$lib/services/supabase/client';
   import { toasts } from '$lib/stores/toasts.svelte';
-  import { goto } from '$app/navigation';
   import type { ApplicationStatus, ApplicationRow, OfferRow } from '$lib/types/database';
   import type { ApplicantView } from '$lib/features/applications/components/ApplicantCard.svelte';
 

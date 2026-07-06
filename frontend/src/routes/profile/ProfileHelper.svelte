@@ -11,7 +11,6 @@
   import {
     getHelperProfile,
     updateOwnProfile,
-    updateHelperProfile,
     listHelperDocuments,
     deleteHelperDocument
   } from '$lib/services/supabase/profiles';

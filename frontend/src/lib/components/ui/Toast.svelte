@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte';
   import Icon from './Icon.svelte';
   import IconButton from './IconButton.svelte';
   import { toasts, type Toast as ToastItem } from '$lib/stores/toasts.svelte';
