@@ -1,5 +1,6 @@
 // Offer queries + RPC wrappers.
 import { supabase } from './client';
+import { demoGuard } from '$lib/config/demo';
 import type {
   OfferRow,
   OfferStatus,
@@ -93,12 +94,14 @@ export interface CreateOfferInput {
 }
 
 export async function createOffer(input: CreateOfferInput): Promise<OfferRow> {
+  demoGuard();
   const { data, error } = await supabase.from('offers').insert(input).select().single();
   if (error) throw error;
   return data as OfferRow;
 }
 
 export async function updateOffer(id: UUID, patch: Partial<CreateOfferInput>): Promise<OfferRow> {
+  demoGuard();
   const { data, error } = await supabase
     .from('offers')
     .update(patch)
@@ -110,6 +113,7 @@ export async function updateOffer(id: UUID, patch: Partial<CreateOfferInput>): P
 }
 
 export async function publishOffer(id: UUID): Promise<OfferRow> {
+  demoGuard();
   const { data, error } = await supabase.rpc('publish_offer', { p_offer_id: id });
   if (error) throw error;
   return data as OfferRow;

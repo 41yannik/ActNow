@@ -1,5 +1,6 @@
 // Application queries + RPC wrappers.
 import { supabase } from './client';
+import { demoGuard } from '$lib/config/demo';
 import type {
   ApplicationRow,
   ApplicationStatus,
@@ -58,18 +59,21 @@ export interface CreateApplicationInput {
 }
 
 export async function createApplication(input: CreateApplicationInput): Promise<ApplicationRow> {
+  demoGuard();
   const { data, error } = await supabase.from('applications').insert(input).select().single();
   if (error) throw error;
   return data as ApplicationRow;
 }
 
 export async function acceptApplication(id: UUID): Promise<ApplicationRow> {
+  demoGuard();
   const { data, error } = await supabase.rpc('accept_application', { p_application_id: id });
   if (error) throw error;
   return data as ApplicationRow;
 }
 
 export async function rejectApplication(id: UUID, reason?: string): Promise<ApplicationRow> {
+  demoGuard();
   const { data, error } = await supabase.rpc('reject_application', {
     p_application_id: id,
     p_reason: reason ?? null,
@@ -79,12 +83,14 @@ export async function rejectApplication(id: UUID, reason?: string): Promise<Appl
 }
 
 export async function withdrawApplication(id: UUID): Promise<ApplicationRow> {
+  demoGuard();
   const { data, error } = await supabase.rpc('withdraw_application', { p_application_id: id });
   if (error) throw error;
   return data as ApplicationRow;
 }
 
 export async function completeApplication(id: UUID): Promise<ApplicationRow> {
+  demoGuard();
   const { data, error } = await supabase.rpc('complete_application', { p_application_id: id });
   if (error) throw error;
   return data as ApplicationRow;

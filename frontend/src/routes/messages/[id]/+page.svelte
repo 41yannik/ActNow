@@ -53,9 +53,13 @@
 
   async function onSend(text: string) {
     if (!auth.profile || !conversation) return;
-    const created = await sendMessage(conversation.id, auth.profile.id, text);
-    if (!messages.find((m) => m.id === created.id)) {
-      messages = [...messages, created];
+    try {
+      const created = await sendMessage(conversation.id, auth.profile.id, text);
+      if (!messages.find((m) => m.id === created.id)) {
+        messages = [...messages, created];
+      }
+    } catch (err) {
+      toasts.error(err instanceof Error ? err.message : 'Nachricht konnte nicht gesendet werden.');
     }
   }
 

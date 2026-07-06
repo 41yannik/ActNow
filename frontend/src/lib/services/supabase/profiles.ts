@@ -1,5 +1,6 @@
 // Profile-related queries (own profile, public profile, helper/org details, documents).
 import { supabase } from './client';
+import { demoGuard } from '$lib/config/demo';
 import type {
   HelperDocumentRow,
   HelperProfileRow,
@@ -29,6 +30,7 @@ export interface ProfileUpdateInput {
 }
 
 export async function updateOwnProfile(profileId: UUID, patch: ProfileUpdateInput) {
+  demoGuard();
   const { data, error } = await supabase
     .from('profiles')
     .update(patch)
@@ -53,6 +55,7 @@ export async function updateHelperProfile(
   profileId: UUID,
   patch: Partial<Omit<HelperProfileRow, 'profile_id' | 'created_at' | 'updated_at'>>,
 ) {
+  demoGuard();
   const { data, error } = await supabase
     .from('helper_profiles')
     .update(patch)
@@ -84,6 +87,7 @@ export async function updateOrganizationProfile(
     >
   >,
 ) {
+  demoGuard();
   const { data, error } = await supabase
     .from('organization_profiles')
     .update(patch)
@@ -118,6 +122,7 @@ export async function listHelperDocuments(helperProfileId: UUID): Promise<Helper
 }
 
 export async function deleteHelperDocument(documentId: UUID) {
+  demoGuard();
   const { error } = await supabase.from('helper_documents').delete().eq('id', documentId);
   if (error) throw error;
 }

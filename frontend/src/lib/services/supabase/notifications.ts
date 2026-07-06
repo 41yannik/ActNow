@@ -1,5 +1,6 @@
 // In-app notifications used by the Community activity feed.
 import { supabase } from './client';
+import { demoGuard, isDemoBlocked } from '$lib/config/demo';
 import type { NotificationRow, UUID } from '$lib/types/database';
 
 export async function listNotifications(limit = 30): Promise<NotificationRow[]> {
@@ -29,6 +30,7 @@ export async function listApplicationNotifications(
 }
 
 export async function markNotificationRead(id: UUID): Promise<void> {
+  if (isDemoBlocked()) return; // background read-tracking — silent no-op
   const { error } = await supabase
     .from('notifications')
     .update({ read_at: new Date().toISOString() })
@@ -38,6 +40,7 @@ export async function markNotificationRead(id: UUID): Promise<void> {
 }
 
 export async function markAllNotificationsRead(profileId: UUID): Promise<void> {
+  demoGuard();
   const { error } = await supabase
     .from('notifications')
     .update({ read_at: new Date().toISOString() })

@@ -1,6 +1,7 @@
 // Saved offers (Favoriten) queries against the existing `saved_offers` table.
 // Backend query layer only — no schema change.
 import { supabase } from './client';
+import { demoGuard } from '$lib/config/demo';
 import type { SavedOfferRow, SavedOfferWithOffer, UUID } from '$lib/types/database';
 
 /** List the offers a helper has saved (most recent first). */
@@ -26,6 +27,7 @@ export async function listSavedOfferIds(helperProfileId: UUID): Promise<Set<UUID
 
 /** Save an offer (idempotent thanks to the unique constraint). */
 export async function saveOffer(helperProfileId: UUID, offerId: UUID): Promise<SavedOfferRow> {
+  demoGuard();
   const { data, error } = await supabase
     .from('saved_offers')
     .upsert(
@@ -40,6 +42,7 @@ export async function saveOffer(helperProfileId: UUID, offerId: UUID): Promise<S
 
 /** Remove a saved offer. */
 export async function unsaveOffer(helperProfileId: UUID, offerId: UUID): Promise<void> {
+  demoGuard();
   const { error } = await supabase
     .from('saved_offers')
     .delete()

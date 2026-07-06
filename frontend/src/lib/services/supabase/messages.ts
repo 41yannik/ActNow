@@ -1,5 +1,6 @@
 // Conversations + messages.
 import { supabase } from './client';
+import { demoGuard, isDemoBlocked } from '$lib/config/demo';
 import type {
   CommunityConversationRow,
   CommunitySummary,
@@ -51,6 +52,7 @@ export async function getCommunitySummary(): Promise<CommunitySummary> {
 }
 
 export async function markConversationRead(conversationId: UUID): Promise<number> {
+  if (isDemoBlocked()) return 0; // called automatically on chat open — silent no-op
   const { data, error } = await supabase.rpc('mark_conversation_read', {
     p_conversation_id: conversationId,
   });
@@ -71,6 +73,18 @@ export async function getConversation(id: UUID): Promise<ConversationRow | null>
 export async function getOrCreateConversationForApplication(
   applicationId: UUID,
 ): Promise<ConversationRow> {
+  if (isDemoBlocked()) {
+    // The RPC upserts (mutating). In demo mode resolve the existing
+    // conversation read-only; only block if none exists yet.
+    const { data, error } = await supabase
+      .from('conversations')
+      .select('*')
+      .eq('application_id', applicationId)
+      .maybeSingle();
+    if (error) throw error;
+    if (data) return data as ConversationRow;
+    demoGuard();
+  }
   const { data, error } = await supabase.rpc('create_conversation_for_application', {
     p_application_id: applicationId,
   });
@@ -94,6 +108,7 @@ export async function sendMessage(
   senderProfileId: UUID,
   body: string,
 ): Promise<MessageRow> {
+  demoGuard();
   const { data, error } = await supabase
     .from('messages')
     .insert({ conversation_id: conversationId, sender_profile_id: senderProfileId, body })
@@ -104,6 +119,7 @@ export async function sendMessage(
 }
 
 export async function markMessageRead(messageId: UUID) {
+  if (isDemoBlocked()) return; // background read-tracking — silent no-op
   const { error } = await supabase
     .from('messages')
     .update({ status: 'read', read_at: new Date().toISOString() })
