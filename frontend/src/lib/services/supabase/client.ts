@@ -6,17 +6,12 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL ?? '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY ?? '';
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  // Non-fatal in dev so the showcase still renders. Real pages must check.
-  console.warn(
+  throw new Error(
     '[supabase] VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY missing. ' +
-      'Copy ../.env.example to frontend/.env to enable backend calls.',
+      'Copy frontend/.env.example to frontend/.env and fill in the values.',
   );
 }
 
-export const supabase: SupabaseClient = createClient(
-  SUPABASE_URL || 'http://localhost:8000',
-  SUPABASE_ANON_KEY || 'anon-key-missing',
-  {
-    auth: { persistSession: true, autoRefreshToken: true },
-  },
-);
+export const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true },
+});
