@@ -2,6 +2,7 @@
   import '../app.css';
   import favicon from '$lib/assets/favicon.svg';
   import ToastHost from '$lib/components/ui/ToastHost.svelte';
+  import DemoBar from '$lib/components/demo/DemoBar.svelte';
   import { initAuth } from '$lib/stores/auth.svelte';
   import { onMount } from 'svelte';
 
@@ -15,6 +16,8 @@
 <svelte:head>
   <link rel="icon" href={favicon} />
 </svelte:head>
+
+<DemoBar />
 
 {@render children()}
 

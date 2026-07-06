@@ -10,6 +10,12 @@
   import { auth } from '$lib/stores/auth.svelte';
   import { loginSchema } from '$lib/validation/auth';
   import { toasts } from '$lib/stores/toasts.svelte';
+  import { DEMO_MODE } from '$lib/config/demo';
+  import { onMount } from 'svelte';
+
+  onMount(() => {
+    if (DEMO_MODE) void goto('/discover');
+  });
 
   let email = $state('');
   let password = $state('');
