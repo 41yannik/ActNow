@@ -73,6 +73,52 @@ Authentication in the dashboard of project `fhqgbenlufdqbihmmdrq`:
 
 The local `config.toml` mirrors these values for `supabase start`.
 
+## Demo-Modus (read-only)
+
+The staging project doubles as the backend for the public portfolio demo
+(see [docs/demo-deployment.md](../docs/demo-deployment.md)). While the demo is
+live, the API roles have **no write privileges** — enforced on the database
+level, independent of the frontend guards. Note: role-level
+`default_transaction_read_only` is NOT applied by PostgREST impersonation
+(verified), which is why privileges are revoked instead.
+
+**ON** (demo live — writes blocked):
+
+```sql
+revoke insert, update, delete on all tables in schema public from authenticated, anon;
+revoke execute on function public.publish_offer(uuid)                       from authenticated;
+revoke execute on function public.accept_application(uuid)                  from authenticated;
+revoke execute on function public.reject_application(uuid, text)            from authenticated;
+revoke execute on function public.withdraw_application(uuid)                from authenticated;
+revoke execute on function public.complete_application(uuid)                from authenticated;
+revoke execute on function public.create_conversation_for_application(uuid) from authenticated;
+revoke execute on function public.mark_conversation_read(uuid)              from authenticated;
+notify pgrst, 'reload schema';
+```
+
+Additionally disable sign-ups in the dashboard (Auth → „Allow new users to
+sign up" off) — GoTrue writes with its own role and would otherwise still
+create accounts.
+
+**OFF** (development on staging — restore writes):
+
+```sql
+grant insert, update, delete on all tables in schema public to authenticated;
+revoke insert, update, delete on all tables in schema public from anon;
+grant execute on function public.publish_offer(uuid)                       to authenticated;
+grant execute on function public.accept_application(uuid)                  to authenticated;
+grant execute on function public.reject_application(uuid, text)            to authenticated;
+grant execute on function public.withdraw_application(uuid)                to authenticated;
+grant execute on function public.complete_application(uuid)                to authenticated;
+grant execute on function public.create_conversation_for_application(uuid) to authenticated;
+grant execute on function public.mark_conversation_read(uuid)              to authenticated;
+notify pgrst, 'reload schema';
+```
+
+Re-enable sign-ups in the dashboard afterwards. The seed credentials
+(`actnow-dev`) are public in this repo — accepted while the demo is read-only
+and sign-ups are off.
+
 ## Smoke-testing RLS
 
 ```bash
