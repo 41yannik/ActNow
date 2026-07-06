@@ -13,7 +13,7 @@
     value,
     group = $bindable<string>(''),
     disabled = false,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 </script>
 

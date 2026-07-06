@@ -9,10 +9,7 @@
 <div class="min-h-screen bg-surface flex flex-col">
   <!-- Navigation -->
   <div class="p-lg border-b border-outline">
-    <button
-      onclick={() => goto('/')}
-      class="text-primary hover:underline font-body-md"
-    >
+    <button onclick={() => goto('/')} class="text-primary hover:underline font-body-md">
       ← Zurück zur Startseite
     </button>
   </div>
@@ -56,7 +53,8 @@
         <h2 class="text-title-lg font-title-lg">Registereintrag und Umsatzsteuer</h2>
         <p>
           [Sofern zutreffend: Registergericht, Registernummer (z. B. Vereinsregister) sowie
-          Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG. Andernfalls diesen Abschnitt entfernen.]
+          Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG. Andernfalls diesen Abschnitt
+          entfernen.]
         </p>
       </section>
 
@@ -70,7 +68,9 @@
       </section>
 
       <section class="space-y-md">
-        <h2 class="text-title-lg font-title-lg">EU-Streitschlichtung und Verbraucherstreitbeilegung</h2>
+        <h2 class="text-title-lg font-title-lg">
+          EU-Streitschlichtung und Verbraucherstreitbeilegung
+        </h2>
         <p>
           Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
           Verbraucherschlichtungsstelle teilzunehmen.

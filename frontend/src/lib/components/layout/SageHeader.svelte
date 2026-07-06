@@ -30,7 +30,7 @@
     onbell,
     titleTrailing,
     topRight,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 
   const hasTopRow = $derived(showLogo || showBell || !!topRight);

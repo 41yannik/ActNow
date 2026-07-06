@@ -10,7 +10,7 @@
     getConversation,
     listMessages,
     markConversationRead,
-    sendMessage
+    sendMessage,
   } from '$lib/services/supabase/messages';
   import { supabase } from '$lib/services/supabase/client';
   import { subscribeChanges, unsubscribe } from '$lib/utils/realtime';
@@ -95,7 +95,7 @@
             messages = messages.map((x) => (x.id === m.id ? m : x));
           }
         },
-        '*'
+        '*',
       );
     }
   });

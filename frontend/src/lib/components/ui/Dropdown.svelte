@@ -20,7 +20,7 @@
     label = 'Menü',
     align = 'right',
     children,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 
   let open = $state(false);
@@ -63,7 +63,10 @@
 
   {#if open}
     <div
-      class="absolute z-50 mt-1 min-w-[180px] overflow-hidden rounded-lg border border-outline-variant bg-surface py-1 shadow-lg {align === 'right' ? 'right-0' : 'left-0'}"
+      class="absolute z-50 mt-1 min-w-[180px] overflow-hidden rounded-lg border border-outline-variant bg-surface py-1 shadow-lg {align ===
+      'right'
+        ? 'right-0'
+        : 'left-0'}"
       role="menu"
     >
       {#if children}{@render children(close)}{/if}

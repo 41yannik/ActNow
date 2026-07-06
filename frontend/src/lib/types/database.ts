@@ -16,20 +16,10 @@ export type OrganizationType =
   | 'private_person'
   | 'other';
 
-export type OfferType =
-  | 'single_event'
-  | 'recurring_event'
-  | 'flexible_task'
-  | 'digital_task';
+export type OfferType = 'single_event' | 'recurring_event' | 'flexible_task' | 'digital_task';
 
 export type OfferStatus =
-  | 'draft'
-  | 'published'
-  | 'paused'
-  | 'filled'
-  | 'completed'
-  | 'cancelled'
-  | 'archived';
+  'draft' | 'published' | 'paused' | 'filled' | 'completed' | 'cancelled' | 'archived';
 
 export type ApplicationStatus =
   | 'submitted'
@@ -42,11 +32,7 @@ export type ApplicationStatus =
   | 'no_show';
 
 export type DocumentType =
-  | 'criminal_record_certificate'
-  | 'identity_document'
-  | 'qualification'
-  | 'certificate'
-  | 'other';
+  'criminal_record_certificate' | 'identity_document' | 'qualification' | 'certificate' | 'other';
 
 export type DocumentStatus = 'active' | 'expired' | 'revoked' | 'deleted';
 export type MessageStatus = 'sent' | 'read' | 'deleted';

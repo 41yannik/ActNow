@@ -21,14 +21,14 @@
     persistent = false,
     onclose,
     children,
-    footer
+    footer,
   }: Props = $props();
 
   const sizes: Record<NonNullable<Props['size']>, string> = {
     sm: 'max-w-sm',
     md: 'max-w-lg',
     lg: 'max-w-2xl',
-    xl: 'max-w-4xl'
+    xl: 'max-w-4xl',
   };
 
   function close() {
@@ -57,11 +57,15 @@
     onkeydown={onKey}
   >
     <div
-      class="w-full {sizes[size]} max-h-[90vh] overflow-hidden rounded-2xl bg-surface text-on-surface shadow-2xl"
+      class="w-full {sizes[
+        size
+      ]} max-h-[90vh] overflow-hidden rounded-2xl bg-surface text-on-surface shadow-2xl"
       role="document"
     >
       {#if title}
-        <header class="flex items-center justify-between border-b border-outline-variant px-md py-sm">
+        <header
+          class="flex items-center justify-between border-b border-outline-variant px-md py-sm"
+        >
           <h2 class="font-h3 text-h3 text-on-surface">{title}</h2>
           <IconButton icon="close" label="Schließen" onclick={close} />
         </header>
@@ -70,7 +74,9 @@
         {#if children}{@render children()}{/if}
       </div>
       {#if footer}
-        <footer class="flex items-center justify-end gap-sm border-t border-outline-variant px-md py-sm">
+        <footer
+          class="flex items-center justify-end gap-sm border-t border-outline-variant px-md py-sm"
+        >
           {@render footer()}
         </footer>
       {/if}

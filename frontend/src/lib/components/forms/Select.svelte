@@ -26,7 +26,7 @@
     placeholder,
     id,
     class: klass = '',
-    children
+    children,
   }: Props = $props();
 
   const sel = $derived(id ?? `sel-${Math.random().toString(36).slice(2, 9)}`);
@@ -34,7 +34,9 @@
 
 <div class="w-full {klass}">
   {#if label}
-    <label for={sel} class="block font-label-md text-label-md text-on-surface-variant mb-1">{label}</label>
+    <label for={sel} class="block font-label-md text-label-md text-on-surface-variant mb-1"
+      >{label}</label
+    >
   {/if}
   <div class="relative">
     <select
@@ -54,7 +56,9 @@
         {@render children()}
       {/if}
     </select>
-    <span class="absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+    <span
+      class="absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+    >
       <Icon name="expand_more" />
     </span>
   </div>

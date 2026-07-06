@@ -24,7 +24,9 @@
 
 <div class="w-full {klass}">
   {#if label}
-    <label for={ta} class="block font-label-md text-label-md text-on-surface-variant mb-1">{label}</label>
+    <label for={ta} class="block font-label-md text-label-md text-on-surface-variant mb-1"
+      >{label}</label
+    >
   {/if}
   <textarea
     id={ta}

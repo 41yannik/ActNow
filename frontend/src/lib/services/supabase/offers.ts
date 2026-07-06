@@ -5,7 +5,7 @@ import type {
   OfferStatus,
   OfferType,
   SearchOfferResult,
-  UUID
+  UUID,
 } from '$lib/types/database';
 
 export interface SearchOffersInput {
@@ -26,18 +26,14 @@ export async function searchOffers(input: SearchOffersInput = {}): Promise<Searc
     p_offer_type: input.offer_type ?? null,
     p_tags: input.tags ?? null,
     p_limit: input.limit ?? 20,
-    p_offset: input.offset ?? 0
+    p_offset: input.offset ?? 0,
   });
   if (error) throw error;
   return (data ?? []) as SearchOfferResult[];
 }
 
 export async function getOffer(id: UUID): Promise<OfferRow | null> {
-  const { data, error } = await supabase
-    .from('offers')
-    .select('*')
-    .eq('id', id)
-    .maybeSingle();
+  const { data, error } = await supabase.from('offers').select('*').eq('id', id).maybeSingle();
   if (error) throw error;
   return data;
 }
@@ -53,7 +49,7 @@ export async function getOfferWithOrg(id: UUID) {
         is_verified,
         profile:profiles!inner(id, display_name, slug, avatar_url, average_rating, rating_count)
       )
-    `
+    `,
     )
     .eq('id', id)
     .maybeSingle();
@@ -63,7 +59,7 @@ export async function getOfferWithOrg(id: UUID) {
 
 export async function listOrgOffers(
   organizationProfileId: UUID,
-  status?: OfferStatus
+  status?: OfferStatus,
 ): Promise<OfferRow[]> {
   let q = supabase
     .from('offers')
@@ -102,10 +98,7 @@ export async function createOffer(input: CreateOfferInput): Promise<OfferRow> {
   return data as OfferRow;
 }
 
-export async function updateOffer(
-  id: UUID,
-  patch: Partial<CreateOfferInput>
-): Promise<OfferRow> {
+export async function updateOffer(id: UUID, patch: Partial<CreateOfferInput>): Promise<OfferRow> {
   const { data, error } = await supabase
     .from('offers')
     .update(patch)

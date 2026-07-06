@@ -15,7 +15,7 @@
     info: { wrap: 'bg-secondary-container text-on-secondary-container', icon: 'info' },
     success: { wrap: 'bg-tertiary-fixed text-on-tertiary-fixed', icon: 'check_circle' },
     warning: { wrap: 'bg-secondary-container text-on-secondary-container', icon: 'warning' },
-    error: { wrap: 'bg-error-container text-on-error-container', icon: 'error' }
+    error: { wrap: 'bg-error-container text-on-error-container', icon: 'error' },
   };
 </script>
 

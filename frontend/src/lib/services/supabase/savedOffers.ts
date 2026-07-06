@@ -25,15 +25,12 @@ export async function listSavedOfferIds(helperProfileId: UUID): Promise<Set<UUID
 }
 
 /** Save an offer (idempotent thanks to the unique constraint). */
-export async function saveOffer(
-  helperProfileId: UUID,
-  offerId: UUID
-): Promise<SavedOfferRow> {
+export async function saveOffer(helperProfileId: UUID, offerId: UUID): Promise<SavedOfferRow> {
   const { data, error } = await supabase
     .from('saved_offers')
     .upsert(
       { helper_profile_id: helperProfileId, offer_id: offerId },
-      { onConflict: 'helper_profile_id,offer_id' }
+      { onConflict: 'helper_profile_id,offer_id' },
     )
     .select()
     .single();

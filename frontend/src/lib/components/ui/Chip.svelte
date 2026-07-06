@@ -21,15 +21,13 @@
     removable = false,
     onremove,
     class: klass = '',
-    children
+    children,
   }: Props = $props();
 
   const variants: Record<Variant, string> = {
-    filter:
-      'bg-surface-container-low text-on-surface-variant hover:bg-surface-container',
-    selected:
-      'bg-secondary-container text-on-secondary-container hover:bg-secondary-container/80',
-    input: 'bg-surface-container text-on-surface'
+    filter: 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container',
+    selected: 'bg-secondary-container text-on-secondary-container hover:bg-secondary-container/80',
+    input: 'bg-surface-container text-on-surface',
   };
 
   const isButton = $derived(!!onclick);

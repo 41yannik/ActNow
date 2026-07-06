@@ -11,7 +11,14 @@
     oninfo?: () => void;
     class?: string;
   }
-  const { name, avatarUrl = null, subtitle = null, onback, oninfo, class: klass = '' }: Props = $props();
+  const {
+    name,
+    avatarUrl = null,
+    subtitle = null,
+    onback,
+    oninfo,
+    class: klass = '',
+  }: Props = $props();
 </script>
 
 <header
@@ -20,7 +27,7 @@
   {#if onback}
     <IconButton icon="arrow_back" label="Zurück" onclick={onback} />
   {/if}
-  <Avatar src={avatarUrl} name={name} size="sm" />
+  <Avatar src={avatarUrl} {name} size="sm" />
   <div class="min-w-0 flex-1">
     <h2 class="font-label-md text-label-md truncate text-on-surface">{name}</h2>
     {#if subtitle}

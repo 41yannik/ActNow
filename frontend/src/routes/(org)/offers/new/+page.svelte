@@ -49,7 +49,7 @@
       starts_at: buildIso(startDate, startTime),
       ends_at: buildIso(endDate, endTime),
       skills_required: skills,
-      max_helpers: max_helpers === '' ? null : Number(max_helpers)
+      max_helpers: max_helpers === '' ? null : Number(max_helpers),
     };
     const parsed = offerSchema.safeParse(payload);
     if (!parsed.success) {
@@ -60,7 +60,7 @@
     try {
       const created = await createOffer({
         ...parsed.data,
-        organization_profile_id: auth.profile.id
+        organization_profile_id: auth.profile.id,
       });
       if (publish) await publishOffer(created.id);
       toasts.success(publish ? 'Angebot veröffentlicht' : 'Entwurf gespeichert');
@@ -133,7 +133,7 @@
         organization_rating: auth.profile?.average_rating ?? null,
         is_remote,
         city,
-        starts_at: buildIso(startDate, startTime)
+        starts_at: buildIso(startDate, startTime),
       }}
     />
   </div>

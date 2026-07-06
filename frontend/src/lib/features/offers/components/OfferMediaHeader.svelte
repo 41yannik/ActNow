@@ -21,7 +21,7 @@
     showSwipeOverlays = false,
     likeOpacity = 0,
     nopeOpacity = 0,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 </script>
 

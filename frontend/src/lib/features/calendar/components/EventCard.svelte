@@ -24,13 +24,13 @@
     isRemote = false,
     statusLabel,
     href,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 </script>
 
 <svelte:element
   this={href ? 'a' : 'article'}
-  href={href}
+  {href}
   class="block rounded-2xl border border-outline-variant bg-surface-container-lowest p-md transition-colors hover:bg-surface-container-low {klass}"
 >
   <div class="flex items-start justify-between gap-sm">

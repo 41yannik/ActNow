@@ -4,10 +4,7 @@
   import EditableField from '$lib/features/profile/components/EditableField.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
   import Button from '$lib/components/ui/Button.svelte';
-  import {
-    getOrganizationProfile,
-    updateOwnProfile
-  } from '$lib/services/supabase/profiles';
+  import { getOrganizationProfile, updateOwnProfile } from '$lib/services/supabase/profiles';
   import { signOut } from '$lib/services/supabase/auth';
   import { auth } from '$lib/stores/auth.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';

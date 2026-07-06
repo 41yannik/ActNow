@@ -28,10 +28,12 @@
     accepted: 'success',
     rejected: 'danger',
     withdrawn: 'muted',
-    no_show: 'danger'
+    no_show: 'danger',
   };
 
-  const effective: Tone = $derived(tone ?? (status ? statusToneMap[status] ?? 'neutral' : 'neutral'));
+  const effective: Tone = $derived(
+    tone ?? (status ? (statusToneMap[status] ?? 'neutral') : 'neutral'),
+  );
 
   const tones: Record<Tone, string> = {
     neutral: 'bg-surface-container text-on-surface',
@@ -39,12 +41,14 @@
     warning: 'bg-secondary-container text-on-secondary-container',
     danger: 'bg-error-container text-on-error-container',
     info: 'bg-secondary-container text-on-secondary-container',
-    muted: 'bg-surface-variant text-on-surface-variant'
+    muted: 'bg-surface-variant text-on-surface-variant',
   };
 </script>
 
 <span
-  class="inline-flex items-center px-2 py-1 rounded-full font-label-md text-[12px] {tones[effective]} {klass}"
+  class="inline-flex items-center px-2 py-1 rounded-full font-label-md text-[12px] {tones[
+    effective
+  ]} {klass}"
 >
   {#if children}{@render children()}{:else}{status}{/if}
 </span>

@@ -7,14 +7,11 @@
   import Button from '$lib/components/ui/Button.svelte';
   import Icon from '$lib/components/ui/Icon.svelte';
   import ConversationListItem from '$lib/features/chat/components/ConversationListItem.svelte';
-  import {
-    getCommunitySummary,
-    listCommunityConversations
-  } from '$lib/services/supabase/messages';
+  import { getCommunitySummary, listCommunityConversations } from '$lib/services/supabase/messages';
   import {
     listNotifications,
     markAllNotificationsRead,
-    markNotificationRead
+    markNotificationRead,
   } from '$lib/services/supabase/notifications';
   import { subscribeChanges, unsubscribe } from '$lib/utils/realtime';
   import { formatRelative } from '$lib/utils/format';
@@ -24,7 +21,7 @@
     CommunityConversationRow,
     CommunitySummary,
     ConversationRow,
-    NotificationRow
+    NotificationRow,
   } from '$lib/types/database';
   import type { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -38,7 +35,7 @@
   let summary = $state<CommunitySummary>({
     unread_messages: 0,
     unread_notifications: 0,
-    total_unread: 0
+    total_unread: 0,
   });
   let channels: RealtimeChannel[] = [];
   let refreshTimer: ReturnType<typeof setTimeout> | null = null;
@@ -52,7 +49,7 @@
       organization_profile_id: row.organization_profile_id,
       last_message_at: row.last_message_at,
       created_at: row.created_at,
-      updated_at: row.updated_at
+      updated_at: row.updated_at,
     };
   }
 
@@ -105,7 +102,7 @@
         await markNotificationRead(n.id);
         await loadSummary();
         notifications = notifications.map((x) =>
-          x.id === n.id ? { ...x, read_at: new Date().toISOString() } : x
+          x.id === n.id ? { ...x, read_at: new Date().toISOString() } : x,
         );
       }
       if (n.entity_type === 'conversation' && n.entity_id) {
@@ -120,7 +117,10 @@
     if (!auth.profile) return;
     try {
       await markAllNotificationsRead(auth.profile.id);
-      notifications = notifications.map((n) => ({ ...n, read_at: n.read_at ?? new Date().toISOString() }));
+      notifications = notifications.map((n) => ({
+        ...n,
+        read_at: n.read_at ?? new Date().toISOString(),
+      }));
       await loadSummary();
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Konnte Aktivitäten nicht aktualisieren');
@@ -132,7 +132,7 @@
     channels = [
       subscribeChanges('community:messages', { table: 'messages' }, scheduleRefresh, '*'),
       subscribeChanges('community:conversations', { table: 'conversations' }, scheduleRefresh, '*'),
-      subscribeChanges('community:notifications', { table: 'notifications' }, scheduleRefresh, '*')
+      subscribeChanges('community:notifications', { table: 'notifications' }, scheduleRefresh, '*'),
     ];
   });
 
@@ -158,7 +158,9 @@
         type="button"
         onclick={() => (tab = 'chats')}
         class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors
-          {tab === 'chats' ? 'bg-surface-container-lowest text-primary shadow-sm' : 'text-on-surface-variant'}"
+          {tab === 'chats'
+          ? 'bg-surface-container-lowest text-primary shadow-sm'
+          : 'text-on-surface-variant'}"
       >
         <Icon name="forum" size={16} />
         Chats
@@ -172,7 +174,9 @@
         type="button"
         onclick={() => (tab = 'activity')}
         class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors
-          {tab === 'activity' ? 'bg-surface-container-lowest text-primary shadow-sm' : 'text-on-surface-variant'}"
+          {tab === 'activity'
+          ? 'bg-surface-container-lowest text-primary shadow-sm'
+          : 'text-on-surface-variant'}"
       >
         <Icon name="notifications" size={16} />
         Aktivität
@@ -198,7 +202,7 @@
                   conversation={asConversation(row)}
                   counterparty={{
                     display_name: row.counterparty_display_name,
-                    avatar_url: row.counterparty_avatar_url
+                    avatar_url: row.counterparty_avatar_url,
                   }}
                   lastMessage={chatPreview(row)}
                   unread={row.unread_count > 0}
@@ -233,23 +237,32 @@
                 >
                   <span
                     class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full
-                      {n.read_at ? 'bg-surface-container text-on-surface-variant' : 'bg-primary text-on-primary'}"
+                      {n.read_at
+                      ? 'bg-surface-container text-on-surface-variant'
+                      : 'bg-primary text-on-primary'}"
                   >
                     <Icon name={n.type === 'message' ? 'chat_bubble' : 'notifications'} size={18} />
                   </span>
                   <span class="min-w-0 flex-1">
                     <span class="flex items-start justify-between gap-3">
                       <span class="text-[14px] font-semibold text-on-surface">{n.title}</span>
-                      <span class="shrink-0 text-[12px] text-on-surface-variant">{formatRelative(n.created_at)}</span>
+                      <span class="shrink-0 text-[12px] text-on-surface-variant"
+                        >{formatRelative(n.created_at)}</span
+                      >
                     </span>
                     {#if n.body}
-                      <span class="mt-1 line-clamp-2 block text-[13px] leading-snug text-on-surface-variant">
+                      <span
+                        class="mt-1 line-clamp-2 block text-[13px] leading-snug text-on-surface-variant"
+                      >
                         {n.body}
                       </span>
                     {/if}
                   </span>
                   {#if !n.read_at}
-                    <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-tertiary" aria-label="Ungelesen"></span>
+                    <span
+                      class="mt-2 h-2 w-2 shrink-0 rounded-full bg-tertiary"
+                      aria-label="Ungelesen"
+                    ></span>
                   {/if}
                 </button>
               </li>

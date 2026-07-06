@@ -1,9 +1,5 @@
 // Domain (presentation-shaped) types. Database row types live in ./database.ts.
-import type {
-  OfferType,
-  OfferStatus,
-  SearchOfferResult
-} from './database';
+import type { OfferType, OfferStatus, SearchOfferResult } from './database';
 
 // Re-export the database enums so existing imports keep working.
 export type {
@@ -11,7 +7,7 @@ export type {
   OfferStatus,
   ApplicationStatus,
   UserRole,
-  ProfileStatus
+  ProfileStatus,
 } from './database';
 
 export interface Offer {
@@ -82,6 +78,6 @@ export function offerFromSearchResult(row: SearchOfferResult): Offer {
     helpers_needed: 0,
     accepted_helpers_count: 0,
     requirements: [],
-    tags: row.skills_required
+    tags: row.skills_required,
   };
 }

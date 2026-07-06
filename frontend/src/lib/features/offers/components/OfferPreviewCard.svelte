@@ -26,9 +26,7 @@
   const title = $derived(offer.title || 'Titel des Angebots');
   const description = $derived(offer.description || 'Beschreibung erscheint hier.');
   const orgName = $derived(offer.organization_name || 'Deine Organisation');
-  const location = $derived(
-    offer.is_remote ? 'Digital / Remote' : (offer.city || 'Ort folgt')
-  );
+  const location = $derived(offer.is_remote ? 'Digital / Remote' : offer.city || 'Ort folgt');
   const schedule = $derived(
     offer.starts_at
       ? new Date(offer.starts_at).toLocaleString('de-DE', {
@@ -36,9 +34,9 @@
           day: '2-digit',
           month: 'short',
           hour: '2-digit',
-          minute: '2-digit'
+          minute: '2-digit',
         })
-      : 'Flexibel'
+      : 'Flexibel',
   );
 </script>
 

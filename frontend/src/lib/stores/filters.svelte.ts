@@ -17,7 +17,7 @@ export function readFilters(searchParams: URLSearchParams): OfferFilters {
     available_from: searchParams.get('from'),
     available_to: searchParams.get('to'),
     offer_type: (searchParams.get('type') as OfferType | null) ?? null,
-    tags: searchParams.get('tags')?.split(',').filter(Boolean) ?? []
+    tags: searchParams.get('tags')?.split(',').filter(Boolean) ?? [],
   };
 }
 
@@ -40,5 +40,5 @@ export const EMPTY_FILTERS: OfferFilters = {
   available_from: null,
   available_to: null,
   offer_type: null,
-  tags: []
+  tags: [],
 };

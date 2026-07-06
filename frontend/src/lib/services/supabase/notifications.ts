@@ -14,7 +14,7 @@ export async function listNotifications(limit = 30): Promise<NotificationRow[]> 
 
 export async function listApplicationNotifications(
   applicationIds: UUID[],
-  limit = 100
+  limit = 100,
 ): Promise<NotificationRow[]> {
   if (applicationIds.length === 0) return [];
   const { data, error } = await supabase

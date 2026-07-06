@@ -19,9 +19,9 @@ export async function signUp(input: SignUpInput) {
     options: {
       data: {
         display_name: role === 'organization' ? organization_name || display_name : display_name,
-        role
-      }
-    }
+        role,
+      },
+    },
   });
   if (error) throw error;
   return data;

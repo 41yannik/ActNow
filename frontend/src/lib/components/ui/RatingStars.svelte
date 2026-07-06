@@ -8,13 +8,7 @@
     showValue?: boolean;
     class?: string;
   }
-  let {
-    value,
-    count = null,
-    size = 16,
-    showValue = true,
-    class: klass = ''
-  }: Props = $props();
+  let { value, count = null, size = 16, showValue = true, class: klass = '' }: Props = $props();
 
   const stars = $derived(
     Array.from({ length: 5 }, (_, i) => {
@@ -22,7 +16,7 @@
       if (v >= 1) return 'full';
       if (v >= 0.5) return 'half';
       return 'empty';
-    }) as ('full' | 'half' | 'empty')[]
+    }) as ('full' | 'half' | 'empty')[],
   );
 </script>
 

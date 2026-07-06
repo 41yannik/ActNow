@@ -20,7 +20,7 @@
     value,
     group = $bindable<string>(''),
     class: klass = '',
-    children
+    children,
   }: Props = $props();
 
   const selected = $derived(group === value);
@@ -30,8 +30,8 @@
   class="
     relative flex items-start gap-3 p-md rounded-xl border cursor-pointer transition-all
     {selected
-      ? 'bg-tertiary-fixed border-primary shadow-[0px_4px_20px_rgba(47,79,79,0.08)]'
-      : 'bg-surface border-outline-variant hover:bg-surface-container-low'}
+    ? 'bg-tertiary-fixed border-primary shadow-[0px_4px_20px_rgba(47,79,79,0.08)]'
+    : 'bg-surface border-outline-variant hover:bg-surface-container-low'}
     {klass}
   "
 >
@@ -49,7 +49,9 @@
   <span class="flex-1">
     <span class="font-label-md text-label-md text-on-surface block">{label}</span>
     {#if description}
-      <span class="font-body-md text-[13px] text-on-surface-variant block mt-0.5">{description}</span>
+      <span class="font-body-md text-[13px] text-on-surface-variant block mt-0.5"
+        >{description}</span
+      >
     {/if}
     {#if children}{@render children()}{/if}
   </span>

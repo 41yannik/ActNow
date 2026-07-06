@@ -34,7 +34,7 @@
       password,
       display_name: role === 'organization' ? org_name : display_name,
       organization_name: role === 'organization' ? org_name : undefined,
-      accept_terms: terms
+      accept_terms: terms,
     };
     const parsed = registerSchema.safeParse(data);
     if (!parsed.success) {
@@ -48,7 +48,7 @@
         password: parsed.data.password,
         role: parsed.data.role,
         display_name: parsed.data.display_name,
-        organization_name: parsed.data.organization_name
+        organization_name: parsed.data.organization_name,
       });
       toasts.success('Konto erstellt!', 'Willkommen bei ActNow');
       await goto(role === 'organization' ? '/dashboard' : '/discover');
@@ -72,7 +72,12 @@
     {#if role === 'helper'}
       <TextField label="Name" autocomplete="name" required bind:value={display_name} />
     {:else}
-      <TextField label="Name der Organisation" autocomplete="organization" required bind:value={org_name} />
+      <TextField
+        label="Name der Organisation"
+        autocomplete="organization"
+        required
+        bind:value={org_name}
+      />
     {/if}
     <TextField type="email" label="E-Mail" autocomplete="email" required bind:value={email} />
     <PasswordInput
@@ -89,7 +94,10 @@
         bind:checked={terms}
         class="mt-1 h-4 w-4 rounded border-outline text-primary focus:ring-primary flex-shrink-0 cursor-pointer accent-primary"
       />
-      <label for="terms-checkbox" class="text-body-md font-body-md text-on-surface cursor-pointer flex-1">
+      <label
+        for="terms-checkbox"
+        class="text-body-md font-body-md text-on-surface cursor-pointer flex-1"
+      >
         <span class="block">
           Ich akzeptiere die
           <a

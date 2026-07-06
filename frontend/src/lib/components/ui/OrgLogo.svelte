@@ -13,7 +13,7 @@
   const sizes: Record<Size, string> = {
     sm: 'w-10 h-10 text-sm',
     md: 'w-14 h-14 text-base',
-    lg: 'w-16 h-16 text-lg'
+    lg: 'w-16 h-16 text-lg',
   };
 
   const initials = $derived(
@@ -22,7 +22,7 @@
       .split(/\s+/)
       .slice(0, 2)
       .map((w) => w[0]?.toUpperCase() ?? '')
-      .join('') || '?'
+      .join('') || '?',
   );
 </script>
 

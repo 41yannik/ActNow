@@ -41,15 +41,23 @@
   {#if loading}
     <div class="flex justify-center py-lg"><LoadingSpinner /></div>
   {:else if offers.length === 0}
-    <EmptyState icon="campaign" title="Noch keine Angebote" description="Erstelle dein erstes Angebot.">
+    <EmptyState
+      icon="campaign"
+      title="Noch keine Angebote"
+      description="Erstelle dein erstes Angebot."
+    >
       {#snippet action()}
         <Button leadingIcon="add" onclick={() => goto('/offers/new')}>Neues Angebot</Button>
       {/snippet}
     </EmptyState>
   {:else}
-    <div class="overflow-x-auto rounded-2xl border border-outline-variant bg-surface-container-lowest">
+    <div
+      class="overflow-x-auto rounded-2xl border border-outline-variant bg-surface-container-lowest"
+    >
       <table class="w-full text-left text-body-md">
-        <thead class="border-b border-outline-variant bg-surface-container-low text-label-md font-label-md text-on-surface-variant">
+        <thead
+          class="border-b border-outline-variant bg-surface-container-low text-label-md font-label-md text-on-surface-variant"
+        >
           <tr>
             <th class="px-md py-sm">Titel</th>
             <th class="px-md py-sm">Helfer</th>
@@ -71,7 +79,9 @@
                   toasts.success('Angebot veröffentlicht');
                   await load();
                 } catch (err) {
-                  toasts.error(err instanceof Error ? err.message : 'Veröffentlichen fehlgeschlagen');
+                  toasts.error(
+                    err instanceof Error ? err.message : 'Veröffentlichen fehlgeschlagen',
+                  );
                 }
               }}
               ondelete={() => toasts.warning('Löschen wird noch nicht unterstützt')}

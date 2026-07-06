@@ -18,7 +18,7 @@ export default ts.config(
       'no-undef': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
-        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
       ],
       // Initially downgraded to warnings: these fire across the existing
       // codebase and need dedicated cleanup passes (tracked as follow-up).
@@ -28,8 +28,8 @@ export default ts.config(
       'svelte/prefer-writable-derived': 'warn',
       'svelte/no-unused-props': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-expressions': 'warn'
-    }
+      '@typescript-eslint/no-unused-expressions': 'warn',
+    },
   },
   {
     files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
@@ -38,8 +38,8 @@ export default ts.config(
         projectService: true,
         extraFileExtensions: ['.svelte'],
         parser: ts.parser,
-        svelteConfig
-      }
-    }
-  }
+        svelteConfig,
+      },
+    },
+  },
 );

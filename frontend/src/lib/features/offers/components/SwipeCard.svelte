@@ -23,7 +23,7 @@
     saved = false,
     ontogglesave,
     onopen,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 
   const likeOpacity = $derived(Math.min(Math.max(dragX, 0) / threshold, 1));
@@ -40,9 +40,9 @@
             day: '2-digit',
             month: 'short',
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
           })
-        : 'Flexibel')
+        : 'Flexibel'),
   );
 
   const durationText = $derived(
@@ -50,20 +50,20 @@
       ? `Dauer ${Math.max(
           1,
           Math.round(
-            (new Date(offer.ends_at).getTime() - new Date(offer.starts_at).getTime()) / 3.6e6
-          )
+            (new Date(offer.ends_at).getTime() - new Date(offer.starts_at).getTime()) / 3.6e6,
+          ),
         )} Std.`
-      : null
+      : null,
   );
 
   const locationText = $derived(
-    offer.is_remote ? 'Digital / Remote' : `${offer.city ?? 'Vor Ort'} · ${meta.km} km entfernt`
+    offer.is_remote ? 'Digital / Remote' : `${offer.city ?? 'Vor Ort'} · ${meta.km} km entfernt`,
   );
 
   const friendLabel = $derived(
     meta.friends.length === 1
       ? `${meta.friends[0]} ist dabei`
-      : `${meta.friends[0]} +${meta.friends.length - 1} dabei`
+      : `${meta.friends[0]} +${meta.friends.length - 1} dabei`,
   );
 
   function toggleSave(e: MouseEvent) {
@@ -145,7 +145,9 @@
             </div>
           {/each}
         </div>
-        <span class="truncate text-[11px] font-semibold text-on-secondary-container">{friendLabel}</span>
+        <span class="truncate text-[11px] font-semibold text-on-secondary-container"
+          >{friendLabel}</span
+        >
       </div>
     {/if}
 
@@ -170,7 +172,9 @@
 
   <!-- Body -->
   <div class="flex flex-1 flex-col gap-2.5 p-[18px]">
-    <h2 class="line-clamp-2 text-[19px] font-bold leading-tight tracking-tight text-on-secondary-container">
+    <h2
+      class="line-clamp-2 text-[19px] font-bold leading-tight tracking-tight text-on-secondary-container"
+    >
       {offer.title}
     </h2>
 
@@ -196,7 +200,9 @@
     <!-- Calendar match badge (mock) -->
     <div
       class="mt-auto inline-flex items-center gap-1.5 self-start rounded-full px-2.5 py-1.5"
-      style="background: {meta.match === 'fits' ? 'rgba(126,143,107,0.14)' : 'rgba(226,148,90,0.14)'};"
+      style="background: {meta.match === 'fits'
+        ? 'rgba(126,143,107,0.14)'
+        : 'rgba(226,148,90,0.14)'};"
     >
       <Icon
         name={meta.match === 'fits' ? 'check_circle' : 'schedule'}
@@ -204,7 +210,9 @@
         class={meta.match === 'fits' ? 'text-secondary' : 'text-tertiary'}
       />
       <span
-        class="text-[11px] font-semibold {meta.match === 'fits' ? 'text-secondary' : 'text-tertiary'}"
+        class="text-[11px] font-semibold {meta.match === 'fits'
+          ? 'text-secondary'
+          : 'text-tertiary'}"
       >
         {meta.match === 'fits' ? 'Passt in deinen Kalender' : 'Teilweise im Kalender'}
       </span>

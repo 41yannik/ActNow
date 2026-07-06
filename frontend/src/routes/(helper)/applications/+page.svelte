@@ -12,7 +12,7 @@
   import Tabs from '$lib/components/ui/Tabs.svelte';
   import {
     listApplicationsForHelper,
-    withdrawApplication
+    withdrawApplication,
   } from '$lib/services/supabase/applications';
   import { getCommunitySummary } from '$lib/services/supabase/messages';
   import { getOrCreateConversationForApplication } from '$lib/services/supabase/messages';
@@ -21,7 +21,11 @@
   import { toasts } from '$lib/stores/toasts.svelte';
   import { APPLICATION_STATUS_LABEL, OFFER_STATUS_LABEL } from '$lib/utils/labels';
   import { formatDate, formatDateTime, formatRelative } from '$lib/utils/format';
-  import type { ApplicationStatus, ApplicationWithOffer, NotificationRow } from '$lib/types/database';
+  import type {
+    ApplicationStatus,
+    ApplicationWithOffer,
+    NotificationRow,
+  } from '$lib/types/database';
 
   type TabValue = 'applications' | 'assignments' | 'history';
   type TimelineTone = 'done' | 'current' | 'muted';
@@ -56,21 +60,21 @@
     'withdrawn',
     'cancelled',
     'completed',
-    'no_show'
+    'no_show',
   ]);
   const WITHDRAWABLE_STATUSES = new Set<ApplicationStatus>([
     'submitted',
     'shortlisted',
-    'accepted'
+    'accepted',
   ]);
   const REMINDER_OFFSETS = [
     { key: '24h', label: '24h vorher', hours: 24, icon: 'notifications_active' },
-    { key: '2h', label: '2h vorher', hours: 2, icon: 'alarm' }
+    { key: '2h', label: '2h vorher', hours: 2, icon: 'alarm' },
   ] as const;
   const REMINDER_STATE_LABEL: Record<ReminderState, string> = {
     planned: 'Geplant',
     due: 'Fällig',
-    sent: 'Gesendet'
+    sent: 'Gesendet',
   };
 
   let loading = $state(true);
@@ -86,14 +90,18 @@
   const tabs = [
     { value: 'applications', label: 'Bewerbungen', icon: 'how_to_reg' },
     { value: 'assignments', label: 'Einsätze', icon: 'event_available' },
-    { value: 'history', label: 'Historie', icon: 'history' }
+    { value: 'history', label: 'Historie', icon: 'history' },
   ] satisfies Array<{ value: TabValue; label: string; icon: string }>;
 
   const applications = $derived(rows.filter((row) => APPLICATION_STATUSES.has(row.status)));
   const assignments = $derived(rows.filter((row) => ASSIGNMENT_STATUSES.has(row.status)));
   const history = $derived(rows.filter((row) => HISTORY_STATUSES.has(row.status)));
   const visibleRows = $derived(
-    activeTab === 'applications' ? applications : activeTab === 'assignments' ? assignments : history
+    activeTab === 'applications'
+      ? applications
+      : activeTab === 'assignments'
+        ? assignments
+        : history,
   );
   const notificationsByApplication = $derived.by(() => {
     const grouped = new Map<string, NotificationRow[]>();
@@ -105,13 +113,14 @@
     }
     return grouped;
   });
-  const nextAssignment = $derived.by(() =>
-    assignments
-      .filter((row) => row.offer?.starts_at)
-      .sort(
-        (a, b) =>
-          new Date(a.offer!.starts_at!).getTime() - new Date(b.offer!.starts_at!).getTime()
-      )[0] ?? null
+  const nextAssignment = $derived.by(
+    () =>
+      assignments
+        .filter((row) => row.offer?.starts_at)
+        .sort(
+          (a, b) =>
+            new Date(a.offer!.starts_at!).getTime() - new Date(b.offer!.starts_at!).getTime(),
+        )[0] ?? null,
   );
   const assignmentReminders = $derived.by(() =>
     assignments
@@ -119,9 +128,9 @@
       .sort(
         (a, b) =>
           new Date(a.sentAt ?? a.scheduledAt).getTime() -
-          new Date(b.sentAt ?? b.scheduledAt).getTime()
+          new Date(b.sentAt ?? b.scheduledAt).getTime(),
       )
-      .slice(0, 4)
+      .slice(0, 4),
   );
 
   function setBusy(id: string, busy: boolean) {
@@ -138,11 +147,11 @@
     try {
       const [apps, unread] = await Promise.all([
         listApplicationsForHelper(auth.profile.id),
-        getCommunitySummary().catch(() => summary)
+        getCommunitySummary().catch(() => summary),
       ]);
       const relatedNotifications = await listApplicationNotifications(
         apps.map((app) => app.id),
-        Math.max(60, apps.length * 6)
+        Math.max(60, apps.length * 6),
       ).catch(() => []);
       rows = apps;
       applicationNotifications = relatedNotifications;
@@ -221,7 +230,7 @@
     status: ApplicationStatus,
     at: string | null,
     fallbackDetail: string,
-    tone: TimelineTone
+    tone: TimelineTone,
   ): TimelineEntry | null {
     if (!at) return null;
     const notification = notificationFor(row, `application.${status}`);
@@ -231,7 +240,7 @@
       detail: notification?.body ?? fallbackDetail,
       at: notification?.created_at ?? at,
       icon: statusIcon(status),
-      tone
+      tone,
     };
   }
 
@@ -255,8 +264,8 @@
         detail: 'Deine Bewerbung wurde an die Organisation gesendet.',
         at: row.submitted_at,
         icon: 'send',
-        tone: 'done'
-      }
+        tone: 'done',
+      },
     ];
 
     const shortlistedNote = notificationFor(row, 'application.shortlisted');
@@ -264,18 +273,43 @@
       entries.push({
         id: `${row.id}-shortlisted`,
         label: APPLICATION_STATUS_LABEL.shortlisted,
-        detail: shortlistedNote?.body ?? 'Die Organisation hat dich in die engere Auswahl genommen.',
+        detail:
+          shortlistedNote?.body ?? 'Die Organisation hat dich in die engere Auswahl genommen.',
         at: shortlistedNote?.created_at ?? row.updated_at,
         icon: 'filter_alt',
-        tone: row.status === 'shortlisted' ? 'current' : 'done'
+        tone: row.status === 'shortlisted' ? 'current' : 'done',
       });
     }
 
     const statusEvents = [
-      statusEvent(row, 'accepted', row.accepted_at, 'Du bist fuer diesen Einsatz eingeplant.', row.status === 'accepted' ? 'current' : 'done'),
-      statusEvent(row, 'rejected', row.rejected_at, 'Die Organisation hat deine Bewerbung abgesagt.', row.status === 'rejected' ? 'current' : 'done'),
-      statusEvent(row, 'withdrawn', row.withdrawn_at, 'Du hast deine Bewerbung zurueckgezogen.', row.status === 'withdrawn' ? 'current' : 'done'),
-      statusEvent(row, 'completed', row.completed_at, 'Der Einsatz wurde abgeschlossen.', row.status === 'completed' ? 'current' : 'done')
+      statusEvent(
+        row,
+        'accepted',
+        row.accepted_at,
+        'Du bist fuer diesen Einsatz eingeplant.',
+        row.status === 'accepted' ? 'current' : 'done',
+      ),
+      statusEvent(
+        row,
+        'rejected',
+        row.rejected_at,
+        'Die Organisation hat deine Bewerbung abgesagt.',
+        row.status === 'rejected' ? 'current' : 'done',
+      ),
+      statusEvent(
+        row,
+        'withdrawn',
+        row.withdrawn_at,
+        'Du hast deine Bewerbung zurueckgezogen.',
+        row.status === 'withdrawn' ? 'current' : 'done',
+      ),
+      statusEvent(
+        row,
+        'completed',
+        row.completed_at,
+        'Der Einsatz wurde abgeschlossen.',
+        row.status === 'completed' ? 'current' : 'done',
+      ),
     ].filter((entry): entry is TimelineEntry => Boolean(entry));
 
     entries.push(...statusEvents);
@@ -287,7 +321,7 @@
         detail: notificationFor(row, `application.${row.status}`)?.body ?? statusHint(row),
         at: notificationFor(row, `application.${row.status}`)?.created_at ?? row.updated_at,
         icon: statusIcon(row.status),
-        tone: 'current'
+        tone: 'current',
       });
     }
 
@@ -299,7 +333,7 @@
         at: reminder.sentAt ?? reminder.scheduledAt,
         icon: reminder.icon,
         tone: reminder.state === 'sent' ? 'done' : reminder.state === 'due' ? 'current' : 'muted',
-        future: reminder.state === 'planned'
+        future: reminder.state === 'planned',
       });
     }
 
@@ -308,7 +342,7 @@
 
   function buildReminderPlans(
     row: ApplicationWithOffer,
-    notifications: NotificationRow[]
+    notifications: NotificationRow[],
   ): AssignmentReminder[] {
     if (row.status !== 'accepted' || !row.offer?.starts_at) return [];
     const startsAt = new Date(row.offer.starts_at).getTime();
@@ -336,7 +370,7 @@
           sent?.body ??
           (state === 'due'
             ? 'Dieser Reminder ist jetzt faellig.'
-            : `Reminder wird fuer ${formatDateTime(scheduledAt)} gefuehrt.`)
+            : `Reminder wird fuer ${formatDateTime(scheduledAt)} gefuehrt.`),
       };
     });
   }
@@ -372,14 +406,16 @@
     try {
       const updated = await withdrawApplication(row.id);
       rows = rows.map((item) =>
-        item.id === row.id ? { ...item, ...updated, offer: item.offer } : item
+        item.id === row.id ? { ...item, ...updated, offer: item.offer } : item,
       );
       selectedForWithdraw = null;
       withdrawDialogOpen = false;
       activeTab = 'history';
       toasts.success('Bewerbung zurückgezogen', title(row));
     } catch (err) {
-      toasts.error(err instanceof Error ? err.message : 'Bewerbung konnte nicht zurückgezogen werden.');
+      toasts.error(
+        err instanceof Error ? err.message : 'Bewerbung konnte nicht zurückgezogen werden.',
+      );
     } finally {
       setBusy(row.id, false);
     }
@@ -409,7 +445,9 @@
   <div class="flex flex-col gap-md p-md">
     <div class="grid grid-cols-1 gap-sm sm:grid-cols-3">
       <div class="rounded-xl border border-outline-variant bg-surface p-md">
-        <div class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant">
+        <div
+          class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant"
+        >
           <Icon name="hourglass_top" size={16} />
           Offen
         </div>
@@ -417,7 +455,9 @@
         <p class="mt-1 text-[13px] text-on-surface-variant">Bewerbungen in Pruefung</p>
       </div>
       <div class="rounded-xl border border-outline-variant bg-surface p-md">
-        <div class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant">
+        <div
+          class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant"
+        >
           <Icon name="event_available" size={16} />
           Zugesagt
         </div>
@@ -425,12 +465,16 @@
         <p class="mt-1 text-[13px] text-on-surface-variant">geplante Einsätze</p>
       </div>
       <div class="rounded-xl border border-outline-variant bg-surface p-md">
-        <div class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant">
+        <div
+          class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant"
+        >
           <Icon name="today" size={16} />
           Nächster Termin
         </div>
         <div class="mt-2 line-clamp-1 text-[16px] font-bold text-on-surface">
-          {nextAssignment?.offer?.starts_at ? formatDate(nextAssignment.offer.starts_at) : 'Keiner geplant'}
+          {nextAssignment?.offer?.starts_at
+            ? formatDate(nextAssignment.offer.starts_at)
+            : 'Keiner geplant'}
         </div>
         <p class="mt-1 line-clamp-1 text-[13px] text-on-surface-variant">
           {nextAssignment ? title(nextAssignment) : 'Bewirb dich auf passende Angebote.'}
@@ -442,13 +486,20 @@
       <section class="rounded-xl border border-outline-variant bg-surface p-md">
         <header class="flex flex-wrap items-start justify-between gap-sm">
           <div>
-            <div class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant">
+            <div
+              class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant"
+            >
               <Icon name="notifications_active" size={16} />
               Einsatz-Reminder
             </div>
             <h2 class="mt-1 text-[18px] font-bold text-on-surface">Naechste Erinnerungen</h2>
           </div>
-          <Button variant="text" size="sm" leadingIcon="calendar_today" onclick={() => goto('/calendar')}>
+          <Button
+            variant="text"
+            size="sm"
+            leadingIcon="calendar_today"
+            onclick={() => goto('/calendar')}
+          >
             Kalender
           </Button>
         </header>
@@ -464,7 +515,11 @@
                     {reminder.label} · {formatDateTime(reminder.sentAt ?? reminder.scheduledAt)}
                   </p>
                 </div>
-                <span class="shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold {reminderStateClass(reminder.state)}">
+                <span
+                  class="shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold {reminderStateClass(
+                    reminder.state,
+                  )}"
+                >
                   {REMINDER_STATE_LABEL[reminder.state]}
                 </span>
               </div>
@@ -487,7 +542,11 @@
       <div class="flex justify-center py-lg"><LoadingSpinner /></div>
     {:else if visibleRows.length === 0}
       <EmptyState
-        icon={activeTab === 'assignments' ? 'event_busy' : activeTab === 'history' ? 'history' : 'how_to_reg'}
+        icon={activeTab === 'assignments'
+          ? 'event_busy'
+          : activeTab === 'history'
+            ? 'history'
+            : 'how_to_reg'}
         title={activeTab === 'assignments'
           ? 'Noch keine zugesagten Einsätze'
           : activeTab === 'history'
@@ -505,7 +564,9 @@
       <div class="grid grid-cols-1 gap-sm lg:grid-cols-2">
         {#each visibleRows as row (row.id)}
           {@const rowTimeline = timeline(row)}
-          <article class="flex min-h-[260px] flex-col rounded-xl border border-outline-variant bg-surface p-md">
+          <article
+            class="flex min-h-[260px] flex-col rounded-xl border border-outline-variant bg-surface p-md"
+          >
             <header class="flex items-start justify-between gap-sm">
               <div class="min-w-0">
                 <div class="mb-2 flex flex-wrap items-center gap-2">
@@ -542,7 +603,9 @@
             </div>
 
             {#if row.motivation_text || row.helper_message}
-              <div class="mt-4 rounded-lg bg-surface-container-low p-sm text-[13px] leading-relaxed text-on-surface">
+              <div
+                class="mt-4 rounded-lg bg-surface-container-low p-sm text-[13px] leading-relaxed text-on-surface"
+              >
                 {row.motivation_text ?? row.helper_message}
               </div>
             {/if}
@@ -554,15 +617,23 @@
               {/if}
             </div>
 
-            <div class="mt-4 rounded-lg border border-outline-variant bg-surface-container-low p-sm">
-              <div class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant">
+            <div
+              class="mt-4 rounded-lg border border-outline-variant bg-surface-container-low p-sm"
+            >
+              <div
+                class="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-on-surface-variant"
+              >
                 <Icon name="timeline" size={16} />
                 Timeline
               </div>
               <ol class="mt-3 flex flex-col gap-3">
                 {#each rowTimeline as item (item.id)}
                   <li class="grid grid-cols-[22px_1fr] gap-2">
-                    <span class="mt-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full {timelineToneClass(item.tone)}">
+                    <span
+                      class="mt-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full {timelineToneClass(
+                        item.tone,
+                      )}"
+                    >
                       <Icon name={item.icon} size={13} />
                     </span>
                     <div class="min-w-0">
@@ -572,7 +643,9 @@
                           {item.future ? 'Geplant' : formatRelative(item.at)}
                         </p>
                       </div>
-                      <p class="mt-0.5 line-clamp-2 text-[12px] leading-relaxed text-on-surface-variant">
+                      <p
+                        class="mt-0.5 line-clamp-2 text-[12px] leading-relaxed text-on-surface-variant"
+                      >
                         {item.detail}
                       </p>
                       <p class="mt-0.5 text-[11px] text-on-surface-variant">
@@ -586,7 +659,12 @@
 
             <div class="mt-auto flex flex-wrap justify-end gap-xs pt-md">
               {#if row.offer}
-                <Button variant="text" size="sm" leadingIcon="open_in_new" onclick={() => goto(`/offers/${row.offer!.id}`)}>
+                <Button
+                  variant="text"
+                  size="sm"
+                  leadingIcon="open_in_new"
+                  onclick={() => goto(`/offers/${row.offer!.id}`)}
+                >
                   Angebot
                 </Button>
               {/if}

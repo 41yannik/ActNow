@@ -8,26 +8,19 @@
     status?: 'online' | 'offline' | 'busy' | null;
     class?: string;
   }
-  let {
-    src,
-    alt = '',
-    name = '',
-    size = 'md',
-    status = null,
-    class: klass = ''
-  }: Props = $props();
+  let { src, alt = '', name = '', size = 'md', status = null, class: klass = '' }: Props = $props();
 
   const sizes: Record<Size, string> = {
     xs: 'w-6 h-6 text-[10px]',
     sm: 'w-8 h-8 text-xs',
     md: 'w-10 h-10 text-sm',
     lg: 'w-14 h-14 text-base',
-    xl: 'w-20 h-20 text-lg'
+    xl: 'w-20 h-20 text-lg',
   };
   const statusColor: Record<NonNullable<Props['status']>, string> = {
     online: 'bg-primary',
     offline: 'bg-outline',
-    busy: 'bg-error'
+    busy: 'bg-error',
   };
 
   const initials = $derived(
@@ -36,7 +29,7 @@
       .split(/\s+/)
       .slice(0, 2)
       .map((w) => w[0]?.toUpperCase() ?? '')
-      .join('') || '?'
+      .join('') || '?',
   );
 </script>
 
@@ -59,7 +52,9 @@
   {/if}
   {#if status}
     <span
-      class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ring-2 ring-surface {statusColor[status]}"
+      class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full ring-2 ring-surface {statusColor[
+        status
+      ]}"
       aria-hidden="true"
     ></span>
   {/if}

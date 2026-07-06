@@ -2,10 +2,7 @@
 import { z } from 'zod';
 
 export const email = z.string().email('Bitte eine gültige E-Mail eingeben.');
-export const password = z
-  .string()
-  .min(8, 'Mindestens 8 Zeichen.')
-  .max(72, 'Maximal 72 Zeichen.');
+export const password = z.string().min(8, 'Mindestens 8 Zeichen.').max(72, 'Maximal 72 Zeichen.');
 
 export const registerSchema = z
   .object({
@@ -15,23 +12,21 @@ export const registerSchema = z
     email,
     password,
     accept_terms: z.literal(true, {
-      message: 'Bitte den Nutzungsbedingungen zustimmen.'
-    })
+      message: 'Bitte den Nutzungsbedingungen zustimmen.',
+    }),
   })
   .refine(
-    (data) =>
-      data.role !== 'organization' ||
-      (data.organization_name?.trim().length ?? 0) >= 2,
+    (data) => data.role !== 'organization' || (data.organization_name?.trim().length ?? 0) >= 2,
     {
       path: ['organization_name'],
-      message: 'Organisationsname erforderlich.'
-    }
+      message: 'Organisationsname erforderlich.',
+    },
   );
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 
 export const loginSchema = z.object({
   email,
-  password: z.string().min(1, 'Bitte Passwort eingeben.')
+  password: z.string().min(1, 'Bitte Passwort eingeben.'),
 });
 export type LoginInput = z.infer<typeof loginSchema>;

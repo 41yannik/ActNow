@@ -25,14 +25,14 @@
     ratingCount = null,
     onedit,
     actions,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 </script>
 
 <header
   class="flex flex-col gap-md rounded-3xl bg-surface-container-low p-md sm:flex-row sm:items-center {klass}"
 >
-  <Avatar src={avatarUrl} name={name} size="xl" />
+  <Avatar src={avatarUrl} {name} size="xl" />
   <div class="min-w-0 flex-1">
     <h1 class="font-h2 text-h2 truncate text-on-surface">{name}</h1>
     {#if subtitle}

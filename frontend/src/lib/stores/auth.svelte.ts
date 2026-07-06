@@ -15,7 +15,7 @@ const state = $state<AuthState>({
   session: null,
   user: null,
   profile: null,
-  loading: true
+  loading: true,
 });
 
 let initialized = false;
@@ -46,7 +46,7 @@ export async function initAuth() {
     const { data } = await withTimeout(
       supabase.auth.getSession(),
       AUTH_INIT_TIMEOUT_MS,
-      'Supabase auth session'
+      'Supabase auth session',
     );
     await applySession(data.session);
   } catch (err) {
@@ -63,7 +63,7 @@ async function applySession(session: Session | null) {
       state.profile = await withTimeout(
         getOwnProfile(session.user.id),
         PROFILE_TIMEOUT_MS,
-        'Supabase profile lookup'
+        'Supabase profile lookup',
       );
     } catch (err) {
       console.error('[auth] failed to load profile', err);
@@ -102,5 +102,5 @@ export const auth = {
         console.error('[auth] refresh failed', err);
       }
     }
-  }
+  },
 };

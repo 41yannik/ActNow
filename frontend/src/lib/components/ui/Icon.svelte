@@ -14,7 +14,7 @@
     filled = false,
     size = 20,
     class: klass = '',
-    'aria-hidden': ariaHidden = true
+    'aria-hidden': ariaHidden = true,
   }: Props = $props();
 </script>
 
