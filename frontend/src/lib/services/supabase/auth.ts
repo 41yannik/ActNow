@@ -1,5 +1,6 @@
 // Authentication service. Wraps Supabase Auth.
 import { supabase } from './client';
+import { demoGuard } from '$lib/config/demo';
 import type { UserRole } from '$lib/types/database';
 
 export interface SignUpInput {
@@ -12,6 +13,7 @@ export interface SignUpInput {
 }
 
 export async function signUp(input: SignUpInput) {
+  demoGuard();
   const { email, password, display_name, role, organization_name } = input;
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -51,6 +53,7 @@ export async function getUser() {
 }
 
 export async function resetPassword(email: string, redirectTo?: string) {
+  demoGuard();
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
   if (error) throw error;
   return data;

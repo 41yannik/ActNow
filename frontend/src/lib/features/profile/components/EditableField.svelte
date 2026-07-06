@@ -3,6 +3,7 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import TextField from '$lib/components/forms/TextField.svelte';
   import TextArea from '$lib/components/forms/TextArea.svelte';
+  import { toasts } from '$lib/stores/toasts.svelte';
 
   interface Props {
     label: string;
@@ -41,6 +42,8 @@
     try {
       await onsave(draft);
       editing = false;
+    } catch (err) {
+      toasts.error(err instanceof Error ? err.message : 'Speichern fehlgeschlagen.');
     } finally {
       saving = false;
     }
