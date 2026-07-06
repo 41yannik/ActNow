@@ -9,7 +9,13 @@
   import { signUp } from '$lib/services/supabase/auth';
   import { registerSchema } from '$lib/validation/auth';
   import { toasts } from '$lib/stores/toasts.svelte';
+  import { DEMO_MODE } from '$lib/config/demo';
+  import { onMount } from 'svelte';
   import type { UserRole } from '$lib/types/database';
+
+  onMount(() => {
+    if (DEMO_MODE) void goto('/discover');
+  });
 
   let role = $state<UserRole>('helper');
   let display_name = $state('');

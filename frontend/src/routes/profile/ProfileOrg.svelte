@@ -6,6 +6,7 @@
   import Button from '$lib/components/ui/Button.svelte';
   import { getOrganizationProfile, updateOwnProfile } from '$lib/services/supabase/profiles';
   import { signOut } from '$lib/services/supabase/auth';
+  import { DEMO_MODE } from '$lib/config/demo';
   import { auth } from '$lib/stores/auth.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import { goto } from '$app/navigation';
@@ -61,7 +62,9 @@
       ratingCount={auth.profile.rating_count}
     >
       {#snippet actions()}
-        <Button variant="outlined" leadingIcon="logout" onclick={logout}>Abmelden</Button>
+        {#if !DEMO_MODE}
+          <Button variant="outlined" leadingIcon="logout" onclick={logout}>Abmelden</Button>
+        {/if}
       {/snippet}
     </ProfileHeaderCard>
 
