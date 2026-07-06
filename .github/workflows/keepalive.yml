@@ -1,0 +1,19 @@
+name: Supabase Keepalive
+
+# Free-tier Supabase projects pause after ~7 days without traffic. Two pings
+# per week keep the demo backend awake; the demo shows an error banner if it
+# is paused anyway.
+on:
+  schedule:
+    - cron: '17 6 * * 1,4' # Mon + Thu, 06:17 UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST endpoint
+        run: |
+          curl -sf "https://fhqgbenlufdqbihmmdrq.supabase.co/rest/v1/published_offers_view?select=id&limit=1" \
+            -H "apikey: sb_publishable_bSAYlEvstsaJJi90ciAFpw_1sLy-djl" > /dev/null
+          echo "Supabase is awake."

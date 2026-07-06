@@ -1,0 +1,57 @@
+name: Deploy Demo (GitHub Pages)
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      # URL and publishable key are public by design (RLS + read-only DB guard
+      # the data); inlined because repository variables require admin access.
+      - run: pnpm build
+        env:
+          VITE_SUPABASE_URL: https://fhqgbenlufdqbihmmdrq.supabase.co
+          VITE_SUPABASE_ANON_KEY: sb_publishable_bSAYlEvstsaJJi90ciAFpw_1sLy-djl
+          VITE_DEMO_MODE: 'true'
+      # GitHub Pages serves unknown routes via 404.html — make it the SPA fallback.
+      - run: cp build/index.html build/404.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
