@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import Icon from '$lib/components/ui/Icon.svelte';
   import CategoryBadge from '$lib/components/ui/CategoryBadge.svelte';
