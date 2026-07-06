@@ -1,6 +1,11 @@
 -- =============================================================================
--- ActNow database schema
--- Single source of truth (per repo `.github/copilot-instructions.md`)
+-- DEPRECATED (2026-07-06): DO NOT APPLY THIS FILE.
+-- The schema is now versioned as migrations under `supabase/migrations/`
+-- (source of truth; see `supabase/README.md`). This file is kept as a frozen
+-- read-only reference of the pre-migration state. Schema changes go into new
+-- migration files, never here. Re-applying this file DROPS all app data.
+-- =============================================================================
+-- ActNow database schema (frozen reference)
 -- Authoritative spec: `docs/data-model.md`
 -- =============================================================================
 --
