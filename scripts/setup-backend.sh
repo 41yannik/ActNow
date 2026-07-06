@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# setup-backend.sh — Start Supabase, apply schema, and load seed data.
+# setup-backend.sh — Start Supabase and apply migrations + seed data.
 #
 # USAGE:
 #   ./scripts/setup-backend.sh
@@ -10,8 +10,8 @@
 #
 # WHAT IT DOES:
 #   1. Starts Supabase (postgres, auth, storage)
-#   2. Applies database schema
-#   3. Loads seed data (test accounts with password 'actnow-dev')
+#   2. Applies supabase/migrations/ + supabase/seed.sql via `supabase db reset`
+#      (test accounts with password 'actnow-dev')
 
 set -euo pipefail
 
@@ -26,8 +26,6 @@ success() { printf "${GREEN}${BOLD}✓${NC} $*\n"; }
 error() { printf "${RED}${BOLD}✗${NC} $*\n"; exit 1; }
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SCHEMA_FILE="$ROOT_DIR/docs/schema.sql"
-SEED_FILE="$ROOT_DIR/docs/seed.sql"
 
 # ── Step 1: Install Supabase CLI if needed ──────────────────────────────────
 
@@ -70,32 +68,13 @@ for i in {1..30}; do
   sleep 1
 done
 
-# ── Step 5: Get database connection ────────────────────────────────────────
+# ── Step 5: Apply migrations + seed ────────────────────────────────────────
 
-log "Retrieving database credentials..."
-DB_URL=$(supabase status --json | jq -r '.db | select(.host) | "postgresql://\(.user):\(.password)@\(.host):\(.port)/\(.database)"' || true)
-
-if [ -z "$DB_URL" ] || [[ "$DB_URL" == "null" ]]; then
-  error "Failed to extract database URL from supabase status"
+log "Applying migrations and seed data (supabase db reset)..."
+if ! supabase db reset; then
+  error "Failed to apply migrations/seed via supabase db reset"
 fi
-
-export PGPASSWORD=""
-
-# ── Step 6: Apply schema ───────────────────────────────────────────────────
-
-log "Applying database schema..."
-if ! psql "$DB_URL" -v ON_ERROR_STOP=1 -f "$SCHEMA_FILE" &> /dev/null; then
-  error "Failed to apply schema"
-fi
-success "Schema applied"
-
-# ── Step 7: Load seed data ─────────────────────────────────────────────────
-
-log "Loading seed data (test accounts)..."
-if ! psql "$DB_URL" -v ON_ERROR_STOP=1 -f "$SEED_FILE" &> /dev/null; then
-  error "Failed to load seed data"
-fi
-success "Seed data loaded"
+success "Migrations and seed data applied"
 
 # ── Summary ────────────────────────────────────────────────────────────────
 
@@ -105,10 +84,9 @@ echo ""
 echo "Test accounts (password: 'actnow-dev'):"
 echo "  - admin@actnow.test (admin)"
 echo "  - helper1@actnow.test (helper)"
-echo "  - org1@actnow.test (organization)"
+echo "  - verein1@actnow.test (organization)"
 echo ""
 echo "Supabase Studio: http://localhost:54323"
-echo "Database URL:    $DB_URL"
 echo ""
 echo "Frontend is running on http://localhost:5173"
 echo "Try registering a new account!"

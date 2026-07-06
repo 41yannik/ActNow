@@ -1,48 +1,40 @@
 # ActNow — Supabase Backend
 
-The ActNow backend lives entirely in Supabase. Per the repository convention
-(`.github/copilot-instructions.md`) the database schema is **not** versioned as
-migrations during early development. Instead:
+The ActNow backend lives entirely in Supabase. Since July 2026 the database is
+**versioned as migrations**:
 
-- [`docs/schema.sql`](../docs/schema.sql) is the single source of truth for the
-  database schema (tables, enums, triggers, RLS, RPCs, storage buckets &
-  policies).
-- [`docs/seed.sql`](../docs/seed.sql) contains development seed data.
+- [`migrations/`](./migrations) is the single source of truth for the database
+  schema (tables, enums, triggers, RLS, RPCs, storage buckets & policies).
+  Schema changes are made by **adding new migration files** — never by editing
+  applied ones.
+- [`seed.sql`](./seed.sql) contains development/staging seed data
+  (referenced by `config.toml` → `[db.seed]`, applied automatically on
+  `supabase db reset`). **Never apply the seed to production.**
+- [`tests/rls_smoke.sql`](./tests/rls_smoke.sql) is the RLS smoke-test suite.
+- [`../docs/schema.sql`](../docs/schema.sql) is the **frozen pre-migration
+  reference** (deprecated — do not apply; see its header).
 
-This folder only contains operational glue (this README + optional local
-config). No `supabase/migrations/` directory is created on purpose.
+## Environments
 
-## Prerequisites
+| Environment | Project                                   | Notes |
+| ----------- | ----------------------------------------- | ----- |
+| Local       | Docker stack via `supabase start`         | Ports 54321–54329, Studio on 54323 |
+| Staging     | `fhqgbenlufdqbihmmdrq` (eu-central-1)     | Free tier — auto-pauses after ~7 days idle; restore via dashboard or MCP `restore_project` |
+| Production  | — (not yet created)                       | Create from the same migrations; **no seed**, custom SMTP + email confirmations required before launch |
 
-- [Supabase CLI](https://supabase.com/docs/guides/cli) (>= v1.150)
-- Docker (for `supabase start`)
-- `psql` (PostgreSQL client)
+Frontend env vars (`frontend/.env`): `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`
+(publishable `sb_publishable_...` key). See `frontend/.env.example`.
 
-## 1. Start a local Supabase stack
+## Local development
 
 ```bash
+./scripts/setup-backend.sh   # installs CLI if needed, starts stack, applies migrations + seed
+# or manually:
 supabase start
+supabase db reset            # replays supabase/migrations/ + supabase/seed.sql
 ```
 
-This boots Postgres, Auth, Storage, and Studio locally. Note the printed URLs
-and keys — copy them into your `.env` (use `.env.example` as a template).
-
-## 2. Apply the schema
-
-```bash
-psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f docs/schema.sql
-```
-
-The script is **replayable**: every `DROP … IF EXISTS` runs first, so you can
-re-apply it any time. **Re-applying drops all app tables and their data.**
-
-## 3. Load seed data
-
-```bash
-psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f docs/seed.sql
-```
-
-Seed accounts (dev only, password `actnow-dev`):
+Seed accounts (dev/staging only, password `actnow-dev`):
 
 | Email                 | Role         |
 | --------------------- | ------------ |
@@ -53,23 +45,74 @@ Seed accounts (dev only, password `actnow-dev`):
 | `verein1@actnow.test` | organization |
 | `verein2@actnow.test` | organization |
 
-> The seed file disables a few business-logic triggers around the controlled
-> inserts and re-enables them at the end. Aggregate columns (`profiles.average_rating`,
-> `offers.accepted_helpers_count`) are recomputed before commit.
+> Note: cloud GoTrue rejects `.test` email domains for **new** signups — the
+> seed accounts work because they are inserted directly. Use real-looking
+> addresses when testing registration against staging.
 
-## 4. Reset the database
+## Deploying schema changes
+
+Staging was initialized via the Supabase MCP (`apply_migration`), one call per
+file in `migrations/`. File names carry the cloud-assigned versions — keep them
+in sync (after applying, compare with `list_migrations`).
+
+For future changes: add a new `migrations/<version>_<name>.sql`, apply it to
+staging via MCP `apply_migration` (or `supabase link` + `supabase db push`),
+then run `supabase db reset` locally to stay identical.
+
+## Auth configuration (staging dashboard checklist)
+
+These settings are **not** covered by migrations — set them under
+Authentication in the dashboard of project `fhqgbenlufdqbihmmdrq`:
+
+| Setting                    | Value                                    | Status |
+| -------------------------- | ---------------------------------------- | ------ |
+| Site URL                   | `http://localhost:5173`                  | ☐ todo |
+| Additional Redirect URLs   | `http://localhost:5173/**`               | ☐ todo |
+| Minimum password length    | `8` (frontend Zod already enforces 8)    | ☐ todo |
+| Confirm email              | OFF for staging; **ON before production launch** (requires custom SMTP, e.g. Resend) | ✓ default |
+
+The local `config.toml` mirrors these values for `supabase start`.
+
+## Smoke-testing RLS
 
 ```bash
-supabase db reset             # nukes the DB
-psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f docs/schema.sql
-psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f docs/seed.sql
+# local (needs seed data):
+psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
+# staging: run the file content via MCP execute_sql
 ```
+
+The suite runs in a single transaction ending in ROLLBACK (no traces) and
+covers: anon read/write boundaries, profile isolation, application visibility,
+message participant scoping, protected-column escalation, and document-share
+scoping. Success prints `RLS SMOKE TESTS PASSED`.
+
+## Security-advisor triage (as of 2026-07-06)
+
+Fixed via migrations `20260706125830` / `20260706125926`: Supabase's default
+privileges had granted function EXECUTE to `anon` — revoked for all RPCs and
+trigger/internal functions (RPCs remain `authenticated`-only by design).
+
+Accepted / follow-ups:
+
+- **`security_definer_view` (4 views, ERROR)** — intentional for now: the views
+  expose only pre-filtered public data (active profiles, published offers) and
+  `anon` deliberately lacks EXECUTE on `is_admin()`, which the underlying RLS
+  policies call. Switching to `security_invoker` requires reworking anon
+  policies first. Follow-up before production.
+- **`function_search_path_mutable` (9 non-definer trigger functions, WARN)** —
+  low risk (not `security definer`); add `set search_path` in a cleanup
+  migration.
+- **`extension_in_public` (citext, WARN)** — move to `extensions` schema in a
+  cleanup migration.
+- **`public_bucket_allows_listing` (avatars, offer-images, WARN)** — public
+  buckets allow listing; tighten the SELECT policies once frontend storage
+  usage lands.
 
 ## Signup contract
 
-`docs/schema.sql` installs an `on_auth_user_created` trigger that auto-creates
-a `profiles` row (plus matching `helper_profiles` / `organization_profiles`
-row) when a user signs up. The frontend must send signup metadata:
+The `on_auth_user_created` trigger auto-creates a `profiles` row (plus matching
+`helper_profiles` / `organization_profiles` row) on signup. The frontend must
+send signup metadata:
 
 ```ts
 await supabase.auth.signUp({
@@ -120,26 +163,20 @@ of their offers.
 | `withdraw_application`                  | applying helper| Status → withdrawn                                                   |
 | `complete_application`                  | owning org     | Status → completed, unlocks rating creation                          |
 | `create_conversation_for_application`   | participant    | Idempotent conversation lookup/insert for an application             |
+| `list_community_conversations`          | authenticated  | Community inbox incl. unread counts                                  |
+| `get_community_summary`                 | authenticated  | Unread message/notification totals                                   |
+| `mark_conversation_read`                | participant    | Marks messages + related notifications read                          |
 
-All RPCs are `security definer`, `revoke ... from public`, `grant ... to authenticated`,
-and perform `auth.uid()` / `current_profile_id()` ownership checks internally.
-
-## Smoke-testing RLS
-
-After loading seed data, log in as one of the dev users from Supabase Studio,
-copy the JWT, and try queries against PostgREST. Quick sanity checks:
-
-- `helper1` cannot `select * from helper_documents` belonging to `helper3`.
-- `verein1` **can** see `helper1`'s document (it has an active share via
-  application 40000000-…-101).
-- Any helper attempting `update profiles set role='admin'` is rejected.
-- `insert into ratings ...` for an application whose status ≠ `completed` is
-  rejected by the `ratings_insert_after_completion` policy.
+All RPCs are `security definer` with `set search_path`, EXECUTE granted to
+`authenticated` only, and perform `auth.uid()` / `current_profile_id()`
+ownership checks internally.
 
 ## Files
 
-- [`docs/schema.sql`](../docs/schema.sql) — schema, RLS, triggers, RPCs, storage
-- [`docs/seed.sql`](../docs/seed.sql) — dev seed data
-- [`docs/data-model.md`](../docs/data-model.md) — authoritative data-model spec
-- [`docs/api-contract.md`](../docs/api-contract.md) — frontend↔backend contract
-- [`.env.example`](../.env.example) — required environment variables
+- [`migrations/`](./migrations) — schema as versioned migrations (source of truth)
+- [`seed.sql`](./seed.sql) — dev/staging seed data
+- [`tests/rls_smoke.sql`](./tests/rls_smoke.sql) — RLS smoke tests
+- [`../docs/schema.sql`](../docs/schema.sql) — frozen pre-migration reference (deprecated)
+- [`../docs/data-model.md`](../docs/data-model.md) — authoritative data-model spec
+- [`../docs/api-contract.md`](../docs/api-contract.md) — frontend↔backend contract
+- [`../.env.example`](../.env.example) — required environment variables
