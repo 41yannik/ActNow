@@ -23,16 +23,18 @@
   async function submit(e: Event) {
     e.preventDefault();
     error = null;
+
     if (!terms) {
-      error = 'Bitte akzeptiere die AGB.';
+      error = 'Bitte akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung.';
       return;
     }
     const data = {
       role,
       email,
       password,
-      display_name,
-      org_name: role === 'organization' ? org_name : undefined
+      display_name: role === 'organization' ? org_name : display_name,
+      organization_name: role === 'organization' ? org_name : undefined,
+      accept_terms: terms
     };
     const parsed = registerSchema.safeParse(data);
     if (!parsed.success) {
@@ -41,13 +43,12 @@
     }
     submitting = true;
     try {
-      const finalDisplay = role === 'organization' ? org_name : display_name;
       await signUp({
         email: parsed.data.email,
         password: parsed.data.password,
         role: parsed.data.role,
-        display_name: finalDisplay,
-        organization_name: role === 'organization' ? org_name : undefined
+        display_name: parsed.data.display_name,
+        organization_name: parsed.data.organization_name
       });
       toasts.success('Konto erstellt!', 'Willkommen bei ActNow');
       await goto(role === 'organization' ? '/dashboard' : '/discover');
@@ -81,17 +82,37 @@
       helper="Mindestens 8 Zeichen."
       bind:value={password}
     />
-    <label class="flex items-start gap-2 text-body-md font-body-md text-on-surface">
+    <div class="flex items-start gap-2">
       <input
+        id="terms-checkbox"
         type="checkbox"
         bind:checked={terms}
-        class="mt-1 h-4 w-4 rounded border-outline text-primary focus:ring-primary"
+        class="mt-1 h-4 w-4 rounded border-outline text-primary focus:ring-primary flex-shrink-0 cursor-pointer accent-primary"
       />
-      <span>
-        Ich akzeptiere die <a class="text-primary hover:underline" href="/agb">AGB</a> und die
-        <a class="text-primary hover:underline" href="/datenschutz">Datenschutzerklärung</a>.
-      </span>
-    </label>
+      <label for="terms-checkbox" class="text-body-md font-body-md text-on-surface cursor-pointer flex-1">
+        <span class="block">
+          Ich akzeptiere die
+          <a
+            href="/agb"
+            class="text-primary hover:underline cursor-pointer font-semibold"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            AGB
+          </a>
+          und die
+          <a
+            href="/datenschutz"
+            class="text-primary hover:underline cursor-pointer font-semibold"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Datenschutzerklärung
+          </a>
+          .
+        </span>
+      </label>
+    </div>
     <Button type="submit" disabled={submitting}>
       {submitting ? 'Registriere…' : 'Konto erstellen'}
     </Button>
