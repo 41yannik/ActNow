@@ -40,6 +40,6 @@ export function enrichOffer(offerId: string): OfferEnrichment {
     taken: 4 + (h % 12),
     km: Number((1 + (h % 80) / 10).toFixed(1)),
     sos: h % 7 === 0,
-    match: h % 4 === 0 ? 'partial' : 'fits'
+    match: h % 4 === 0 ? 'partial' : 'fits',
   };
 }

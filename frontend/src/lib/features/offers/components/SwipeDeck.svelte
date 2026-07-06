@@ -41,7 +41,7 @@
     savedIds,
     ontogglesave,
     onopendetail,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 
   // ── Reactive state ─────────────────────────────────────────────────────────
@@ -65,8 +65,7 @@
   let cardEl: HTMLDivElement | null = null;
 
   const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ── Geometry helpers ──────────────────────────────────────────────────────
   const rotation = $derived(prefersReducedMotion ? 0 : dragX * rotationFactor);
@@ -116,15 +115,18 @@
     }
 
     // Wait for transition, then pop the card.
-    window.setTimeout(() => {
-      history = [...history, { offer: top, direction }];
-      queue = queue.slice(1);
-      onswipe?.({ direction, offerId: top.id });
-      exiting = null;
-      dragX = 0;
-      dragY = 0;
-      if (queue.length === 0) onempty?.();
-    }, prefersReducedMotion ? 0 : 280);
+    window.setTimeout(
+      () => {
+        history = [...history, { offer: top, direction }];
+        queue = queue.slice(1);
+        onswipe?.({ direction, offerId: top.id });
+        exiting = null;
+        dragX = 0;
+        dragY = 0;
+        if (queue.length === 0) onempty?.();
+      },
+      prefersReducedMotion ? 0 : 280,
+    );
   }
 
   function undo() {
@@ -138,26 +140,37 @@
   // Exposed via `bind:this`. Svelte 5: `export` from `<script module>` is for
   // module-level — for instance methods we attach via `$$` is not available, so
   // expose handlers through a tiny accessor pattern.
-  export function swipeLeft() { commit('left'); }
-  export function swipeRight() { commit('right'); }
-  export function undoLast() { undo(); }
-  export function topOfferId(): string | null { return queue[0]?.id ?? null; }
+  export function swipeLeft() {
+    commit('left');
+  }
+  export function swipeRight() {
+    commit('right');
+  }
+  export function undoLast() {
+    undo();
+  }
+  export function topOfferId(): string | null {
+    return queue[0]?.id ?? null;
+  }
 
   // ── Keyboard ──────────────────────────────────────────────────────────────
   function onKey(e: KeyboardEvent) {
-    if (e.key === 'ArrowLeft') { e.preventDefault(); commit('left'); }
-    else if (e.key === 'ArrowRight') { e.preventDefault(); commit('right'); }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      commit('left');
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      commit('right');
+    }
   }
 
   // Active card transform.
   const transform = $derived(
     exiting || dragging
       ? `translate(${dragX}px, ${dragY}px) rotate(${rotation}deg)`
-      : 'translate(0,0) rotate(0deg)'
+      : 'translate(0,0) rotate(0deg)',
   );
-  const transition = $derived(
-    dragging ? 'none' : 'transform 0.28s ease, opacity 0.28s ease'
-  );
+  const transition = $derived(dragging ? 'none' : 'transform 0.28s ease, opacity 0.28s ease');
   const opacity = $derived(exiting ? 0 : 1);
 </script>
 
@@ -192,7 +205,7 @@
       >
         <SwipeCard
           {offer}
-          dragX={dragX}
+          {dragX}
           threshold={swipeThreshold}
           saved={savedIds?.has(offer.id) ?? false}
           ontogglesave={() => ontogglesave?.(offer.id)}

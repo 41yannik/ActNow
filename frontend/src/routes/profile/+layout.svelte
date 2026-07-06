@@ -25,20 +25,20 @@
   const helperTop = [
     { label: 'Discover', href: '/discover', active: false },
     { label: 'Calendar', href: '/calendar', active: false },
-    { label: 'Messages', href: '/messages', active: false }
+    { label: 'Messages', href: '/messages', active: false },
   ];
   const helperBottom = [
     { label: 'Discover', href: '/discover', icon: 'explore', active: false },
     { label: 'Calendar', href: '/calendar', icon: 'calendar_today', active: false },
     { label: 'Messages', href: '/messages', icon: 'chat', active: false },
-    { label: 'Profile', href: '/profile', icon: 'person', active: true }
+    { label: 'Profile', href: '/profile', icon: 'person', active: true },
   ];
   const orgItems = [
     { label: 'Dashboard', href: '/dashboard', icon: 'dashboard', active: false },
     { label: 'Angebote', href: '/offers', icon: 'volunteer_activism', active: false },
     { label: 'Bewerbungen', href: '/applications', icon: 'assignment_ind', active: false },
     { label: 'Nachrichten', href: '/messages', icon: 'mail', active: false },
-    { label: 'Profil', href: '/profile', icon: 'person', active: true }
+    { label: 'Profil', href: '/profile', icon: 'person', active: true },
   ];
 </script>
 

@@ -9,22 +9,18 @@
   }
   const { variant = 'rect', class: klass = '', lines = 1 }: Props = $props();
 
-  const base =
-    'animate-pulse bg-surface-container-high';
+  const base = 'animate-pulse bg-surface-container-high';
   const shape = {
     rect: 'rounded-lg',
     text: 'rounded h-4',
-    circle: 'rounded-full'
+    circle: 'rounded-full',
   } as const;
 </script>
 
 {#if variant === 'text' && lines > 1}
   <div class="space-y-2 {klass}">
     {#each Array(lines) as _, i}
-      <div
-        class="{base} {shape.text}"
-        style="width: {i === lines - 1 ? 60 : 100}%"
-      ></div>
+      <div class="{base} {shape.text}" style="width: {i === lines - 1 ? 60 : 100}%"></div>
     {/each}
   </div>
 {:else}

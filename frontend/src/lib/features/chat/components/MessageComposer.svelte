@@ -8,7 +8,12 @@
     placeholder?: string;
     class?: string;
   }
-  const { onsend, disabled = false, placeholder = 'Nachricht schreiben…', class: klass = '' }: Props = $props();
+  const {
+    onsend,
+    disabled = false,
+    placeholder = 'Nachricht schreiben…',
+    class: klass = '',
+  }: Props = $props();
 
   let text = $state('');
   let sending = $state(false);

@@ -4,12 +4,12 @@ import type {
   ApplicationRow,
   ApplicationStatus,
   ApplicationWithOffer,
-  UUID
+  UUID,
 } from '$lib/types/database';
 
 export async function listApplicationsForOffer(
   offerId: UUID,
-  status?: ApplicationStatus
+  status?: ApplicationStatus,
 ): Promise<ApplicationRow[]> {
   let q = supabase
     .from('applications')
@@ -24,7 +24,7 @@ export async function listApplicationsForOffer(
 
 export async function listApplicationsForHelper(
   helperProfileId: UUID,
-  status?: ApplicationStatus | ApplicationStatus[]
+  status?: ApplicationStatus | ApplicationStatus[],
 ): Promise<ApplicationWithOffer[]> {
   let q = supabase
     .from('applications')
@@ -39,7 +39,7 @@ export async function listApplicationsForHelper(
           profile:profiles!inner(id, display_name, slug, avatar_url, average_rating, rating_count)
         )
       )
-    `
+    `,
     )
     .eq('helper_profile_id', helperProfileId)
     .order('submitted_at', { ascending: false });
@@ -72,7 +72,7 @@ export async function acceptApplication(id: UUID): Promise<ApplicationRow> {
 export async function rejectApplication(id: UUID, reason?: string): Promise<ApplicationRow> {
   const { data, error } = await supabase.rpc('reject_application', {
     p_application_id: id,
-    p_reason: reason ?? null
+    p_reason: reason ?? null,
   });
   if (error) throw error;
   return data as ApplicationRow;

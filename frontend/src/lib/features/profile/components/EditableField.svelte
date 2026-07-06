@@ -12,7 +12,14 @@
     onsave: (next: string) => void | Promise<void>;
     class?: string;
   }
-  const { label, value, multiline = false, placeholder = '', onsave, class: klass = '' }: Props = $props();
+  const {
+    label,
+    value,
+    multiline = false,
+    placeholder = '',
+    onsave,
+    class: klass = '',
+  }: Props = $props();
 
   let editing = $state(false);
   let draft = $state('');
@@ -54,7 +61,9 @@
       <TextField bind:value={draft} {placeholder} />
     {/if}
     <div class="flex justify-end gap-xs">
-      <button type="button" class="px-sm py-1 text-on-surface-variant" onclick={cancel}>Abbrechen</button>
+      <button type="button" class="px-sm py-1 text-on-surface-variant" onclick={cancel}
+        >Abbrechen</button
+      >
       <button
         type="button"
         class="rounded-full bg-primary px-md py-1 text-on-primary disabled:opacity-50"

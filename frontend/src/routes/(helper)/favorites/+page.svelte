@@ -17,7 +17,7 @@
     CommunitySummary,
     OfferRow,
     OfferStatus,
-    SavedOfferWithOffer
+    SavedOfferWithOffer,
   } from '$lib/types/database';
   import { formatDate, formatRelative } from '$lib/utils/format';
   import { OFFER_STATUS_LABEL } from '$lib/utils/labels';
@@ -27,7 +27,7 @@
     'filled',
     'completed',
     'cancelled',
-    'archived'
+    'archived',
   ]);
 
   let loading = $state(true);
@@ -37,7 +37,7 @@
   let summary = $state<CommunitySummary>({
     unread_messages: 0,
     unread_notifications: 0,
-    total_unread: 0
+    total_unread: 0,
   });
 
   const visibleCount = $derived(favorites.filter((item) => item.offer).length);
@@ -58,10 +58,7 @@
         return;
       }
 
-      const [rows, unread] = await Promise.all([
-        listSavedOffers(auth.profile.id),
-        summaryPromise
-      ]);
+      const [rows, unread] = await Promise.all([listSavedOffers(auth.profile.id), summaryPromise]);
       favorites = rows;
       summary = unread;
     } catch (err) {
@@ -133,7 +130,9 @@
 <section class="mx-auto w-full max-w-2xl">
   <SageHeader
     title="Favoriten"
-    subtitle={visibleCount === 1 ? '1 gespeichertes Angebot' : `${visibleCount} gespeicherte Angebote`}
+    subtitle={visibleCount === 1
+      ? '1 gespeichertes Angebot'
+      : `${visibleCount} gespeicherte Angebote`}
     unread={summary.total_unread}
     onbell={() => goto('/community')}
   />
@@ -143,104 +142,112 @@
       <div class="flex min-h-[420px] items-center justify-center">
         <LoadingSpinner />
       </div>
-    {:else}
-      {#if errorMessage}
-        <Alert tone="error" title="Favoriten nicht geladen">
-          <div class="space-y-sm">
-            <p>{errorMessage}</p>
-            <Button variant="outlined" size="sm" onclick={load}>Erneut versuchen</Button>
-          </div>
-        </Alert>
-      {:else if favorites.length === 0}
-        <div class="flex min-h-[420px] items-center justify-center">
-          <EmptyState
-            icon="favorite"
-            title="Noch keine Favoriten"
-            description="Gespeicherte Angebote aus Entdecken erscheinen hier als kompakte Liste."
-          >
-            {#snippet action()}
-              <Button onclick={() => goto('/discover')} leadingIcon="search">Angebote entdecken</Button>
-            {/snippet}
-          </EmptyState>
-        </div>
-      {:else}
+    {:else if errorMessage}
+      <Alert tone="error" title="Favoriten nicht geladen">
         <div class="space-y-sm">
-          {#each favorites as item (item.id)}
-            {@const offer = item.offer}
-            {@const unavailable = isUnavailable(offer)}
-            <article
-              class="flex gap-sm rounded-lg border p-md shadow-sm transition-colors
-                {unavailable
-                  ? 'border-error/35 bg-error-container/10'
-                  : 'border-outline-variant bg-surface'}"
-            >
-              <div
-                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg
-                  {unavailable
-                    ? 'bg-error-container text-on-error-container'
-                    : 'bg-primary-container text-white'}"
-              >
-                <Icon name={unavailable ? 'event_busy' : 'bookmark'} filled={!unavailable} size={22} />
-              </div>
-
-              <div class="min-w-0 flex-1">
-                <div class="flex flex-wrap items-start justify-between gap-xs">
-                  <h2 class="min-w-0 flex-1 break-words text-[15px] font-bold leading-snug text-on-secondary-container">
-                    {titleText(offer)}
-                  </h2>
-                  <Badge tone={unavailable ? 'danger' : 'success'}>{statusText(offer)}</Badge>
-                </div>
-
-                {#if offer?.description}
-                  <p class="mt-1 line-clamp-2 text-[13px] leading-relaxed text-on-surface-variant">
-                    {offer.description}
-                  </p>
-                {/if}
-
-                <div class="mt-sm flex flex-wrap gap-x-md gap-y-xs text-[12px] font-medium text-on-surface-variant">
-                  <span class="inline-flex items-center gap-1">
-                    <Icon name={offer?.is_remote ? 'language' : 'location_on'} size={14} />
-                    {locationText(offer)}
-                  </span>
-                  <span class="inline-flex items-center gap-1">
-                    <Icon name="calendar_today" size={14} />
-                    {dateText(offer)}
-                  </span>
-                  <span class="inline-flex items-center gap-1">
-                    <Icon name="category" size={14} />
-                    {categoryText(offer)}
-                  </span>
-                </div>
-
-                <div class="mt-sm flex flex-wrap items-center justify-between gap-sm">
-                  <span class="text-[11px] text-on-surface-variant">
-                    Gespeichert {formatRelative(item.created_at)}
-                  </span>
-                  <div class="flex items-center gap-xs">
-                    <Button
-                      variant="outlined"
-                      size="sm"
-                      disabled={!offer}
-                      onclick={() => openOffer(offer)}
-                    >
-                      Öffnen
-                    </Button>
-                    <IconButton
-                      icon={removingIds.has(item.id) ? 'progress_activity' : 'delete'}
-                      label="Aus Favoriten entfernen"
-                      tone="danger"
-                      size="sm"
-                      disabled={removingIds.has(item.id)}
-                      class={removingIds.has(item.id) ? 'animate-spin' : ''}
-                      onclick={() => removeFavorite(item)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </article>
-          {/each}
+          <p>{errorMessage}</p>
+          <Button variant="outlined" size="sm" onclick={load}>Erneut versuchen</Button>
         </div>
-      {/if}
+      </Alert>
+    {:else if favorites.length === 0}
+      <div class="flex min-h-[420px] items-center justify-center">
+        <EmptyState
+          icon="favorite"
+          title="Noch keine Favoriten"
+          description="Gespeicherte Angebote aus Entdecken erscheinen hier als kompakte Liste."
+        >
+          {#snippet action()}
+            <Button onclick={() => goto('/discover')} leadingIcon="search"
+              >Angebote entdecken</Button
+            >
+          {/snippet}
+        </EmptyState>
+      </div>
+    {:else}
+      <div class="space-y-sm">
+        {#each favorites as item (item.id)}
+          {@const offer = item.offer}
+          {@const unavailable = isUnavailable(offer)}
+          <article
+            class="flex gap-sm rounded-lg border p-md shadow-sm transition-colors
+                {unavailable
+              ? 'border-error/35 bg-error-container/10'
+              : 'border-outline-variant bg-surface'}"
+          >
+            <div
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg
+                  {unavailable
+                ? 'bg-error-container text-on-error-container'
+                : 'bg-primary-container text-white'}"
+            >
+              <Icon
+                name={unavailable ? 'event_busy' : 'bookmark'}
+                filled={!unavailable}
+                size={22}
+              />
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-start justify-between gap-xs">
+                <h2
+                  class="min-w-0 flex-1 break-words text-[15px] font-bold leading-snug text-on-secondary-container"
+                >
+                  {titleText(offer)}
+                </h2>
+                <Badge tone={unavailable ? 'danger' : 'success'}>{statusText(offer)}</Badge>
+              </div>
+
+              {#if offer?.description}
+                <p class="mt-1 line-clamp-2 text-[13px] leading-relaxed text-on-surface-variant">
+                  {offer.description}
+                </p>
+              {/if}
+
+              <div
+                class="mt-sm flex flex-wrap gap-x-md gap-y-xs text-[12px] font-medium text-on-surface-variant"
+              >
+                <span class="inline-flex items-center gap-1">
+                  <Icon name={offer?.is_remote ? 'language' : 'location_on'} size={14} />
+                  {locationText(offer)}
+                </span>
+                <span class="inline-flex items-center gap-1">
+                  <Icon name="calendar_today" size={14} />
+                  {dateText(offer)}
+                </span>
+                <span class="inline-flex items-center gap-1">
+                  <Icon name="category" size={14} />
+                  {categoryText(offer)}
+                </span>
+              </div>
+
+              <div class="mt-sm flex flex-wrap items-center justify-between gap-sm">
+                <span class="text-[11px] text-on-surface-variant">
+                  Gespeichert {formatRelative(item.created_at)}
+                </span>
+                <div class="flex items-center gap-xs">
+                  <Button
+                    variant="outlined"
+                    size="sm"
+                    disabled={!offer}
+                    onclick={() => openOffer(offer)}
+                  >
+                    Öffnen
+                  </Button>
+                  <IconButton
+                    icon={removingIds.has(item.id) ? 'progress_activity' : 'delete'}
+                    label="Aus Favoriten entfernen"
+                    tone="danger"
+                    size="sm"
+                    disabled={removingIds.has(item.id)}
+                    class={removingIds.has(item.id) ? 'animate-spin' : ''}
+                    onclick={() => removeFavorite(item)}
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+        {/each}
+      </div>
     {/if}
   </div>
 </section>

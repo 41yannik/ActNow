@@ -10,7 +10,7 @@ export interface OrgDashboardMetrics {
 }
 
 export async function getOrgDashboardMetrics(
-  organizationProfileId: UUID
+  organizationProfileId: UUID,
 ): Promise<OrgDashboardMetrics> {
   // Run four count queries in parallel.
   const [openOffersQ, newAppsQ, upcomingQ, unreadQ] = await Promise.all([
@@ -28,7 +28,7 @@ export async function getOrgDashboardMetrics(
       .from('applications')
       .select('id, offer:offers!inner(organization_profile_id, starts_at)', {
         count: 'exact',
-        head: true
+        head: true,
       })
       .eq('offer.organization_profile_id', organizationProfileId)
       .eq('status', 'accepted')
@@ -37,16 +37,16 @@ export async function getOrgDashboardMetrics(
       .from('messages')
       .select('id, conversation:conversations!inner(organization_profile_id)', {
         count: 'exact',
-        head: true
+        head: true,
       })
       .eq('conversation.organization_profile_id', organizationProfileId)
       .neq('status', 'read')
-      .neq('sender_profile_id', organizationProfileId)
+      .neq('sender_profile_id', organizationProfileId),
   ]);
   return {
     open_offers: openOffersQ.count ?? 0,
     new_applications: newAppsQ.count ?? 0,
     upcoming_engagements: upcomingQ.count ?? 0,
-    unread_messages: unreadQ.count ?? 0
+    unread_messages: unreadQ.count ?? 0,
   };
 }

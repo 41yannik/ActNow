@@ -5,7 +5,7 @@ import type {
   HelperProfileRow,
   OrganizationProfileRow,
   ProfileRow,
-  UUID
+  UUID,
 } from '$lib/types/database';
 
 export async function getOwnProfile(userId: UUID): Promise<ProfileRow | null> {
@@ -51,7 +51,7 @@ export async function getHelperProfile(profileId: UUID): Promise<HelperProfileRo
 
 export async function updateHelperProfile(
   profileId: UUID,
-  patch: Partial<Omit<HelperProfileRow, 'profile_id' | 'created_at' | 'updated_at'>>
+  patch: Partial<Omit<HelperProfileRow, 'profile_id' | 'created_at' | 'updated_at'>>,
 ) {
   const { data, error } = await supabase
     .from('helper_profiles')
@@ -64,7 +64,7 @@ export async function updateHelperProfile(
 }
 
 export async function getOrganizationProfile(
-  profileId: UUID
+  profileId: UUID,
 ): Promise<OrganizationProfileRow | null> {
   const { data, error } = await supabase
     .from('organization_profiles')
@@ -82,7 +82,7 @@ export async function updateOrganizationProfile(
       OrganizationProfileRow,
       'profile_id' | 'created_at' | 'updated_at' | 'is_verified' | 'verified_at'
     >
-  >
+  >,
 ) {
   const { data, error } = await supabase
     .from('organization_profiles')

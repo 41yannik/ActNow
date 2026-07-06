@@ -9,7 +9,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   // Non-fatal in dev so the showcase still renders. Real pages must check.
   console.warn(
     '[supabase] VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY missing. ' +
-      'Copy ../.env.example to frontend/.env to enable backend calls.'
+      'Copy ../.env.example to frontend/.env to enable backend calls.',
   );
 }
 
@@ -17,6 +17,6 @@ export const supabase: SupabaseClient = createClient(
   SUPABASE_URL || 'http://localhost:8000',
   SUPABASE_ANON_KEY || 'anon-key-missing',
   {
-    auth: { persistSession: true, autoRefreshToken: true }
-  }
+    auth: { persistSession: true, autoRefreshToken: true },
+  },
 );

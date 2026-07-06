@@ -17,18 +17,15 @@ export const offerSchema = z
     starts_at: z.string().datetime().optional().nullable(),
     ends_at: z.string().datetime().optional().nullable(),
     application_deadline: z.string().datetime().optional().nullable(),
-    requires_documents: z.boolean().default(false)
+    requires_documents: z.boolean().default(false),
   })
   .refine((d) => d.is_remote || (d.city && d.city.length > 0), {
     path: ['city'],
-    message: 'Ort erforderlich, falls nicht remote.'
+    message: 'Ort erforderlich, falls nicht remote.',
   })
   .refine(
-    (d) =>
-      d.starts_at == null ||
-      d.ends_at == null ||
-      new Date(d.ends_at) > new Date(d.starts_at),
-    { path: ['ends_at'], message: 'Endzeit muss nach Startzeit liegen.' }
+    (d) => d.starts_at == null || d.ends_at == null || new Date(d.ends_at) > new Date(d.starts_at),
+    { path: ['ends_at'], message: 'Endzeit muss nach Startzeit liegen.' },
   );
 
 export type OfferInput = z.infer<typeof offerSchema>;

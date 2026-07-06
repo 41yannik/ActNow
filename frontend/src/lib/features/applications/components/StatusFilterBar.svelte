@@ -14,7 +14,7 @@
     value,
     options = ['all', 'submitted', 'shortlisted', 'accepted', 'rejected', 'completed'],
     onchange,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 
   function label(o: ApplicationStatus | 'all') {
@@ -24,6 +24,10 @@
 
 <div class="no-scrollbar flex gap-xs overflow-x-auto {klass}" role="toolbar" aria-label="Status">
   {#each options as o}
-    <Chip label={label(o)} variant={value === o ? 'selected' : 'filter'} onclick={() => onchange(o)} />
+    <Chip
+      label={label(o)}
+      variant={value === o ? 'selected' : 'filter'}
+      onclick={() => onchange(o)}
+    />
   {/each}
 </div>

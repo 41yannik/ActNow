@@ -1,10 +1,29 @@
 <script lang="ts">
   import {
-    Button, IconButton, Chip, Avatar, OrgLogo, RatingStars, Badge, Tag,
-    EmptyState, LoadingSpinner, Alert,
-    TextField, TextArea, Select, Checkbox, Radio, CheckboxCard, RadioCard, FormSection,
-    TopNavBar, BottomNavBar, PageHeader,
-    SwipeDeck, SwipeActionBar
+    Button,
+    IconButton,
+    Chip,
+    Avatar,
+    OrgLogo,
+    RatingStars,
+    Badge,
+    Tag,
+    EmptyState,
+    LoadingSpinner,
+    Alert,
+    TextField,
+    TextArea,
+    Select,
+    Checkbox,
+    Radio,
+    CheckboxCard,
+    RadioCard,
+    FormSection,
+    TopNavBar,
+    BottomNavBar,
+    PageHeader,
+    SwipeDeck,
+    SwipeActionBar,
   } from '$lib';
   import type { Offer } from '$lib/types/domain';
   import type { SwipeEvent } from '$lib/features/offers/components/swipe.types';
@@ -28,7 +47,7 @@
       schedule_text: 'Jeden Dienstag, 15:00 – 17:00',
       helpers_needed: 4,
       accepted_helpers_count: 2,
-      starts_at: null
+      starts_at: null,
     },
     {
       id: 'o-2',
@@ -47,7 +66,7 @@
       schedule_text: 'Samstag, 09:00 – 12:00',
       helpers_needed: 10,
       accepted_helpers_count: 4,
-      starts_at: null
+      starts_at: null,
     },
     {
       id: 'o-3',
@@ -66,8 +85,8 @@
       schedule_text: 'Flexibel, bis Ende des Monats',
       helpers_needed: 1,
       accepted_helpers_count: 0,
-      starts_at: null
-    }
+      starts_at: null,
+    },
   ];
 
   // ── Swipe wiring ─────────────────────────────────────────────────────────
@@ -110,28 +129,25 @@
   <section class="space-y-md">
     <h2 class="font-h2 text-h2-mobile md:text-h2 text-on-surface">★ SwipeDeck</h2>
     <p class="text-on-surface-variant max-w-2xl">
-      Drag the top card or use the buttons / arrow keys. Cards beyond the top
-      are rendered as visual depth only.
+      Drag the top card or use the buttons / arrow keys. Cards beyond the top are rendered as visual
+      depth only.
     </p>
 
     <div class="flex flex-col items-center gap-md">
-      <SwipeDeck
-        bind:this={deck}
-        offers={queue}
-        onswipe={handleSwipe}
-        onempty={handleEmpty}
-      />
+      <SwipeDeck bind:this={deck} offers={queue} onswipe={handleSwipe} onempty={handleEmpty} />
 
       <SwipeActionBar
         canUndo={true}
         onundo={() => deck?.undoLast()}
         onreject={() => deck?.swipeLeft()}
-        onsave={() => log = ['Favorit → ' + (deck?.topOfferId() ?? '—'), ...log].slice(0, 6)}
+        onsave={() => (log = ['Favorit → ' + (deck?.topOfferId() ?? '—'), ...log].slice(0, 6))}
         onaccept={() => deck?.swipeRight()}
       />
 
       <div class="flex gap-sm">
-        <Button variant="outlined" size="sm" leadingIcon="refresh" onclick={reset}>Reset Deck</Button>
+        <Button variant="outlined" size="sm" leadingIcon="refresh" onclick={reset}
+          >Reset Deck</Button
+        >
       </div>
 
       {#if log.length}
@@ -196,10 +212,10 @@
       <Alert tone="success" title="Bewerbung gesendet">
         Der Verein wurde benachrichtigt und meldet sich in Kürze.
       </Alert>
-      <Alert tone="error" title="Fehler">
-        Bitte überprüfe deine Internetverbindung.
-      </Alert>
-      <div class="bg-surface-container-lowest rounded-xl p-md shadow-sm flex items-center justify-center">
+      <Alert tone="error" title="Fehler">Bitte überprüfe deine Internetverbindung.</Alert>
+      <div
+        class="bg-surface-container-lowest rounded-xl p-md shadow-sm flex items-center justify-center"
+      >
         <LoadingSpinner size={36} />
       </div>
       <div class="bg-surface-container-lowest rounded-xl shadow-sm">
@@ -217,9 +233,20 @@
     <h2 class="font-h2 text-h2-mobile md:text-h2 text-on-surface">Forms</h2>
 
     <div class="bg-surface-container-lowest rounded-xl p-md md:p-lg shadow-sm space-y-lg">
-      <FormSection title="Basisinformationen" description="Diese Felder werden auf der Karte angezeigt.">
-        <TextField label="Titel des Angebots" placeholder="z.B. Lesepaten gesucht" bind:value={textValue} />
-        <TextArea label="Beschreibung" placeholder="Beschreibe die Aufgaben…" bind:value={descValue} />
+      <FormSection
+        title="Basisinformationen"
+        description="Diese Felder werden auf der Karte angezeigt."
+      >
+        <TextField
+          label="Titel des Angebots"
+          placeholder="z.B. Lesepaten gesucht"
+          bind:value={textValue}
+        />
+        <TextArea
+          label="Beschreibung"
+          placeholder="Beschreibe die Aufgaben…"
+          bind:value={descValue}
+        />
         <div class="grid md:grid-cols-2 gap-md">
           <Select
             label="Kategorie"
@@ -229,7 +256,7 @@
               { value: 'education', label: 'Bildung & Mentoring' },
               { value: 'environment', label: 'Umweltschutz' },
               { value: 'social', label: 'Soziales & Pflege' },
-              { value: 'crafts', label: 'Handwerk & Logistik' }
+              { value: 'crafts', label: 'Handwerk & Logistik' },
             ]}
           />
           <TextField type="number" label="Benötigte Helfer" value={1} min={1} />
@@ -286,7 +313,8 @@
       <code class="text-primary">TopNavBar</code> is mounted at the top of this page.
       <code class="text-primary">BottomNavBar</code> is mounted below (mobile only).
       <code class="text-primary">SideNavBar</code> and <code class="text-primary">AppShell</code>
-      are intended for the organization dashboard layout — see <code class="text-primary">$lib</code> exports.
+      are intended for the organization dashboard layout — see
+      <code class="text-primary">$lib</code> exports.
     </p>
   </section>
 </main>

@@ -51,7 +51,12 @@
       <Alert tone="error">{error}</Alert>
     {/if}
     <TextField type="email" label="E-Mail" autocomplete="email" required bind:value={email} />
-    <PasswordInput label="Passwort" autocomplete="current-password" required bind:value={password} />
+    <PasswordInput
+      label="Passwort"
+      autocomplete="current-password"
+      required
+      bind:value={password}
+    />
     <Button type="submit" disabled={submitting}>{submitting ? 'Anmelden…' : 'Anmelden'}</Button>
   </form>
   {#snippet footer()}

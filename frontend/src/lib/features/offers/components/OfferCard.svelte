@@ -18,16 +18,14 @@
   const { offer, href, class: klass = '', compact = false }: Props = $props();
 
   const locationText = $derived(offer.is_remote ? 'Digital / Remote' : (offer.city ?? ''));
-  const scheduleText = $derived(
-    offer.starts_at ? formatDate(offer.starts_at) : 'Flexibel'
-  );
+  const scheduleText = $derived(offer.starts_at ? formatDate(offer.starts_at) : 'Flexibel');
 
   const Tag = $derived(href ? 'a' : 'article');
 </script>
 
 <svelte:element
   this={Tag}
-  href={href}
+  {href}
   class="block overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest transition-shadow hover:shadow-lg {klass}"
 >
   {#if !compact}

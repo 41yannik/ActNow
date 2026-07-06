@@ -8,7 +8,7 @@ export const OFFER_STATUS_LABEL: Record<OfferStatus, string> = {
   filled: 'Voll',
   completed: 'Abgeschlossen',
   cancelled: 'Abgesagt',
-  archived: 'Archiviert'
+  archived: 'Archiviert',
 };
 
 export const APPLICATION_STATUS_LABEL: Record<ApplicationStatus, string> = {
@@ -19,5 +19,5 @@ export const APPLICATION_STATUS_LABEL: Record<ApplicationStatus, string> = {
   withdrawn: 'Zurückgezogen',
   cancelled: 'Storniert',
   completed: 'Abgeschlossen',
-  no_show: 'Nicht erschienen'
+  no_show: 'Nicht erschienen',
 };

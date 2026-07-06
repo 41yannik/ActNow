@@ -9,14 +9,7 @@
     canUndo?: boolean;
     class?: string;
   }
-  let {
-    onreject,
-    onsave,
-    onaccept,
-    onundo,
-    canUndo = false,
-    class: klass = ''
-  }: Props = $props();
+  let { onreject, onsave, onaccept, onundo, canUndo = false, class: klass = '' }: Props = $props();
 
   const columns = $derived(onundo ? '3rem 4rem 4rem 5rem' : '4rem 4rem 5rem');
 </script>
@@ -43,7 +36,9 @@
         </button>
       </div>
       <span
-        class="whitespace-nowrap text-center text-[11px] font-medium text-on-surface-variant {canUndo ? '' : 'opacity-50'}"
+        class="whitespace-nowrap text-center text-[11px] font-medium text-on-surface-variant {canUndo
+          ? ''
+          : 'opacity-50'}"
       >
         Karte zurück
       </span>

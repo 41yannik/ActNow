@@ -20,9 +20,9 @@
       { label: 'Rewards', href: '/rewards', icon: 'star' },
       { label: 'Start', href: '/discover', icon: 'home', center: true },
       { label: 'Favoriten', href: '/favorites', icon: 'favorite' },
-      { label: 'Profil', href: '/profile', icon: 'person' }
+      { label: 'Profil', href: '/profile', icon: 'person' },
     ],
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 </script>
 

@@ -17,13 +17,15 @@
     class="
       max-w-[75%] rounded-2xl px-md py-sm
       {mine
-        ? 'rounded-br-md bg-primary text-on-primary'
-        : 'rounded-bl-md bg-surface-container text-on-surface'}
+      ? 'rounded-br-md bg-primary text-on-primary'
+      : 'rounded-bl-md bg-surface-container text-on-surface'}
     "
   >
     <p class="text-body-md font-body-md whitespace-pre-wrap break-words">{body}</p>
     <div
-      class="mt-1 flex items-center justify-end gap-1 text-[11px] {mine ? 'text-on-primary/70' : 'text-on-surface-variant'}"
+      class="mt-1 flex items-center justify-end gap-1 text-[11px] {mine
+        ? 'text-on-primary/70'
+        : 'text-on-surface-variant'}"
     >
       <span>{formatTime(createdAt)}</span>
       {#if mine}

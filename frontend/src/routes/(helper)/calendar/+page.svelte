@@ -9,7 +9,12 @@
   import { auth } from '$lib/stores/auth.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import { APPLICATION_STATUS_LABEL } from '$lib/utils/labels';
-  import type { ApplicationRow, ApplicationWithOffer, OfferRow, ProfileRow } from '$lib/types/database';
+  import type {
+    ApplicationRow,
+    ApplicationWithOffer,
+    OfferRow,
+    ProfileRow,
+  } from '$lib/types/database';
 
   interface Event {
     application: ApplicationRow;
@@ -40,7 +45,7 @@
         .map((r: ApplicationWithOffer) => ({
           application: r as ApplicationRow,
           offer: r.offer!,
-          org: r.offer?.organization?.profile ?? null
+          org: r.offer?.organization?.profile ?? null,
         }));
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Konnte Termine nicht laden');
@@ -88,7 +93,11 @@
         {selectedDate?.toLocaleDateString('de-DE', { dateStyle: 'full' }) ?? 'Termine'}
       </h3>
       {#if selectedEvents.length === 0}
-        <EmptyState icon="event_busy" title="Keine Termine" description="An diesem Tag hast du keine Einsätze." />
+        <EmptyState
+          icon="event_busy"
+          title="Keine Termine"
+          description="An diesem Tag hast du keine Einsätze."
+        />
       {:else}
         {#each selectedEvents as ev (ev.application.id)}
           <EventCard

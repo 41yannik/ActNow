@@ -31,7 +31,7 @@
       key: d.toISOString().slice(0, 10),
       dow: d.toLocaleDateString('de-DE', { weekday: 'short' }).replace('.', ''),
       day: d.getDate(),
-      today: i === 0
+      today: i === 0,
     };
   });
   let selectedDay = $state(days[0].key);
@@ -39,7 +39,7 @@
   const greeting = $derived(
     auth.profile
       ? `Hallo ${auth.profile.display_name?.split(' ')[0] ?? ''} 👋${auth.profile.city ? ` · ${auth.profile.city}` : ''}`
-      : 'Finde deinen nächsten Einsatz'
+      : 'Finde deinen nächsten Einsatz',
   );
 
   async function load() {
@@ -80,7 +80,7 @@
       await createApplication({
         offer_id: offer.id,
         helper_profile_id: auth.profile.id,
-        motivation_text: null
+        motivation_text: null,
       });
       toasts.success('Bewerbung gesendet · +100 Punkte', offer.title);
     } catch (err) {
@@ -143,8 +143,11 @@
           class="flex w-[46px] shrink-0 flex-col items-center gap-0.5 rounded-xl py-1.5 transition-colors
                  {sel ? 'bg-primary' : 'bg-transparent'}"
         >
-          <span class="text-[11px] font-medium {sel ? 'text-white/85' : 'text-on-surface-variant'}">{d.dow}</span>
-          <span class="text-[17px] font-bold {sel ? 'text-white' : 'text-on-surface'}">{d.day}</span>
+          <span class="text-[11px] font-medium {sel ? 'text-white/85' : 'text-on-surface-variant'}"
+            >{d.dow}</span
+          >
+          <span class="text-[17px] font-bold {sel ? 'text-white' : 'text-on-surface'}">{d.day}</span
+          >
           {#if !sel && d.today}
             <span class="-mt-0.5 h-1 w-1 rounded-full bg-primary"></span>
           {/if}

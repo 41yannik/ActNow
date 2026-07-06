@@ -3,12 +3,12 @@
 const DATE_FMT = new Intl.DateTimeFormat('de-DE', {
   day: '2-digit',
   month: '2-digit',
-  year: 'numeric'
+  year: 'numeric',
 });
 
 const TIME_FMT = new Intl.DateTimeFormat('de-DE', {
   hour: '2-digit',
-  minute: '2-digit'
+  minute: '2-digit',
 });
 
 const DATETIME_FMT = new Intl.DateTimeFormat('de-DE', {
@@ -16,13 +16,13 @@ const DATETIME_FMT = new Intl.DateTimeFormat('de-DE', {
   month: 'short',
   year: 'numeric',
   hour: '2-digit',
-  minute: '2-digit'
+  minute: '2-digit',
 });
 
 const WEEKDAY_FMT = new Intl.DateTimeFormat('de-DE', { weekday: 'long' });
 const MONTH_YEAR_FMT = new Intl.DateTimeFormat('de-DE', {
   month: 'long',
-  year: 'numeric'
+  year: 'numeric',
 });
 
 export function formatDate(iso: string | Date | null | undefined): string {

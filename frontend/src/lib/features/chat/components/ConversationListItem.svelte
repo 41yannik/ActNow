@@ -22,14 +22,14 @@
     selected = false,
     href,
     onclick,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 </script>
 
 {#if href}
   <a
     {href}
-    onclick={onclick}
+    {onclick}
     class="
       flex w-full items-center gap-sm rounded-xl px-sm py-sm text-left transition-colors
       {selected ? 'bg-secondary-container' : 'hover:bg-surface-container-low'}
@@ -39,7 +39,11 @@
     <Avatar src={counterparty.avatar_url} name={counterparty.display_name} size="md" />
     <div class="min-w-0 flex-1">
       <div class="flex items-baseline justify-between gap-sm">
-        <span class="font-label-md text-label-md truncate {unread ? 'text-on-surface font-semibold' : 'text-on-surface'}">
+        <span
+          class="font-label-md text-label-md truncate {unread
+            ? 'text-on-surface font-semibold'
+            : 'text-on-surface'}"
+        >
           {counterparty.display_name}
         </span>
         {#if conversation.last_message_at}
@@ -61,7 +65,7 @@
 {:else}
   <button
     type="button"
-    onclick={onclick}
+    {onclick}
     class="
       flex w-full items-center gap-sm rounded-xl px-sm py-sm text-left transition-colors
       {selected ? 'bg-secondary-container' : 'hover:bg-surface-container-low'}
@@ -71,7 +75,11 @@
     <Avatar src={counterparty.avatar_url} name={counterparty.display_name} size="md" />
     <div class="min-w-0 flex-1">
       <div class="flex items-baseline justify-between gap-sm">
-        <span class="font-label-md text-label-md truncate {unread ? 'text-on-surface font-semibold' : 'text-on-surface'}">
+        <span
+          class="font-label-md text-label-md truncate {unread
+            ? 'text-on-surface font-semibold'
+            : 'text-on-surface'}"
+        >
           {counterparty.display_name}
         </span>
         {#if conversation.last_message_at}

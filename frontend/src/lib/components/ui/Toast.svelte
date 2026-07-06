@@ -12,7 +12,7 @@
     info: { wrap: 'bg-secondary-container text-on-secondary-container', icon: 'info' },
     success: { wrap: 'bg-tertiary-fixed text-on-tertiary-fixed', icon: 'check_circle' },
     warning: { wrap: 'bg-secondary-container text-on-secondary-container', icon: 'warning' },
-    error: { wrap: 'bg-error-container text-on-error-container', icon: 'error' }
+    error: { wrap: 'bg-error-container text-on-error-container', icon: 'error' },
   } as const;
 
   const tone = $derived(tones[toast.tone]);
@@ -30,10 +30,5 @@
     {/if}
     <p class="font-body-md text-body-md">{toast.message}</p>
   </div>
-  <IconButton
-    icon="close"
-    label="Schließen"
-    size="sm"
-    onclick={() => toasts.dismiss(toast.id)}
-  />
+  <IconButton icon="close" label="Schließen" size="sm" onclick={() => toasts.dismiss(toast.id)} />
 </div>

@@ -18,14 +18,15 @@
 {#if href}
   <a
     {href}
-    onclick={onclick}
+    {onclick}
     class="flex w-full items-center justify-between gap-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-md text-left transition-colors hover:bg-surface-container-low {klass}"
   >
     <div class="min-w-0 flex-1">
       <h4 class="font-label-md text-label-md truncate text-on-surface">{offer.title}</h4>
       <p class="text-[12px] text-on-surface-variant">
         {offer.is_remote ? 'Remote' : (offer.city ?? '')}
-        {#if offer.starts_at} · {formatDate(offer.starts_at)}{/if}
+        {#if offer.starts_at}
+          · {formatDate(offer.starts_at)}{/if}
       </p>
     </div>
     <Badge status={application.status}>{APPLICATION_STATUS_LABEL[application.status]}</Badge>
@@ -33,14 +34,15 @@
 {:else}
   <button
     type="button"
-    onclick={onclick}
+    {onclick}
     class="flex w-full items-center justify-between gap-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-md text-left transition-colors hover:bg-surface-container-low {klass}"
   >
     <div class="min-w-0 flex-1">
       <h4 class="font-label-md text-label-md truncate text-on-surface">{offer.title}</h4>
       <p class="text-[12px] text-on-surface-variant">
         {offer.is_remote ? 'Remote' : (offer.city ?? '')}
-        {#if offer.starts_at} · {formatDate(offer.starts_at)}{/if}
+        {#if offer.starts_at}
+          · {formatDate(offer.starts_at)}{/if}
       </p>
     </div>
     <Badge status={application.status}>{APPLICATION_STATUS_LABEL[application.status]}</Badge>

@@ -17,7 +17,7 @@
     open_offers: 0,
     new_applications: 0,
     upcoming_engagements: 0,
-    unread_messages: 0
+    unread_messages: 0,
   });
   let recentOffers = $state<any[]>([]);
 
@@ -27,7 +27,7 @@
     try {
       const [m, offers] = await Promise.all([
         getOrgDashboardMetrics(auth.profile.id),
-        listOrgOffers(auth.profile.id)
+        listOrgOffers(auth.profile.id),
       ]);
       metrics = m;
       recentOffers = offers.slice(0, 5);
@@ -46,7 +46,9 @@
 <section class="flex flex-col gap-md p-md">
   <PageHeader title="Dashboard" subtitle={`Willkommen, ${auth.profile?.display_name ?? ''}`}>
     {#snippet action()}
-      <Button leadingIcon="add" onclick={() => (location.href = '/offers/new')}>Neues Angebot</Button>
+      <Button leadingIcon="add" onclick={() => (location.href = '/offers/new')}
+        >Neues Angebot</Button
+      >
     {/snippet}
   </PageHeader>
 
@@ -54,10 +56,29 @@
     <div class="flex justify-center py-lg"><LoadingSpinner /></div>
   {:else}
     <div class="grid grid-cols-2 gap-sm md:grid-cols-4">
-      <MetricCard icon="campaign" label="Offene Angebote" value={metrics.open_offers} onclick={() => (location.href = '/offers')} />
-      <MetricCard icon="how_to_reg" label="Neue Bewerbungen" value={metrics.new_applications} onclick={() => (location.href = '/applications')} />
-      <MetricCard icon="event_available" label="Kommende Einsätze" value={metrics.upcoming_engagements} />
-      <MetricCard icon="mark_email_unread" label="Ungelesen" value={metrics.unread_messages} onclick={() => (location.href = '/messages')} />
+      <MetricCard
+        icon="campaign"
+        label="Offene Angebote"
+        value={metrics.open_offers}
+        onclick={() => (location.href = '/offers')}
+      />
+      <MetricCard
+        icon="how_to_reg"
+        label="Neue Bewerbungen"
+        value={metrics.new_applications}
+        onclick={() => (location.href = '/applications')}
+      />
+      <MetricCard
+        icon="event_available"
+        label="Kommende Einsätze"
+        value={metrics.upcoming_engagements}
+      />
+      <MetricCard
+        icon="mark_email_unread"
+        label="Ungelesen"
+        value={metrics.unread_messages}
+        onclick={() => (location.href = '/messages')}
+      />
     </div>
 
     <ActivityFeed
@@ -68,7 +89,7 @@
         title: o.title,
         subtitle: OFFER_STATUS_LABEL[o.status as keyof typeof OFFER_STATUS_LABEL],
         timestamp: formatRelative(o.updated_at),
-        href: `/offers/${o.id}/edit`
+        href: `/offers/${o.id}/edit`,
       }))}
     />
   {/if}

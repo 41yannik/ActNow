@@ -13,7 +13,7 @@
     name,
     value,
     disabled = false,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 </script>
 

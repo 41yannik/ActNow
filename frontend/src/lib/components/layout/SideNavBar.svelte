@@ -25,12 +25,12 @@
       { label: 'Offers', href: '/org/offers', icon: 'volunteer_activism' },
       { label: 'Applications', href: '/org/applications', icon: 'assignment_ind' },
       { label: 'Messages', href: '/org/messages', icon: 'mail' },
-      { label: 'Profile', href: '/org/profile', icon: 'person' }
+      { label: 'Profile', href: '/org/profile', icon: 'person' },
     ],
     userName,
     userRole,
     userAvatar = null,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 </script>
 
@@ -50,8 +50,8 @@
           class="
             flex items-center gap-base px-md py-sm rounded-lg font-label-md text-label-md transition-all
             {item.active
-              ? 'bg-secondary-container text-on-secondary-container translate-x-1'
-              : 'text-on-surface-variant hover:bg-surface-container-highest'}
+            ? 'bg-secondary-container text-on-secondary-container translate-x-1'
+            : 'text-on-surface-variant hover:bg-surface-container-highest'}
           "
         >
           <Icon name={item.icon} filled={item.active} size={22} />

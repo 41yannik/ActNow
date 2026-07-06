@@ -16,7 +16,7 @@
     eventsByDate = {},
     selectedDate = null,
     onselect,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 
   const WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
@@ -30,7 +30,11 @@
 
   function sameDay(a: Date, b: Date | null) {
     if (!b) return false;
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    return (
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate()
+    );
   }
 
   const today = new Date();

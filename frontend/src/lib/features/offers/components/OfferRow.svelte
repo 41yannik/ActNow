@@ -20,7 +20,7 @@
   const applicationsLabel = $derived(
     offer.max_helpers
       ? `${offer.accepted_helpers_count} / ${offer.max_helpers}`
-      : `${offer.accepted_helpers_count}`
+      : `${offer.accepted_helpers_count}`,
   );
 </script>
 

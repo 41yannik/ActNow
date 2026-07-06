@@ -9,7 +9,7 @@
   import {
     listApplicationsForOffer,
     acceptApplication,
-    rejectApplication
+    rejectApplication,
   } from '$lib/services/supabase/applications';
   import { getOffer } from '$lib/services/supabase/offers';
   import { supabase } from '$lib/services/supabase/client';
@@ -48,7 +48,7 @@
       applicants = apps.map((a) => ({
         application: a,
         profile: profileMap.get(a.helper_profile_id)!,
-        helper: helperMap.get(a.helper_profile_id) ?? null
+        helper: helperMap.get(a.helper_profile_id) ?? null,
       }));
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Konnte Bewerbungen nicht laden');
@@ -60,24 +60,25 @@
   onMount(load);
 
   const filtered = $derived(
-    filter === 'all' ? applicants : applicants.filter((a) => a.application.status === filter)
+    filter === 'all' ? applicants : applicants.filter((a) => a.application.status === filter),
   );
 </script>
 
 <svelte:head><title>Bewerbungen · ActNow</title></svelte:head>
 
 <section class="flex flex-col gap-md p-md">
-  <PageHeader
-    title={offer?.title ?? 'Bewerbungen'}
-    subtitle={`${applicants.length} Bewerbungen`}
-  />
+  <PageHeader title={offer?.title ?? 'Bewerbungen'} subtitle={`${applicants.length} Bewerbungen`} />
 
   <StatusFilterBar value={filter} onchange={(v) => (filter = v)} />
 
   {#if loading}
     <div class="flex justify-center py-lg"><LoadingSpinner /></div>
   {:else if filtered.length === 0}
-    <EmptyState icon="how_to_reg" title="Keine Bewerbungen" description="Noch hat sich niemand beworben." />
+    <EmptyState
+      icon="how_to_reg"
+      title="Keine Bewerbungen"
+      description="Noch hat sich niemand beworben."
+    />
   {:else}
     <div class="grid grid-cols-1 gap-sm md:grid-cols-2">
       {#each filtered as a (a.application.id)}

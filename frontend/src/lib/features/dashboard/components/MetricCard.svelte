@@ -11,8 +11,15 @@
     onclick?: () => void;
     class?: string;
   }
-  const { icon, label, value, trend = null, trendLabel = null, onclick, class: klass = '' }: Props =
-    $props();
+  const {
+    icon,
+    label,
+    value,
+    trend = null,
+    trendLabel = null,
+    onclick,
+    class: klass = '',
+  }: Props = $props();
 
   const trendUp = $derived(trend != null && trend > 0);
   const trendDown = $derived(trend != null && trend < 0);
@@ -31,9 +38,16 @@
     <span class="font-h2 text-h2">{value}</span>
     {#if trend != null}
       <span
-        class="inline-flex items-center gap-1 text-[12px] {trendUp ? 'text-tertiary' : trendDown ? 'text-error' : 'text-on-surface-variant'}"
+        class="inline-flex items-center gap-1 text-[12px] {trendUp
+          ? 'text-tertiary'
+          : trendDown
+            ? 'text-error'
+            : 'text-on-surface-variant'}"
       >
-        <Icon name={trendUp ? 'trending_up' : trendDown ? 'trending_down' : 'trending_flat'} size={14} />
+        <Icon
+          name={trendUp ? 'trending_up' : trendDown ? 'trending_down' : 'trending_flat'}
+          size={14}
+        />
         {trend > 0 ? '+' : ''}{trend}{trendLabel ? ` ${trendLabel}` : ''}
       </span>
     {/if}
@@ -49,9 +63,16 @@
     <span class="font-h2 text-h2">{value}</span>
     {#if trend != null}
       <span
-        class="inline-flex items-center gap-1 text-[12px] {trendUp ? 'text-tertiary' : trendDown ? 'text-error' : 'text-on-surface-variant'}"
+        class="inline-flex items-center gap-1 text-[12px] {trendUp
+          ? 'text-tertiary'
+          : trendDown
+            ? 'text-error'
+            : 'text-on-surface-variant'}"
       >
-        <Icon name={trendUp ? 'trending_up' : trendDown ? 'trending_down' : 'trending_flat'} size={14} />
+        <Icon
+          name={trendUp ? 'trending_up' : trendDown ? 'trending_down' : 'trending_flat'}
+          size={14}
+        />
         {trend > 0 ? '+' : ''}{trend}{trendLabel ? ` ${trendLabel}` : ''}
       </span>
     {/if}

@@ -14,7 +14,9 @@
   type="button"
   role="menuitem"
   {disabled}
-  class="flex w-full items-center gap-sm px-sm py-2 text-left font-body-md text-body-md transition-colors disabled:cursor-not-allowed disabled:opacity-50 {danger ? 'text-error hover:bg-error-container/40' : 'text-on-surface hover:bg-surface-container-low'}"
+  class="flex w-full items-center gap-sm px-sm py-2 text-left font-body-md text-body-md transition-colors disabled:cursor-not-allowed disabled:opacity-50 {danger
+    ? 'text-error hover:bg-error-container/40'
+    : 'text-on-surface hover:bg-surface-container-low'}"
   onclick={() => onclick?.()}
 >
   {#if icon}<Icon name={icon} size={18} />{/if}

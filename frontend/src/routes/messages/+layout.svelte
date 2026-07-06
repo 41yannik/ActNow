@@ -25,20 +25,20 @@
   const helperTop = $derived([
     { label: 'Discover', href: '/discover', active: false },
     { label: 'Calendar', href: '/calendar', active: false },
-    { label: 'Messages', href: '/messages', active: path.startsWith('/messages') }
+    { label: 'Messages', href: '/messages', active: path.startsWith('/messages') },
   ]);
   const helperBottom = $derived([
     { label: 'Discover', href: '/discover', icon: 'explore', active: false },
     { label: 'Calendar', href: '/calendar', icon: 'calendar_today', active: false },
     { label: 'Messages', href: '/messages', icon: 'chat', active: path.startsWith('/messages') },
-    { label: 'Profile', href: '/profile', icon: 'person', active: false }
+    { label: 'Profile', href: '/profile', icon: 'person', active: false },
   ]);
   const orgItems = $derived([
     { label: 'Dashboard', href: '/dashboard', icon: 'dashboard', active: false },
     { label: 'Angebote', href: '/offers', icon: 'volunteer_activism', active: false },
     { label: 'Bewerbungen', href: '/applications', icon: 'assignment_ind', active: false },
     { label: 'Nachrichten', href: '/messages', icon: 'mail', active: true },
-    { label: 'Profil', href: '/profile', icon: 'person', active: false }
+    { label: 'Profil', href: '/profile', icon: 'person', active: false },
   ]);
 </script>
 

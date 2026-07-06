@@ -30,16 +30,15 @@
 
 <div class="w-full {klass}">
   {#if label}
-    <label
-      for={inputId}
-      class="block font-label-md text-label-md text-on-surface-variant mb-1"
-    >
+    <label for={inputId} class="block font-label-md text-label-md text-on-surface-variant mb-1">
       {label}
     </label>
   {/if}
   <div class="relative">
     {#if leadingIcon}
-      <span class="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+      <span
+        class="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+      >
         <Icon name={leadingIcon} size={20} />
       </span>
     {/if}
@@ -59,7 +58,9 @@
       {...rest}
     />
     {#if trailingIcon}
-      <span class="absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+      <span
+        class="absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+      >
         <Icon name={trailingIcon} size={20} />
       </span>
     {/if}

@@ -20,7 +20,7 @@
       organization_profile_id: row.organization_profile_id,
       last_message_at: row.last_message_at,
       created_at: row.created_at,
-      updated_at: row.updated_at
+      updated_at: row.updated_at,
     };
   }
 
@@ -60,7 +60,7 @@
             conversation={asConversation(row)}
             counterparty={{
               display_name: row.counterparty_display_name,
-              avatar_url: row.counterparty_avatar_url
+              avatar_url: row.counterparty_avatar_url,
             }}
             lastMessage={preview(row)}
             unread={row.unread_count > 0}

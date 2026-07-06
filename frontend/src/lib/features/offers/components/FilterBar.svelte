@@ -15,7 +15,7 @@
     { value: 'single_event', label: 'Einmalig', icon: 'event' },
     { value: 'recurring_event', label: 'Regelmäßig', icon: 'repeat' },
     { value: 'flexible_task', label: 'Flexibel', icon: 'tune' },
-    { value: 'digital_task', label: 'Digital', icon: 'wifi' }
+    { value: 'digital_task', label: 'Digital', icon: 'wifi' },
   ];
 
   function toggleType(t: OfferType) {

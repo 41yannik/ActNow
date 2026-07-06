@@ -5,7 +5,7 @@ import type {
   CommunitySummary,
   ConversationRow,
   MessageRow,
-  UUID
+  UUID,
 } from '$lib/types/database';
 
 export async function listConversationsForProfile(profileId: UUID) {
@@ -19,7 +19,7 @@ export async function listConversationsForProfile(profileId: UUID) {
       helper:helper_profiles!inner(profile:profiles!inner(id, display_name, avatar_url)),
       organization:organization_profiles!inner(profile:profiles!inner(id, display_name, avatar_url)),
       last_message:messages(body, created_at, sender_profile_id)
-    `
+    `,
     )
     .or(`helper_profile_id.eq.${profileId},organization_profile_id.eq.${profileId}`)
     .order('last_message_at', { ascending: false, nullsFirst: false });
@@ -29,11 +29,11 @@ export async function listConversationsForProfile(profileId: UUID) {
 
 export async function listCommunityConversations(
   limit = 50,
-  offset = 0
+  offset = 0,
 ): Promise<CommunityConversationRow[]> {
   const { data, error } = await supabase.rpc('list_community_conversations', {
     p_limit: limit,
-    p_offset: offset
+    p_offset: offset,
   });
   if (error) throw error;
   return (data ?? []) as CommunityConversationRow[];
@@ -46,13 +46,13 @@ export async function getCommunitySummary(): Promise<CommunitySummary> {
   return {
     unread_messages: row?.unread_messages ?? 0,
     unread_notifications: row?.unread_notifications ?? 0,
-    total_unread: row?.total_unread ?? 0
+    total_unread: row?.total_unread ?? 0,
   };
 }
 
 export async function markConversationRead(conversationId: UUID): Promise<number> {
   const { data, error } = await supabase.rpc('mark_conversation_read', {
-    p_conversation_id: conversationId
+    p_conversation_id: conversationId,
   });
   if (error) throw error;
   return Number(data ?? 0);
@@ -69,10 +69,10 @@ export async function getConversation(id: UUID): Promise<ConversationRow | null>
 }
 
 export async function getOrCreateConversationForApplication(
-  applicationId: UUID
+  applicationId: UUID,
 ): Promise<ConversationRow> {
   const { data, error } = await supabase.rpc('create_conversation_for_application', {
-    p_application_id: applicationId
+    p_application_id: applicationId,
   });
   if (error) throw error;
   return data as ConversationRow;
@@ -92,7 +92,7 @@ export async function listMessages(conversationId: UUID, limit = 100): Promise<M
 export async function sendMessage(
   conversationId: UUID,
   senderProfileId: UUID,
-  body: string
+  body: string,
 ): Promise<MessageRow> {
   const { data, error } = await supabase
     .from('messages')

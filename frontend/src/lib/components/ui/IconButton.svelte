@@ -28,12 +28,12 @@
     default: 'text-on-surface-variant hover:text-primary hover:bg-surface-container',
     primary: 'text-primary hover:bg-primary/10',
     danger: 'text-error hover:bg-error-container',
-    success: 'text-primary hover:bg-tertiary-fixed'
+    success: 'text-primary hover:bg-tertiary-fixed',
   };
   const sizes: Record<Size, { wrap: string; icon: number }> = {
     sm: { wrap: 'p-1.5', icon: 18 },
     md: { wrap: 'p-2', icon: 22 },
-    lg: { wrap: 'p-3', icon: 28 }
+    lg: { wrap: 'p-3', icon: 28 },
   };
 </script>
 

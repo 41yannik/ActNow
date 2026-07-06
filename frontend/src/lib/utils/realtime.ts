@@ -13,7 +13,7 @@ export function subscribeChanges<T extends { [key: string]: unknown }>(
   channelName: string,
   filter: ChangeFilter,
   onChange: (payload: RealtimePostgresChangesPayload<T>) => void,
-  event: 'INSERT' | 'UPDATE' | 'DELETE' | '*' = '*'
+  event: 'INSERT' | 'UPDATE' | 'DELETE' | '*' = '*',
 ): RealtimeChannel {
   const channel = supabase.channel(channelName).on(
     // postgres_changes is a known string literal; cast keeps wrapper API simple.
@@ -22,9 +22,9 @@ export function subscribeChanges<T extends { [key: string]: unknown }>(
       event,
       schema: filter.schema ?? 'public',
       table: filter.table,
-      filter: filter.filter
+      filter: filter.filter,
     } as never,
-    (payload: unknown) => onChange(payload as RealtimePostgresChangesPayload<T>)
+    (payload: unknown) => onChange(payload as RealtimePostgresChangesPayload<T>),
   );
   channel.subscribe();
   return channel;

@@ -7,7 +7,7 @@
   import { getOfferWithOrg } from '$lib/services/supabase/offers';
   import {
     createApplication,
-    listApplicationsForHelper
+    listApplicationsForHelper,
   } from '$lib/services/supabase/applications';
   import { listSavedOfferIds, saveOffer, unsaveOffer } from '$lib/services/supabase/savedOffers';
   import { auth } from '$lib/stores/auth.svelte';
@@ -28,7 +28,11 @@
 
   function fmtDate(iso: string | null) {
     return iso
-      ? new Date(iso).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'long' })
+      ? new Date(iso).toLocaleDateString('de-DE', {
+          weekday: 'short',
+          day: '2-digit',
+          month: 'long',
+        })
       : 'Flexibel';
   }
   function fmtTime(a: string | null, b: string | null) {
@@ -48,17 +52,17 @@
             label: 'Ort',
             value: offer.is_remote
               ? 'Digital / Remote'
-              : `${offer.city ?? offer.location_name ?? 'Vor Ort'}${meta ? `, ${meta.km} km` : ''}`
+              : `${offer.city ?? offer.location_name ?? 'Vor Ort'}${meta ? `, ${meta.km} km` : ''}`,
           },
           {
             icon: 'group',
             label: 'Plätze',
             value: offer.max_helpers
               ? `${Math.max(0, offer.max_helpers - (offer.accepted_helpers_count ?? 0))} von ${offer.max_helpers} frei`
-              : 'Offen'
-          }
+              : 'Offen',
+          },
         ]
-      : []
+      : [],
   );
 
   const requirements = $derived(
@@ -67,9 +71,9 @@
           { ok: true, t: 'Verifiziertes Profil' },
           { ok: true, t: `Mind. ${offer.min_age ?? 16} Jahre` },
           ...(offer.requires_documents ? [{ ok: false, t: 'Führungszeugnis' }] : []),
-          ...((offer.skills_required ?? []) as string[]).map((s) => ({ ok: true, t: s }))
+          ...((offer.skills_required ?? []) as string[]).map((s) => ({ ok: true, t: s })),
         ]
-      : []
+      : [],
   );
 
   async function load() {
@@ -79,7 +83,7 @@
       if (auth.profile) {
         const [savedSet, apps] = await Promise.all([
           listSavedOfferIds(auth.profile.id),
-          listApplicationsForHelper(auth.profile.id)
+          listApplicationsForHelper(auth.profile.id),
         ]);
         saved = savedSet.has(offerId);
         hasApplied = (apps as Array<{ offer_id: string }>).some((a) => a.offer_id === offerId);
@@ -116,7 +120,7 @@
       await createApplication({
         offer_id: offerId,
         helper_profile_id: auth.profile.id,
-        motivation_text: null
+        motivation_text: null,
       });
       hasApplied = true;
       showConfirm = false;
@@ -139,7 +143,9 @@
   <article class="mx-auto w-full max-w-2xl pb-32">
     <!-- Hero -->
     <div class="relative h-80 w-full bg-surface-container-low">
-      <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-secondary-container to-primary">
+      <div
+        class="flex h-full w-full items-center justify-center bg-gradient-to-br from-secondary-container to-primary"
+      >
         <Icon name="volunteer_activism" size={72} class="text-white/40" />
       </div>
       <div
@@ -147,7 +153,10 @@
         style="background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 30%, transparent 65%, rgba(0,0,0,0.6) 100%);"
       ></div>
 
-      <div class="absolute inset-x-4 top-4 flex justify-between" style="top: max(1rem, env(safe-area-inset-top));">
+      <div
+        class="absolute inset-x-4 top-4 flex justify-between"
+        style="top: max(1rem, env(safe-area-inset-top));"
+      >
         <button
           type="button"
           onclick={() => history.back()}
@@ -169,20 +178,28 @@
       <div class="absolute left-4 top-28 flex items-center gap-2">
         {#if offer.category}<CategoryBadge category={offer.category} />{/if}
         {#if meta?.sos}
-          <span class="rounded-full bg-tertiary px-3 py-1 text-[11px] font-bold tracking-wider text-white">
+          <span
+            class="rounded-full bg-tertiary px-3 py-1 text-[11px] font-bold tracking-wider text-white"
+          >
             SOS · KURZFRISTIG
           </span>
         {/if}
       </div>
 
-      <h1 class="absolute inset-x-4 bottom-4 text-[24px] font-bold leading-tight tracking-tight text-white">
+      <h1
+        class="absolute inset-x-4 bottom-4 text-[24px] font-bold leading-tight tracking-tight text-white"
+      >
         {offer.title}
       </h1>
     </div>
 
     <!-- Org row -->
-    <div class="mx-4 mt-3.5 flex items-center gap-3 rounded-xl border border-outline-variant bg-surface p-3.5">
-      <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-primary-container text-[14px] font-bold text-white">
+    <div
+      class="mx-4 mt-3.5 flex items-center gap-3 rounded-xl border border-outline-variant bg-surface p-3.5"
+    >
+      <div
+        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-primary-container text-[14px] font-bold text-white"
+      >
         {(org?.display_name ?? 'O')
           .split(' ')
           .map((w: string) => w[0])
@@ -191,7 +208,9 @@
       </div>
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-1.5">
-          <span class="truncate text-[14px] font-bold text-on-secondary-container">{org?.display_name ?? 'Organisation'}</span>
+          <span class="truncate text-[14px] font-bold text-on-secondary-container"
+            >{org?.display_name ?? 'Organisation'}</span
+          >
           {#if offer.organization?.is_verified}
             <Icon name="verified" filled size={15} class="text-primary" />
           {/if}
@@ -210,9 +229,14 @@
         <div class="rounded-xl border border-outline-variant bg-surface p-3">
           <div class="flex items-center gap-2">
             <Icon name={f.icon} size={14} class="text-secondary" />
-            <span class="text-[10.5px] font-semibold uppercase tracking-wide text-on-surface-variant">{f.label}</span>
+            <span
+              class="text-[10.5px] font-semibold uppercase tracking-wide text-on-surface-variant"
+              >{f.label}</span
+            >
           </div>
-          <div class="mt-1.5 text-[13.5px] font-semibold leading-tight text-on-surface">{f.value}</div>
+          <div class="mt-1.5 text-[13.5px] font-semibold leading-tight text-on-surface">
+            {f.value}
+          </div>
         </div>
       {/each}
     </div>
@@ -229,10 +253,14 @@
       <div class="overflow-hidden rounded-xl border border-outline-variant bg-surface">
         {#each requirements as r, i}
           <div
-            class="flex items-center gap-3 px-3.5 py-3 {i < requirements.length - 1 ? 'border-b border-outline-variant' : ''}"
+            class="flex items-center gap-3 px-3.5 py-3 {i < requirements.length - 1
+              ? 'border-b border-outline-variant'
+              : ''}"
           >
             <span
-              class="flex h-[22px] w-[22px] items-center justify-center rounded-full {r.ok ? 'bg-primary text-white' : 'bg-tertiary/20 text-tertiary'}"
+              class="flex h-[22px] w-[22px] items-center justify-center rounded-full {r.ok
+                ? 'bg-primary text-white'
+                : 'bg-tertiary/20 text-tertiary'}"
             >
               <Icon name={r.ok ? 'check' : 'priority_high'} size={12} />
             </span>
@@ -247,20 +275,27 @@
     {#if meta && meta.friends.length > 0}
       <section class="mx-4 mt-5">
         <h2 class="mb-2.5 text-[16px] font-bold text-on-secondary-container">Wer ist dabei?</h2>
-        <div class="flex items-center gap-3 rounded-xl border border-outline-variant bg-surface p-3.5">
+        <div
+          class="flex items-center gap-3 rounded-xl border border-outline-variant bg-surface p-3.5"
+        >
           <div class="flex">
             {#each meta.friends.slice(0, 3) as f, i}
               <div
                 class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-[12px] font-bold text-white"
-                style="background: {['#A4B097', '#B8A57E', '#7A8AB7'][i]}; margin-left: {i === 0 ? 0 : -8}px;"
+                style="background: {['#A4B097', '#B8A57E', '#7A8AB7'][i]}; margin-left: {i === 0
+                  ? 0
+                  : -8}px;"
               >
                 {f[0]}
               </div>
             {/each}
           </div>
           <div class="text-[13px] leading-tight text-on-surface">
-            <b>{meta.friends.join(' & ')}</b> {meta.friends.length === 1 ? 'ist' : 'sind'} dabei<br />
-            <span class="text-[12px] text-on-surface-variant">+ {meta.taken} weitere Helfer:innen</span>
+            <b>{meta.friends.join(' & ')}</b>
+            {meta.friends.length === 1 ? 'ist' : 'sind'} dabei<br />
+            <span class="text-[12px] text-on-surface-variant"
+              >+ {meta.taken} weitere Helfer:innen</span
+            >
           </div>
         </div>
       </section>
@@ -270,12 +305,24 @@
     {#if meta}
       <section
         class="mx-4 mt-5 flex items-center gap-3 rounded-xl border p-3.5"
-        style="background: {meta.match === 'fits' ? 'rgba(126,143,107,0.12)' : 'rgba(226,148,90,0.12)'};
-               border-color: {meta.match === 'fits' ? 'rgba(126,143,107,0.25)' : 'rgba(226,148,90,0.25)'};"
+        style="background: {meta.match === 'fits'
+          ? 'rgba(126,143,107,0.12)'
+          : 'rgba(226,148,90,0.12)'};
+               border-color: {meta.match === 'fits'
+          ? 'rgba(126,143,107,0.25)'
+          : 'rgba(226,148,90,0.25)'};"
       >
-        <Icon name="calendar_today" size={22} class={meta.match === 'fits' ? 'text-secondary' : 'text-tertiary'} />
+        <Icon
+          name="calendar_today"
+          size={22}
+          class={meta.match === 'fits' ? 'text-secondary' : 'text-tertiary'}
+        />
         <div class="flex-1">
-          <div class="text-[13px] font-bold {meta.match === 'fits' ? 'text-secondary' : 'text-tertiary'}">
+          <div
+            class="text-[13px] font-bold {meta.match === 'fits'
+              ? 'text-secondary'
+              : 'text-tertiary'}"
+          >
             {meta.match === 'fits' ? 'Passt in deinen Kalender' : 'Teilweise Überschneidung'}
           </div>
           <div class="mt-0.5 text-[11.5px] text-on-surface-variant">
@@ -306,9 +353,11 @@
       onclick={() => !hasApplied && (showConfirm = true)}
       disabled={hasApplied}
       class="flex flex-1 items-center justify-center rounded-btn px-5 py-[15px] text-[16px] font-semibold text-white
-             shadow-[0_4px_14px_rgba(126,143,107,0.35)] {hasApplied ? 'bg-on-surface-variant' : 'bg-primary'}"
+             shadow-[0_4px_14px_rgba(126,143,107,0.35)] {hasApplied
+        ? 'bg-on-surface-variant'
+        : 'bg-primary'}"
     >
-      {hasApplied ? '✓ Bewerbung gesendet' : "Jetzt bewerben · +100 P."}
+      {hasApplied ? '✓ Bewerbung gesendet' : 'Jetzt bewerben · +100 P.'}
     </button>
   </div>
 
@@ -323,7 +372,9 @@
     >
       <div class="animate-slide-up w-full rounded-t-3xl bg-surface px-[22px] pb-8 pt-3.5">
         <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-outline"></div>
-        <div class="mx-auto mb-3.5 mt-1.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/15">
+        <div
+          class="mx-auto mb-3.5 mt-1.5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/15"
+        >
           <Icon name="favorite" filled size={28} class="text-primary" />
         </div>
         <div class="text-center text-[22px] font-bold tracking-tight text-on-secondary-container">
@@ -334,8 +385,12 @@
           eine Bestätigung.
         </div>
 
-        <div class="mt-4 flex items-center gap-3 rounded-xl border border-outline-variant bg-surface-variant p-3">
-          <div class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-container text-[12px] font-bold text-white">
+        <div
+          class="mt-4 flex items-center gap-3 rounded-xl border border-outline-variant bg-surface-variant p-3"
+        >
+          <div
+            class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-container text-[12px] font-bold text-white"
+          >
             {(auth.profile?.display_name ?? 'Du')
               .split(' ')
               .map((w) => w[0])
@@ -343,7 +398,9 @@
               .join('')}
           </div>
           <div class="min-w-0 flex-1">
-            <div class="text-[13.5px] font-semibold text-on-surface">{auth.profile?.display_name ?? 'Du'}</div>
+            <div class="text-[13.5px] font-semibold text-on-surface">
+              {auth.profile?.display_name ?? 'Du'}
+            </div>
             <div class="mt-0.5 text-[11.5px] text-on-surface-variant">Verifiziert · Helfer:in</div>
           </div>
           <Icon name="verified" filled size={18} class="text-primary" />

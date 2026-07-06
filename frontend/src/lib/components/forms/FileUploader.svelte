@@ -34,7 +34,7 @@
     maxSize = 20 * 1024 * 1024,
     files = $bindable([]),
     onchange,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 
   let dragging = $state(false);
@@ -86,7 +86,11 @@
   {/if}
   <button
     type="button"
-    class="flex w-full flex-col items-center justify-center gap-xs rounded-2xl border-2 border-dashed px-md py-lg text-center transition-colors {dragging ? 'border-primary bg-primary-container/40' : message ? 'border-error bg-error-container/20' : 'border-outline-variant bg-surface-container-low hover:bg-surface-container'}"
+    class="flex w-full flex-col items-center justify-center gap-xs rounded-2xl border-2 border-dashed px-md py-lg text-center transition-colors {dragging
+      ? 'border-primary bg-primary-container/40'
+      : message
+        ? 'border-error bg-error-container/20'
+        : 'border-outline-variant bg-surface-container-low hover:bg-surface-container'}"
     ondragover={onDragOver}
     ondragleave={() => (dragging = false)}
     ondrop={onDrop}

@@ -21,7 +21,7 @@
     cancelLabel = 'Abbrechen',
     tone = 'primary',
     onconfirm,
-    oncancel
+    oncancel,
   }: Props = $props();
 
   let busy = $state(false);
@@ -46,11 +46,7 @@
   <p class="font-body-md text-body-md text-on-surface-variant">{message}</p>
   {#snippet footer()}
     <Button variant="text" onclick={cancel} disabled={busy}>{cancelLabel}</Button>
-    <Button
-      variant={tone === 'danger' ? 'danger' : 'primary'}
-      onclick={confirm}
-      loading={busy}
-    >
+    <Button variant={tone === 'danger' ? 'danger' : 'primary'} onclick={confirm} loading={busy}>
       {confirmLabel}
     </Button>
   {/snippet}

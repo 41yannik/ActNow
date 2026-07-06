@@ -14,7 +14,7 @@
   const { document, ondelete, onopen, class: klass = '' }: Props = $props();
 
   const expired = $derived(
-    document.expires_at ? new Date(document.expires_at).getTime() < Date.now() : false
+    document.expires_at ? new Date(document.expires_at).getTime() < Date.now() : false,
   );
 </script>
 

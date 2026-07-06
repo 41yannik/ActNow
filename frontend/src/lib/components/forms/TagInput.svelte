@@ -20,7 +20,7 @@
     placeholder = 'Hinzufügen…',
     suggestions = [],
     id,
-    class: klass = ''
+    class: klass = '',
   }: Props = $props();
 
   let draft = $state('');
@@ -29,12 +29,8 @@
     draft.trim().length === 0
       ? []
       : suggestions
-          .filter(
-            (s) =>
-              s.toLowerCase().includes(draft.toLowerCase()) &&
-              !value.includes(s)
-          )
-          .slice(0, 6)
+          .filter((s) => s.toLowerCase().includes(draft.toLowerCase()) && !value.includes(s))
+          .slice(0, 6),
   );
 
   function add(tag: string) {
@@ -65,7 +61,9 @@
     </label>
   {/if}
   <div
-    class="flex flex-wrap items-center gap-xs rounded-lg border bg-surface px-sm py-2 transition-shadow focus-within:ring-2 focus-within:ring-primary focus-within:border-primary {error ? 'border-error' : 'border-outline-variant'}"
+    class="flex flex-wrap items-center gap-xs rounded-lg border bg-surface px-sm py-2 transition-shadow focus-within:ring-2 focus-within:ring-primary focus-within:border-primary {error
+      ? 'border-error'
+      : 'border-outline-variant'}"
   >
     {#each value as tag}
       <span

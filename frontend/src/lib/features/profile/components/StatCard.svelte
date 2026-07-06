@@ -12,9 +12,7 @@
   const { icon, label, value, sublabel = null, class: klass = '' }: Props = $props();
 </script>
 
-<div
-  class="flex flex-col gap-1 rounded-2xl bg-surface-container-low p-md text-on-surface {klass}"
->
+<div class="flex flex-col gap-1 rounded-2xl bg-surface-container-low p-md text-on-surface {klass}">
   {#if icon}
     <Icon name={icon} size={20} class="text-primary" />
   {/if}

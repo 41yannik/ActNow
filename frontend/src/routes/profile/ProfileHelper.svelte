@@ -12,7 +12,7 @@
     getHelperProfile,
     updateOwnProfile,
     listHelperDocuments,
-    deleteHelperDocument
+    deleteHelperDocument,
   } from '$lib/services/supabase/profiles';
   import { signOut } from '$lib/services/supabase/auth';
   import { auth } from '$lib/stores/auth.svelte';
@@ -77,7 +77,12 @@
     </ProfileHeaderCard>
 
     <div class="grid grid-cols-2 gap-sm sm:grid-cols-3">
-      <StatCard icon="star" label="Bewertung" value={auth.profile.average_rating?.toFixed(1) ?? '—'} sublabel={`${auth.profile.rating_count} Bewertungen`} />
+      <StatCard
+        icon="star"
+        label="Bewertung"
+        value={auth.profile.average_rating?.toFixed(1) ?? '—'}
+        sublabel={`${auth.profile.rating_count} Bewertungen`}
+      />
       <StatCard icon="check_circle" label="Einsätze" value={0} />
       <StatCard icon="schedule" label="Stunden" value={0} />
     </div>
@@ -110,7 +115,11 @@
     <div>
       <h3 class="font-h4 text-h4 mb-sm text-on-surface">Dokumente</h3>
       {#if docs.length === 0}
-        <EmptyState icon="upload_file" title="Keine Dokumente" description="Lade Nachweise hoch, wenn ein Angebot dies erfordert." />
+        <EmptyState
+          icon="upload_file"
+          title="Keine Dokumente"
+          description="Lade Nachweise hoch, wenn ein Angebot dies erfordert."
+        />
       {:else}
         <div class="flex flex-col gap-xs">
           {#each docs as d (d.id)}

@@ -13,7 +13,7 @@
     description,
     checked = $bindable(false),
     class: klass = '',
-    children
+    children,
   }: Props = $props();
 </script>
 

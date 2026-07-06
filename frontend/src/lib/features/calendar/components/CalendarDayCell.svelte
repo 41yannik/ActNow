@@ -9,8 +9,15 @@
     onclick?: (d: Date) => void;
     class?: string;
   }
-  const { date, inMonth, today = false, selected = false, count = 0, onclick, class: klass = '' }: Props =
-    $props();
+  const {
+    date,
+    inMonth,
+    today = false,
+    selected = false,
+    count = 0,
+    onclick,
+    class: klass = '',
+  }: Props = $props();
 </script>
 
 <button

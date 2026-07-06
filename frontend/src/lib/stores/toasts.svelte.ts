@@ -39,5 +39,5 @@ export const toasts = {
   warning: (message: string, title?: string, duration?: number) =>
     push('warning', message, title, duration),
   error: (message: string, title?: string, duration = 6000) =>
-    push('error', message, title, duration)
+    push('error', message, title, duration),
 };

@@ -5,7 +5,14 @@
   interface Props {
     title?: string;
     icon?: string;
-    items: { id: string; icon?: string; title: string; subtitle?: string; href?: string; timestamp?: string }[];
+    items: {
+      id: string;
+      icon?: string;
+      title: string;
+      subtitle?: string;
+      href?: string;
+      timestamp?: string;
+    }[];
     empty?: Snippet;
     class?: string;
   }

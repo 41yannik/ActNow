@@ -66,8 +66,12 @@
   <div class="flex flex-wrap items-center justify-end gap-xs">
     <Button variant="text" leadingIcon="chat" onclick={() => onmessage?.(a.id)}>Nachricht</Button>
     {#if pending}
-      <Button variant="outlined" leadingIcon="close" onclick={() => onreject?.(a.id)}>Ablehnen</Button>
-      <Button variant="primary" leadingIcon="check" onclick={() => onaccept?.(a.id)}>Annehmen</Button>
+      <Button variant="outlined" leadingIcon="close" onclick={() => onreject?.(a.id)}
+        >Ablehnen</Button
+      >
+      <Button variant="primary" leadingIcon="check" onclick={() => onaccept?.(a.id)}
+        >Annehmen</Button
+      >
     {/if}
   </div>
 </article>
