@@ -40,8 +40,7 @@ Besucher ──► GitHub Pages (statischer SPA-Build, VITE_DEMO_MODE=true)
 
 ### Einmalige Einrichtung (Repo-Admin, GitHub-UI)
 
-1. **Settings → Pages → Source: „GitHub Actions"** (erfordert Admin-Rechte auf
-   `dmu1981/ActNow`).
+1. **Settings → Pages → Source: „GitHub Actions"** (Repo `41yannik/ActNow`).
 2. Nach dem ersten Deploy: **Settings → Pages → Custom domain:**
    `actnow.yannik-h-huber.de` eintragen, DNS-Check abwarten, dann
    **Enforce HTTPS** aktivieren (Zertifikat kann bis ~24 h dauern).
@@ -49,16 +48,16 @@ Besucher ──► GitHub Pages (statischer SPA-Build, VITE_DEMO_MODE=true)
    sign up" **deaktivieren** (GoTrue schreibt mit eigener Rolle und wäre sonst
    trotz Privilegien-Entzug in der Lage, Accounts anzulegen).
 
-Hinweis: Die Zwischen-URL `dmu1981.github.io/ActNow` funktioniert **nicht**
+Hinweis: Die Zwischen-URL `41yannik.github.io/ActNow` funktioniert **nicht**
 (absolute Asset-Pfade) — die Demo ist erst über die Custom Domain nutzbar.
 
 ## Hetzner-DNS (einmalig, vom Domain-Inhaber)
 
 In der Hetzner-DNS-Konsole für `yannik-h-huber.de` einen Eintrag anlegen:
 
-| Typ   | Name     | Wert                 |
-| ----- | -------- | -------------------- |
-| CNAME | `actnow` | `dmu1981.github.io.` |
+| Typ   | Name     | Wert                   |
+| ----- | -------- | ---------------------- |
+| CNAME | `actnow` | `41yannik.github.io.` |
 
 (TTL Standard. Der Name im GitHub-Pages-Custom-Domain-Feld muss exakt dem
 Inhalt von `frontend/static/CNAME` entsprechen.)
