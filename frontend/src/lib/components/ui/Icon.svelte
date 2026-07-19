@@ -1,6 +1,6 @@
 <script lang="ts">
   // Material Symbols Outlined wrapper.
-  // Loaded via Google Fonts in src/app.css.
+  // The font is bundled locally through Fontsource in the root layout.
   interface Props {
     name: string;
     filled?: boolean;

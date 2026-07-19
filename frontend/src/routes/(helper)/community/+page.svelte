@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import SageHeader from '$lib/components/layout/SageHeader.svelte';
   import EmptyState from '$lib/components/ui/EmptyState.svelte';
@@ -7,15 +7,14 @@
   import Button from '$lib/components/ui/Button.svelte';
   import Icon from '$lib/components/ui/Icon.svelte';
   import ConversationListItem from '$lib/features/chat/components/ConversationListItem.svelte';
-  import { getCommunitySummary, listCommunityConversations } from '$lib/services/supabase/messages';
   import {
+    getCommunitySummary,
+    listCommunityConversations,
     listNotifications,
-    markAllNotificationsRead,
-    markNotificationRead,
-  } from '$lib/services/supabase/notifications';
-  import { subscribeChanges, unsubscribe } from '$lib/utils/realtime';
+  } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
   import { formatRelative } from '$lib/utils/format';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import type {
     CommunityConversationRow,
@@ -23,7 +22,6 @@
     ConversationRow,
     NotificationRow,
   } from '$lib/types/database';
-  import type { RealtimeChannel } from '@supabase/supabase-js';
 
   type Tab = 'chats' | 'activity';
 
@@ -37,8 +35,6 @@
     unread_notifications: 0,
     total_unread: 0,
   });
-  let channels: RealtimeChannel[] = [];
-  let refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
   function asConversation(row: CommunityConversationRow): ConversationRow {
     return {
@@ -60,13 +56,13 @@
   }
 
   async function loadSummary() {
-    summary = await getCommunitySummary();
+    summary = await getCommunitySummary(auth.profile.id);
   }
 
   async function loadChats() {
     loadingChats = true;
     try {
-      chats = await listCommunityConversations(50);
+      chats = await listCommunityConversations(auth.profile.id, 50);
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Konnte Chats nicht laden');
     } finally {
@@ -77,7 +73,7 @@
   async function loadActivity() {
     loadingActivity = true;
     try {
-      notifications = await listNotifications(40);
+      notifications = await listNotifications(auth.profile.id, 40);
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Konnte Aktivitäten nicht laden');
     } finally {
@@ -89,56 +85,20 @@
     await Promise.all([loadSummary(), loadChats(), loadActivity()]);
   }
 
-  function scheduleRefresh() {
-    if (refreshTimer) clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(() => {
-      void loadAll();
-    }, 250);
-  }
-
   async function openNotification(n: NotificationRow) {
-    try {
-      if (!n.read_at) {
-        await markNotificationRead(n.id);
-        await loadSummary();
-        notifications = notifications.map((x) =>
-          x.id === n.id ? { ...x, read_at: new Date().toISOString() } : x,
-        );
-      }
-      if (n.entity_type === 'conversation' && n.entity_id) {
-        await goto(`/messages/${n.entity_id}`);
-      }
-    } catch (err) {
-      toasts.error(err instanceof Error ? err.message : 'Konnte Aktivität nicht öffnen');
+    if (n.entity_type === 'conversation' && n.entity_id) {
+      await goto(`/messages/${n.entity_id}`);
+      return;
     }
+    showDemoAction('Aktivität als gelesen markieren');
   }
 
-  async function markAllRead() {
-    if (!auth.profile) return;
-    try {
-      await markAllNotificationsRead(auth.profile.id);
-      notifications = notifications.map((n) => ({
-        ...n,
-        read_at: n.read_at ?? new Date().toISOString(),
-      }));
-      await loadSummary();
-    } catch (err) {
-      toasts.error(err instanceof Error ? err.message : 'Konnte Aktivitäten nicht aktualisieren');
-    }
+  function markAllRead() {
+    showDemoAction('Aktivitäten als gelesen markieren');
   }
 
   onMount(() => {
     void loadAll();
-    channels = [
-      subscribeChanges('community:messages', { table: 'messages' }, scheduleRefresh, '*'),
-      subscribeChanges('community:conversations', { table: 'conversations' }, scheduleRefresh, '*'),
-      subscribeChanges('community:notifications', { table: 'notifications' }, scheduleRefresh, '*'),
-    ];
-  });
-
-  onDestroy(() => {
-    if (refreshTimer) clearTimeout(refreshTimer);
-    for (const channel of channels) void unsubscribe(channel);
   });
 </script>
 

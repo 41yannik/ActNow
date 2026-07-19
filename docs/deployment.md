@@ -1,103 +1,29 @@
-# Deployment - ActNow
+# Deployment – ActNow Portfolio-Demo
 
-Status: Arbeitsfaehiger lokaler Build ist hergestellt. Ein konkretes Hosting-Ziel ist noch nicht
-entschieden.
+Das einzige aktive Deployment-Ziel ist GitHub Pages mit der Custom Domain
+`actnow.yannik-h-huber.de`. Die Anwendung ist eine statische SPA und benötigt keine
+Laufzeitumgebung, Datenbank, Zugangsdaten oder Environment-Variablen.
 
-## Lokales Frontend
-
-Voraussetzungen:
-
-- Node.js 22.x
-- Corepack
-- Zugriff auf das Repository
-
-Setup und Verifikation:
+## Lokale Prüfung
 
 ```bash
 cd frontend
-corepack prepare pnpm@10.24.0 --activate
 corepack pnpm install --frozen-lockfile
-corepack pnpm run check
-corepack pnpm run build
+corepack pnpm lint
+corepack pnpm check
+corepack pnpm exec playwright install chromium
+corepack pnpm test:e2e
+corepack pnpm build
+corepack pnpm preview
 ```
 
-Alternativ vom Repository-Root:
+## Release-Gates
 
-```bash
-./scripts/bootstrap-frontend.sh --clean
-```
+- Lint, Svelte-Typprüfung und Build sind erfolgreich.
+- Es gibt keine Supabase-, Realtime- oder externe Font-Abhängigkeit im Frontend.
+- Alle Demo-Routen laden ausschließlich fiktive lokale Daten.
+- Schreibende Aktionen verändern keine Fixtures und keinen Browser-Speicher.
+- Die Rechtsseiten verweisen auf die zentralen, aktuellen Portfolio-Rechtstexte.
 
-`--clean` entfernt nur generierte Frontend-Artefakte (`node_modules`, `.svelte-kit`) und baut sie
-aus dem Lockfile neu auf.
-
-## Lokales Backend
-
-Supabase bleibt in dieser Entwicklungsphase schema-basiert:
-
-- `docs/schema.sql` ist die aktuelle Schema-Quelle.
-- `docs/seed.sql` enthaelt lokale Entwicklungsdaten.
-- `supabase/README.md` beschreibt Reset, Schema-Apply und Seed.
-
-Backend-Befehle:
-
-```bash
-supabase start
-psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f docs/schema.sql
-psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f docs/seed.sql
-```
-
-## Environment Variables
-
-Frontend benoetigt nur Vite-Variablen:
-
-```bash
-VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
-```
-
-Root-/Backend-Umgebung siehe `.env.example`:
-
-```bash
-SUPABASE_URL=
-SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-SUPABASE_DB_URL=
-```
-
-`SUPABASE_SERVICE_ROLE_KEY` darf niemals in Browser-Code oder ein oeffentliches Frontend-Bundle.
-
-## Aktueller Build-Stand
-
-- `corepack pnpm run check`: muss 0 Fehler und 0 Warnungen liefern.
-- `corepack pnpm run build`: muss erfolgreich sein.
-- `@sveltejs/adapter-auto` baut lokal, meldet aber ohne Hosting-Umgebung, dass kein konkretes
-  Production-Ziel erkannt wurde.
-
-## Hosting-Entscheidung
-
-Offen fuer M4:
-
-- Netlify
-- Vercel
-- anderer SvelteKit-kompatibler Hoster
-
-Nach Entscheidung:
-
-- passenden SvelteKit-Adapter konfigurieren, falls `adapter-auto` nicht ausreicht.
-- Staging-Projekt in Supabase erstellen.
-- Staging-Environment-Variablen setzen.
-- Schema-Apply-Prozess fuer Staging definieren.
-- Seed-Prozess ohne Testpasswoerter fuer produktionsnahe Umgebungen definieren.
-
-## Release-Checkliste
-
-Vor jedem Preview- oder Production-Release:
-
-- Git-Arbeitsbaum ist sauber oder die Release-Aenderungen sind bewusst gestaged.
-- `corepack pnpm install --frozen-lockfile` laeuft.
-- `corepack pnpm run check` laeuft mit 0 Fehlern und 0 Warnungen.
-- `corepack pnpm run build` laeuft.
-- Supabase-Schema/API-Aenderungen sind dokumentiert.
-- RLS-Auswirkungen sind geprueft.
-- Relevante Seed-Daten fuer lokale Pruefung existieren.
-- Roadmap und Acceptance Criteria sind aktualisiert.
+Die konkrete Pages-, DNS- und HTTPS-Konfiguration ist in
+[`demo-deployment.md`](./demo-deployment.md) beschrieben.

@@ -1,5 +1,5 @@
-// Database types — hand-aligned to docs/schema.sql.
-// When the schema changes, update both schema.sql and this file together.
+// Presentation data contracts retained from the original database design.
+// The static portfolio demo fills these shapes from local TypeScript fixtures.
 
 export type UUID = string;
 export type ISODateTime = string;

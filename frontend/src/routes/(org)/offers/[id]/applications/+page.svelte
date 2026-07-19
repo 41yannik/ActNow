@@ -6,14 +6,16 @@
   import StatusFilterBar from '$lib/features/applications/components/StatusFilterBar.svelte';
   import EmptyState from '$lib/components/ui/EmptyState.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
+  import Button from '$lib/components/ui/Button.svelte';
   import {
     listApplicationsForOffer,
-    acceptApplication,
-    rejectApplication,
-  } from '$lib/services/supabase/applications';
-  import { getOffer } from '$lib/services/supabase/offers';
-  import { supabase } from '$lib/services/supabase/client';
+    getHelperProfiles,
+    getOffer,
+    getProfiles,
+  } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
   import { toasts } from '$lib/stores/toasts.svelte';
+  import { goto } from '$app/navigation';
   import type { ApplicationStatus, ApplicationRow, OfferRow } from '$lib/types/database';
   import type { ApplicantView } from '$lib/features/applications/components/ApplicantCard.svelte';
 
@@ -34,17 +36,9 @@
         applicants = [];
         return;
       }
-      const { data: profiles, error } = await supabase
-        .from('profiles')
-        .select('id, display_name, avatar_url, city, average_rating')
-        .in('id', ids);
-      if (error) throw error;
-      const { data: helpers } = await supabase
-        .from('helper_profiles')
-        .select('profile_id, skills, languages')
-        .in('profile_id', ids);
-      const profileMap = new Map<string, any>((profiles ?? []).map((p: any) => [p.id, p]));
-      const helperMap = new Map<string, any>((helpers ?? []).map((h: any) => [h.profile_id, h]));
+      const [profiles, helpers] = await Promise.all([getProfiles(ids), getHelperProfiles(ids)]);
+      const profileMap = new Map(profiles.map((profile) => [profile.id, profile]));
+      const helperMap = new Map(helpers.map((helper) => [helper.profile_id, helper]));
       applicants = apps.map((a) => ({
         application: a,
         profile: profileMap.get(a.helper_profile_id)!,
@@ -69,41 +63,40 @@
 <section class="flex flex-col gap-md p-md">
   <PageHeader title={offer?.title ?? 'Bewerbungen'} subtitle={`${applicants.length} Bewerbungen`} />
 
-  <StatusFilterBar value={filter} onchange={(v) => (filter = v)} />
-
   {#if loading}
     <div class="flex justify-center py-lg"><LoadingSpinner /></div>
-  {:else if filtered.length === 0}
+  {:else if !offer}
     <EmptyState
-      icon="how_to_reg"
-      title="Keine Bewerbungen"
-      description="Noch hat sich niemand beworben."
-    />
+      icon="search_off"
+      title="Angebot nicht gefunden"
+      description="Diese Kennung gehört zu keinem Angebot der statischen Demo."
+    >
+      {#snippet action()}
+        <Button onclick={() => goto('/offers')} leadingIcon="arrow_back">Zu den Angeboten</Button>
+      {/snippet}
+    </EmptyState>
   {:else}
-    <div class="grid grid-cols-1 gap-sm md:grid-cols-2">
-      {#each filtered as a (a.application.id)}
-        <ApplicantCard
-          applicant={a}
-          onaccept={async (id) => {
-            try {
-              await acceptApplication(id);
-              toasts.success('Bewerbung angenommen');
-              await load();
-            } catch (err) {
-              toasts.error(err instanceof Error ? err.message : 'Annehmen fehlgeschlagen');
-            }
-          }}
-          onreject={async (id) => {
-            try {
-              await rejectApplication(id);
-              toasts.success('Bewerbung abgelehnt');
-              await load();
-            } catch (err) {
-              toasts.error(err instanceof Error ? err.message : 'Ablehnen fehlgeschlagen');
-            }
-          }}
-        />
-      {/each}
-    </div>
+    <StatusFilterBar value={filter} onchange={(v) => (filter = v)} />
+
+    {#if filtered.length === 0}
+      <EmptyState
+        icon="how_to_reg"
+        title="Keine Bewerbungen"
+        description="Noch hat sich niemand beworben."
+      />
+    {:else}
+      <div class="grid grid-cols-1 gap-sm md:grid-cols-2">
+        {#each filtered as a (a.application.id)}
+          <ApplicantCard
+            applicant={a}
+            onaccept={() => showDemoAction('Bewerbung annehmen')}
+            onreject={() => showDemoAction('Bewerbung ablehnen')}
+            oncomplete={() => showDemoAction('Einsatz abschließen')}
+            onmessage={() => showDemoAction('Nachricht senden')}
+            onview={() => showDemoAction('Bewerberprofil öffnen')}
+          />
+        {/each}
+      </div>
+    {/if}
   {/if}
 </section>

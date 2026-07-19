@@ -16,7 +16,7 @@
     <nav class="flex flex-wrap items-center gap-md text-[13px]">
       <a href="/impressum" class="hover:text-primary">Impressum</a>
       <a href="/datenschutz" class="hover:text-primary">Datenschutz</a>
-      <a href="/agb" class="hover:text-primary">AGB</a>
+      <a href="/agb" class="hover:text-primary">Demo-Hinweise</a>
     </nav>
   </div>
 </footer>

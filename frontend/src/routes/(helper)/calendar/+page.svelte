@@ -5,8 +5,8 @@
   import EventCard from '$lib/features/calendar/components/EventCard.svelte';
   import EmptyState from '$lib/components/ui/EmptyState.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
-  import { listApplicationsForHelper } from '$lib/services/supabase/applications';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { listApplicationsForHelper } from '$lib/demo/repository';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import { APPLICATION_STATUS_LABEL } from '$lib/utils/labels';
   import type {
