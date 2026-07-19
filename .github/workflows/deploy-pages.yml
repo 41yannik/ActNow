@@ -32,13 +32,10 @@ jobs:
           cache: pnpm
           cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      # URL and publishable key are public by design (RLS + read-only DB guard
-      # the data); inlined because repository variables require admin access.
-      - run: pnpm build
-        env:
-          VITE_SUPABASE_URL: https://fhqgbenlufdqbihmmdrq.supabase.co
-          VITE_SUPABASE_ANON_KEY: sb_publishable_bSAYlEvstsaJJi90ciAFpw_1sLy-djl
-          VITE_DEMO_MODE: 'true'
+      - run: pnpm lint
+      - run: pnpm check
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
       # GitHub Pages serves unknown routes via 404.html — make it the SPA fallback.
       - run: cp build/index.html build/404.html
       - uses: actions/configure-pages@v5

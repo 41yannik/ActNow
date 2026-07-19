@@ -1,79 +1,62 @@
-# Demo-Deployment (Portfolio-Showcase)
+# Statische Portfolio-Demo
 
-Die App läuft als **read-only Demo** unter **https://actnow.yannik-h-huber.de** —
-zum Vorzeigen, nicht zur produktiven Nutzung.
+ActNow wird als rein statische SvelteKit-SPA über GitHub Pages veröffentlicht. Die Demo ist ein
+Masterprojekt zum Erkunden und keine produktive Vermittlungsplattform.
 
 ## Architektur
 
-```
-Besucher ──► GitHub Pages (statischer SPA-Build, VITE_DEMO_MODE=true)
-                  │
-                  ▼
-             Supabase-Staging fhqgbenlufdqbihmmdrq (eu-central-1)
-             App-Rollen ohne Schreibprivilegien (siehe supabase/README.md)
+```text
+Besucher → GitHub Pages → statische HTML-, CSS-, JavaScript-, Font- und Bilddateien
 ```
 
-- **Auto-Login:** Besucher werden automatisch als Demo-Helferin „Anna" angemeldet
-  (`frontend/src/lib/config/demo.ts`); eine Top-Leiste (`DemoBar.svelte`) erlaubt
-  das Umschalten auf die Vereins-Ansicht (SV Sonnenschein).
-- **Schreibblockade, zweistufig:**
-  1. Frontend: `demoGuard()` in allen mutierenden Service-Funktionen
-     (`frontend/src/lib/services/supabase/*`) — freundliche Toast-Meldung.
-  2. Datenbank: `authenticated`/`anon` haben keine INSERT/UPDATE/DELETE-Privilegien
-     und keinen EXECUTE auf mutierenden RPCs (Toggle siehe
-     [supabase/README.md](../supabase/README.md#demo-modus-read-only)).
-- Login-/Register-Seiten leiten im Demo-Modus um; Abmelden ist ausgeblendet.
-- Die Demo-Zugangsdaten (`actnow-dev`) sind bewusst öffentlich — die DB ist
-  read-only und Sign-ups sind deaktiviert.
+- Kein Backend, Supabase-Projekt, Login, Realtime oder externer Datendienst.
+- Fiktive Beispieldaten liegen in `frontend/src/lib/demo/fixtures.ts`.
+- Das lokale `DemoRepository` stellt ausschließlich Leseoperationen bereit.
+- Schreibende UI-Aktionen zeigen einen Hinweis und verändern keine Daten.
+- Es werden weder Browser-Speicher noch Cookies für einen Demo-Zustand verwendet.
 
-## Build & Deploy
+## Build und Deployment
 
-- `frontend/` baut mit `@sveltejs/adapter-static` (`fallback: index.html`, reine
-  Client-SPA). `static/CNAME` (= `actnow.yannik-h-huber.de`) und `static/.nojekyll`
-  landen im Build.
-- [.github/workflows/deploy-pages.yml](../.github/workflows/deploy-pages.yml)
-  deployt bei jedem Push auf `master` (Build mit `VITE_DEMO_MODE=true`,
-  `404.html` = SPA-Fallback für GitHub Pages).
-- [.github/workflows/keepalive.yml](../.github/workflows/keepalive.yml) pingt das
-  Free-Tier-Supabase 2×/Woche an, damit es nicht pausiert. Falls es doch pausiert,
-  zeigt die Demo ein Fehlerbanner; im Supabase-Dashboard reaktivieren.
-
-### Einmalige Einrichtung (Repo-Admin, GitHub-UI)
-
-1. **Settings → Pages → Source: „GitHub Actions"** (Repo `41yannik/ActNow`).
-2. Nach dem ersten Deploy: **Settings → Pages → Custom domain:**
-   `actnow.yannik-h-huber.de` eintragen, DNS-Check abwarten, dann
-   **Enforce HTTPS** aktivieren (Zertifikat kann bis ~24 h dauern).
-3. **Supabase-Dashboard → Authentication → Sign In / Up:** „Allow new users to
-   sign up" **deaktivieren** (GoTrue schreibt mit eigener Rolle und wäre sonst
-   trotz Privilegien-Entzug in der Lage, Accounts anzulegen).
-
-Hinweis: Die Zwischen-URL `41yannik.github.io/ActNow` funktioniert **nicht**
-(absolute Asset-Pfade) — die Demo ist erst über die Custom Domain nutzbar.
-
-## Hetzner-DNS (einmalig, vom Domain-Inhaber)
-
-In der Hetzner-DNS-Konsole für `yannik-h-huber.de` einen Eintrag anlegen:
-
-| Typ   | Name     | Wert                   |
-| ----- | -------- | ---------------------- |
-| CNAME | `actnow` | `41yannik.github.io.` |
-
-(TTL Standard. Der Name im GitHub-Pages-Custom-Domain-Feld muss exakt dem
-Inhalt von `frontend/static/CNAME` entsprechen.)
-
-## Demo lokal testen
+Der Workflow `.github/workflows/deploy-pages.yml` prüft und baut das Frontend bei jedem Push auf
+`master`. Unbekannte Pfade werden über eine Kopie von `index.html` als `404.html` an die SPA
+zurückgegeben.
 
 ```bash
 cd frontend
-VITE_DEMO_MODE=true corepack pnpm build && corepack pnpm preview
-# Achtung: `vite preview` cached die Fallback-HTML — nach jedem Rebuild neu starten.
+corepack pnpm install --frozen-lockfile
+corepack pnpm lint
+corepack pnpm check
+corepack pnpm exec playwright install chromium
+corepack pnpm test:e2e
+corepack pnpm build
+corepack pnpm preview
 ```
 
-## Demo-Modus wieder abschalten (für Weiterentwicklung)
+Environment-Variablen oder Secrets werden nicht benötigt.
 
-1. Schreibprivilegien wiederherstellen: SQL-Block „OFF" in
-   [supabase/README.md](../supabase/README.md#demo-modus-read-only).
-2. Sign-ups im Dashboard wieder aktivieren.
-3. Deploys pausieren: `deploy-pages.yml` Trigger entfernen oder Workflow im
-   GitHub-UI deaktivieren.
+## Custom Domain und HTTPS
+
+1. In GitHub unter **Settings → Pages** die Quelle **GitHub Actions** wählen.
+2. `actnow.yannik-h-huber.de` als Custom Domain speichern.
+3. Beim DNS-Anbieter einen CNAME `actnow` auf `41yannik.github.io.` setzen und widersprüchliche
+   A-/AAAA-Einträge entfernen.
+4. Die Domain über den von GitHub angebotenen TXT-Eintrag verifizieren.
+5. Nach erfolgreicher Zertifikatsausstellung **Enforce HTTPS** aktivieren.
+
+Wenn das Zertifikat nicht zum Hostnamen passt, die Custom Domain in den Pages-Einstellungen
+entfernen und erneut eintragen. Falls CAA-Einträge verwendet werden, muss `letsencrypt.org`
+zugelassen sein. DNS- und Zertifikatsänderungen können bis zu 24 Stunden benötigen.
+
+## Manueller Release-Check
+
+- `http://actnow.yannik-h-huber.de` leitet auf HTTPS um.
+- Das Zertifikat gilt für `actnow.yannik-h-huber.de`.
+- Startseite und direkte Unterseiten funktionieren.
+- Beide Rollen lassen sich wechseln.
+- Browserkonsole und Netzwerkprotokoll zeigen keine Backend- oder Fremdhost-Anfragen.
+- Impressum und Datenschutz verweisen auf die zentralen Rechtstexte unter `yannik-h-huber.de`.
+
+## Historisches Backend
+
+Das Verzeichnis `supabase/` dokumentiert die frühere Backend-Ausarbeitung des Masterprojekts. Es
+wird von der Portfolio-Demo weder gebaut noch ausgeführt.

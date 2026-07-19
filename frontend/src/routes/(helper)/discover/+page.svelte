@@ -8,11 +8,10 @@
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import Icon from '$lib/components/ui/Icon.svelte';
-  import { searchOffers } from '$lib/services/supabase/offers';
-  import { createApplication } from '$lib/services/supabase/applications';
-  import { listSavedOfferIds, saveOffer, unsaveOffer } from '$lib/services/supabase/savedOffers';
+  import { listSavedOfferIds, searchOffers } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
   import { offerFromSearchResult, type Offer } from '$lib/types/domain';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import type { SwipeEvent } from '$lib/features/offers/components/swipe.types';
 
@@ -76,44 +75,17 @@
     if (!auth.profile) return;
     const offer = offers.find((o) => o.id === e.offerId);
     if (!offer) return;
-    try {
-      await createApplication({
-        offer_id: offer.id,
-        helper_profile_id: auth.profile.id,
-        motivation_text: null,
-      });
-      toasts.success('Bewerbung gesendet · +100 Punkte', offer.title);
-    } catch (err) {
-      toasts.error(err instanceof Error ? err.message : 'Bewerbung fehlgeschlagen');
-    }
+    showDemoAction(`Bewerbung für „${offer.title}“`);
   }
 
-  async function toggleSave(offerId: string) {
+  function toggleSave(offerId: string) {
     if (!auth.profile) return;
-    const isSaved = savedIds.has(offerId);
-    // optimistic
-    const next = new Set(savedIds);
-    isSaved ? next.delete(offerId) : next.add(offerId);
-    savedIds = next;
-    try {
-      if (isSaved) {
-        await unsaveOffer(auth.profile.id, offerId);
-      } else {
-        await saveOffer(auth.profile.id, offerId);
-        toasts.success('In Favoriten gespeichert');
-      }
-    } catch (err) {
-      // revert on failure
-      const revert = new Set(savedIds);
-      isSaved ? revert.add(offerId) : revert.delete(offerId);
-      savedIds = revert;
-      toasts.error(err instanceof Error ? err.message : 'Konnte nicht speichern');
-    }
+    showDemoAction(savedIds.has(offerId) ? 'Favorit entfernen' : 'Favorit speichern');
   }
 
   function saveTop() {
     const id = deck?.topOfferId();
-    if (id) void toggleSave(id);
+    if (id) toggleSave(id);
   }
 </script>
 

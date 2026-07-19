@@ -1,7 +1,8 @@
 # ActNow Dokumentation
 
-Dieses Verzeichnis ist die zentrale Inhaltsuebersicht fuer Produkt, Technik, Datenmodell und
-Umsetzungsplanung der ActNow Web App.
+Dieses Verzeichnis ist die zentrale Inhaltsübersicht für das ActNow-Masterprojekt. Das aktive
+Portfolio-Frontend ist eine statische Demo; Backend-, Schema- und API-Dokumente beschreiben die
+historische, nicht mehr angebundene Produktarchitektur.
 
 ## Inhaltsverzeichnis
 
@@ -13,14 +14,15 @@ Umsetzungsplanung der ActNow Web App.
 - [Technical Requirements](./technical-requirements.md) - Technologie-Stack, Architektur,
   Typisierung, RLS und Betriebsanforderungen.
 - [Data Model](./data-model.md) - fachliches Datenmodell und Tabellenstruktur.
-- [API Contract](./api-contract.md) - erwartete Supabase-Queries, RPCs und Frontend-Contracts.
-- [Schema SQL](./schema.sql) - aktuelle Supabase-Schema-Quelle.
-- [Seed SQL](./seed.sql) - lokale Entwicklungsdaten.
+- [API Contract](./api-contract.md) - historischer Supabase-/Frontend-Contract.
+- [Schema SQL](./schema.sql) - eingefrorene historische Schema-Referenz.
+- [Seed SQL](./seed.sql) - historische lokale Entwicklungsdaten.
 - [Design Port Phase 1 Report](./design-port-phase1-report.md) - aktueller Design-Port-Stand und
   Backend-Flags.
 - [UI Screens](./ui-screens.md) - Screen-Inventar, UI-Regeln und offene produktive Screens.
 - [Acceptance Criteria](./acceptance-criteria.md) - Feature-Gates und pruefbare Kriterien.
-- [Deployment](./deployment.md) - lokales Setup, Build-Gates und Deployment-Annahmen.
+- [Deployment](./deployment.md) - statischer Build und Release-Gates.
+- [Portfolio-Demo](./demo-deployment.md) - GitHub Pages, Custom Domain und HTTPS.
 
 ## Nutzung
 

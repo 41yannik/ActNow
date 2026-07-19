@@ -5,9 +5,8 @@
   import ActivityFeed from '$lib/features/dashboard/components/ActivityFeed.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
   import Button from '$lib/components/ui/Button.svelte';
-  import { getOrgDashboardMetrics } from '$lib/services/supabase/dashboard';
-  import { listOrgOffers } from '$lib/services/supabase/offers';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { getOrgDashboardMetrics, listOrgOffers } from '$lib/demo/repository';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import { formatRelative } from '$lib/utils/format';
   import { OFFER_STATUS_LABEL } from '$lib/utils/labels';
@@ -19,7 +18,7 @@
     upcoming_engagements: 0,
     unread_messages: 0,
   });
-  let recentOffers = $state<any[]>([]);
+  let recentOffers = $state<Awaited<ReturnType<typeof listOrgOffers>>>([]);
 
   async function load() {
     if (!auth.profile) return;
@@ -66,7 +65,7 @@
         icon="how_to_reg"
         label="Neue Bewerbungen"
         value={metrics.new_applications}
-        onclick={() => (location.href = '/applications')}
+        onclick={() => (location.href = '/offers/offer-sommerfest/applications')}
       />
       <MetricCard
         icon="event_available"

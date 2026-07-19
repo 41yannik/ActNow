@@ -1,16 +1,19 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/state';
+  import { goto } from '$app/navigation';
   import Icon from '$lib/components/ui/Icon.svelte';
   import CategoryBadge from '$lib/components/ui/CategoryBadge.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
-  import { getOfferWithOrg } from '$lib/services/supabase/offers';
+  import EmptyState from '$lib/components/ui/EmptyState.svelte';
+  import Button from '$lib/components/ui/Button.svelte';
   import {
-    createApplication,
+    getOfferWithOrg,
     listApplicationsForHelper,
-  } from '$lib/services/supabase/applications';
-  import { listSavedOfferIds, saveOffer, unsaveOffer } from '$lib/services/supabase/savedOffers';
-  import { auth } from '$lib/stores/auth.svelte';
+    listSavedOfferIds,
+  } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import { enrichOffer } from '$lib/features/offers/mockEnrich';
 
@@ -97,39 +100,17 @@
 
   onMount(load);
 
-  async function toggleSave() {
+  function toggleSave() {
     if (!auth.profile) return;
-    const was = saved;
-    saved = !was;
-    try {
-      if (was) await unsaveOffer(auth.profile.id, offerId);
-      else {
-        await saveOffer(auth.profile.id, offerId);
-        toasts.success('In Favoriten gespeichert');
-      }
-    } catch (err) {
-      saved = was;
-      toasts.error(err instanceof Error ? err.message : 'Konnte nicht speichern');
-    }
+    showDemoAction(saved ? 'Favorit entfernen' : 'Favorit speichern');
   }
 
   async function confirmApply() {
     if (!auth.profile || hasApplied) return;
     applying = true;
-    try {
-      await createApplication({
-        offer_id: offerId,
-        helper_profile_id: auth.profile.id,
-        motivation_text: null,
-      });
-      hasApplied = true;
-      showConfirm = false;
-      toasts.success('Bewerbung gesendet · +100 Punkte', offer?.title);
-    } catch (err) {
-      toasts.error(err instanceof Error ? err.message : 'Bewerbung fehlgeschlagen');
-    } finally {
-      applying = false;
-    }
+    showDemoAction(`Bewerbung für „${offer?.title ?? 'Angebot'}“`);
+    showConfirm = false;
+    applying = false;
   }
 </script>
 
@@ -138,7 +119,17 @@
 {#if loading}
   <div class="flex min-h-[60vh] items-center justify-center"><LoadingSpinner /></div>
 {:else if !offer}
-  <div class="p-md text-center text-on-surface-variant">Angebot nicht gefunden.</div>
+  <div class="p-md">
+    <EmptyState
+      icon="search_off"
+      title="Angebot nicht gefunden"
+      description="Dieses Angebot ist in den Demo-Daten nicht vorhanden."
+    >
+      {#snippet action()}
+        <Button onclick={() => goto('/discover')}>Zurück zu Entdecken</Button>
+      {/snippet}
+    </EmptyState>
+  </div>
 {:else}
   <article class="mx-auto w-full max-w-2xl pb-32">
     <!-- Hero -->
@@ -337,7 +328,7 @@
 
   <!-- Sticky apply bar (above bottom nav on mobile) -->
   <div
-    class="fixed inset-x-0 bottom-[72px] z-30 mx-auto flex max-w-2xl items-center gap-2.5 border-t border-outline
+    class="fixed inset-x-0 bottom-[72px] z-[45] mx-auto flex max-w-2xl items-center gap-2.5 border-t border-outline
            bg-background/96 px-4 py-3.5 backdrop-blur md:bottom-0"
   >
     <button
@@ -381,8 +372,9 @@
           Bewerbung absenden?
         </div>
         <div class="mt-2 text-center text-[14px] leading-relaxed text-on-surface-variant">
-          Dein Profil wird an <b>{org?.display_name ?? 'die Organisation'}</b> übermittelt. Du erhältst
-          eine Bestätigung.
+          In einer produktiven Version würde dein Profil an
+          <b>{org?.display_name ?? 'die Organisation'}</b> übermittelt. In dieser Demo findet keine Übertragung
+          statt.
         </div>
 
         <div

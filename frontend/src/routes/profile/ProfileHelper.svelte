@@ -7,18 +7,10 @@
   import EmptyState from '$lib/components/ui/EmptyState.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
   import Tag from '$lib/components/ui/Tag.svelte';
-  import Button from '$lib/components/ui/Button.svelte';
-  import {
-    getHelperProfile,
-    updateOwnProfile,
-    listHelperDocuments,
-    deleteHelperDocument,
-  } from '$lib/services/supabase/profiles';
-  import { signOut } from '$lib/services/supabase/auth';
-  import { DEMO_MODE } from '$lib/config/demo';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { getHelperProfile, listHelperDocuments } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
-  import { goto } from '$app/navigation';
   import type { HelperProfileRow, HelperDocumentRow } from '$lib/types/database';
 
   let loading = $state(true);
@@ -42,20 +34,13 @@
 
   async function saveBio(next: string) {
     if (!auth.profile) return;
-    await updateOwnProfile(auth.profile.id, { bio: next });
-    await auth.refresh();
-    toasts.success('Profil aktualisiert');
+    void next;
+    showDemoAction('Profil bearbeiten');
   }
   async function saveCity(next: string) {
     if (!auth.profile) return;
-    await updateOwnProfile(auth.profile.id, { city: next });
-    await auth.refresh();
-    toasts.success('Profil aktualisiert');
-  }
-
-  async function logout() {
-    await signOut();
-    await goto('/login');
+    void next;
+    showDemoAction('Profil bearbeiten');
   }
 </script>
 
@@ -71,13 +56,8 @@
       city={auth.profile.city}
       averageRating={auth.profile.average_rating}
       ratingCount={auth.profile.rating_count}
-    >
-      {#snippet actions()}
-        {#if !DEMO_MODE}
-          <Button variant="outlined" leadingIcon="logout" onclick={logout}>Abmelden</Button>
-        {/if}
-      {/snippet}
-    </ProfileHeaderCard>
+      onedit={() => showDemoAction('Profil bearbeiten')}
+    />
 
     <div class="grid grid-cols-2 gap-sm sm:grid-cols-3">
       <StatCard
@@ -126,20 +106,7 @@
       {:else}
         <div class="flex flex-col gap-xs">
           {#each docs as d (d.id)}
-            <DocumentItem
-              document={d}
-              ondelete={async (id) => {
-                try {
-                  await deleteHelperDocument(id);
-                  docs = docs.filter((x) => x.id !== id);
-                  toasts.success('Dokument gelöscht');
-                } catch (err) {
-                  toasts.error(
-                    err instanceof Error ? err.message : 'Dokument konnte nicht gelöscht werden.',
-                  );
-                }
-              }}
-            />
+            <DocumentItem document={d} ondelete={() => showDemoAction('Dokument löschen')} />
           {/each}
         </div>
       {/if}

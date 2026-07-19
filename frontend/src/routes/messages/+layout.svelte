@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import AppShell from '$lib/components/layout/AppShell.svelte';
   import TopNavBar from '$lib/components/layout/TopNavBar.svelte';
@@ -7,17 +6,9 @@
   import SideNavBar from '$lib/components/layout/SideNavBar.svelte';
   import MobileTopBar from '$lib/components/layout/MobileTopBar.svelte';
   import Footer from '$lib/components/layout/Footer.svelte';
-  import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
 
   let { children } = $props();
-
-  $effect(() => {
-    if (auth.loading) return;
-    if (!auth.isAuthenticated) {
-      void goto(`/login?next=${encodeURIComponent(page.url.pathname)}`);
-    }
-  });
 
   const path = $derived(page.url.pathname as string);
   const isOrg = $derived(auth.role === 'organization');
@@ -36,15 +27,18 @@
   const orgItems = $derived([
     { label: 'Dashboard', href: '/dashboard', icon: 'dashboard', active: false },
     { label: 'Angebote', href: '/offers', icon: 'volunteer_activism', active: false },
-    { label: 'Bewerbungen', href: '/applications', icon: 'assignment_ind', active: false },
+    {
+      label: 'Bewerbungen',
+      href: '/offers/offer-sommerfest/applications',
+      icon: 'assignment_ind',
+      active: false,
+    },
     { label: 'Nachrichten', href: '/messages', icon: 'mail', active: true },
     { label: 'Profil', href: '/profile', icon: 'person', active: false },
   ]);
 </script>
 
-{#if auth.loading || !auth.isAuthenticated}
-  <div class="flex min-h-screen items-center justify-center"><LoadingSpinner /></div>
-{:else if isOrg}
+{#if isOrg}
   <AppShell docked>
     {#snippet top()}
       <MobileTopBar title="Nachrichten" />
