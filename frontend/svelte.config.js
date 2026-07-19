@@ -1,4 +1,5 @@
 import adapter from '@sveltejs/adapter-static';
+import { staticDemoRoutes } from './demo-routes.mjs';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -7,9 +8,12 @@ const config = {
     runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true),
   },
   kit: {
-    // The app is a pure client-side SPA (no server routes / load functions):
-    // static build with an index.html fallback for dynamic routes.
-    adapter: adapter({ fallback: 'index.html' }),
+    // Known demo routes are emitted as real HTML documents so direct links on
+    // GitHub Pages return 200. The fallback covers friendly unknown-ID views.
+    adapter: adapter({ fallback: '404.html' }),
+    prerender: {
+      entries: staticDemoRoutes,
+    },
   },
 };
 

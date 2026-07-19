@@ -1,4 +1,5 @@
-// Pure client-side SPA: no SSR, no prerendering (dynamic [id] routes are
-// served via the static adapter's index.html fallback).
+// The demo stays client-side only, while known routes receive static HTML
+// entry documents for reliable GitHub Pages deep links.
 export const ssr = false;
-export const prerender = false;
+export const prerender = true;
+export const trailingSlash = 'always';
