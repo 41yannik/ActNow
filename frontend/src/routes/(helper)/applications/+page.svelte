@@ -11,13 +11,13 @@
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
   import Tabs from '$lib/components/ui/Tabs.svelte';
   import {
+    getCommunitySummary,
+    getConversationForApplication,
+    listApplicationNotifications,
     listApplicationsForHelper,
-    withdrawApplication,
-  } from '$lib/services/supabase/applications';
-  import { getCommunitySummary } from '$lib/services/supabase/messages';
-  import { getOrCreateConversationForApplication } from '$lib/services/supabase/messages';
-  import { listApplicationNotifications } from '$lib/services/supabase/notifications';
-  import { auth } from '$lib/stores/auth.svelte';
+  } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import { APPLICATION_STATUS_LABEL, OFFER_STATUS_LABEL } from '$lib/utils/labels';
   import { formatDate, formatDateTime, formatRelative } from '$lib/utils/format';
@@ -147,7 +147,7 @@
     try {
       const [apps, unread] = await Promise.all([
         listApplicationsForHelper(auth.profile.id),
-        getCommunitySummary().catch(() => summary),
+        getCommunitySummary(auth.profile.id).catch(() => summary),
       ]);
       const relatedNotifications = await listApplicationNotifications(
         apps.map((app) => app.id),
@@ -390,8 +390,9 @@
   async function openChat(row: ApplicationWithOffer) {
     setBusy(row.id, true);
     try {
-      const conversation = await getOrCreateConversationForApplication(row.id);
-      await goto(`/messages/${conversation.id}`);
+      const conversation = await getConversationForApplication(row.id);
+      if (conversation) await goto(`/messages/${conversation.id}`);
+      else showDemoAction('Neue Unterhaltung beginnen');
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Chat konnte nicht geöffnet werden.');
     } finally {
@@ -403,22 +404,10 @@
     const row = selectedForWithdraw;
     if (!row) return;
     setBusy(row.id, true);
-    try {
-      const updated = await withdrawApplication(row.id);
-      rows = rows.map((item) =>
-        item.id === row.id ? { ...item, ...updated, offer: item.offer } : item,
-      );
-      selectedForWithdraw = null;
-      withdrawDialogOpen = false;
-      activeTab = 'history';
-      toasts.success('Bewerbung zurückgezogen', title(row));
-    } catch (err) {
-      toasts.error(
-        err instanceof Error ? err.message : 'Bewerbung konnte nicht zurückgezogen werden.',
-      );
-    } finally {
-      setBusy(row.id, false);
-    }
+    showDemoAction(`Bewerbung für „${title(row)}“ zurückziehen`);
+    selectedForWithdraw = null;
+    withdrawDialogOpen = false;
+    setBusy(row.id, false);
   }
 </script>
 
@@ -703,7 +692,7 @@
   bind:open={withdrawDialogOpen}
   title="Bewerbung zurückziehen?"
   message={selectedForWithdraw
-    ? `Du ziehst deine Bewerbung fuer "${title(selectedForWithdraw)}" zurueck. Die Organisation sieht den neuen Status.`
+    ? `In der Demo wird deine Bewerbung für "${title(selectedForWithdraw)}" nicht zurückgezogen und kein Status verändert.`
     : ''}
   confirmLabel="Zurückziehen"
   tone="danger"

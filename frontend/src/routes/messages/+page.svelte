@@ -4,7 +4,8 @@
   import EmptyState from '$lib/components/ui/EmptyState.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
   import PageHeader from '$lib/components/layout/PageHeader.svelte';
-  import { listCommunityConversations } from '$lib/services/supabase/messages';
+  import { listCommunityConversations } from '$lib/demo/repository';
+  import { demoSession } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import type { CommunityConversationRow, ConversationRow } from '$lib/types/database';
 
@@ -33,7 +34,7 @@
   async function load() {
     loading = true;
     try {
-      rows = await listCommunityConversations(50);
+      rows = await listCommunityConversations(demoSession.profile.id, 50);
     } catch (err) {
       toasts.error(err instanceof Error ? err.message : 'Konnte Nachrichten nicht laden');
     } finally {

@@ -9,9 +9,9 @@
   import Icon from '$lib/components/ui/Icon.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
-  import { getCommunitySummary } from '$lib/services/supabase/messages';
-  import { listSavedOffers, unsaveOffer } from '$lib/services/supabase/savedOffers';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { getCommunitySummary, listSavedOffers } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import type {
     CommunitySummary,
@@ -50,7 +50,7 @@
     loading = true;
     errorMessage = null;
     try {
-      const summaryPromise = getCommunitySummary().catch(() => summary);
+      const summaryPromise = getCommunitySummary(auth.profile.id).catch(() => summary);
       if (!auth.profile) {
         favorites = [];
         summary = await summaryPromise;
@@ -97,27 +97,9 @@
     return offer?.category ?? 'Allgemein';
   }
 
-  function setRemoving(id: string, value: boolean) {
-    const next = new Set(removingIds);
-    if (value) next.add(id);
-    else next.delete(id);
-    removingIds = next;
-  }
-
-  async function removeFavorite(item: SavedOfferWithOffer) {
+  function removeFavorite(item: SavedOfferWithOffer) {
     if (!auth.profile || removingIds.has(item.id)) return;
-    const previous = favorites;
-    favorites = favorites.filter((favorite) => favorite.id !== item.id);
-    setRemoving(item.id, true);
-    try {
-      await unsaveOffer(auth.profile.id, item.offer_id);
-      toasts.success('Aus Favoriten entfernt');
-    } catch (err) {
-      favorites = previous;
-      toasts.error(err instanceof Error ? err.message : 'Favorit konnte nicht entfernt werden.');
-    } finally {
-      setRemoving(item.id, false);
-    }
+    showDemoAction('Favorit entfernen');
   }
 
   function openOffer(offer: OfferRow | null) {

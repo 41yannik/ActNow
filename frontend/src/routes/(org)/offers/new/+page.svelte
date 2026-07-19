@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import PageHeader from '$lib/components/layout/PageHeader.svelte';
   import TextField from '$lib/components/forms/TextField.svelte';
   import TextArea from '$lib/components/forms/TextArea.svelte';
@@ -12,9 +11,8 @@
   import Button from '$lib/components/ui/Button.svelte';
   import Alert from '$lib/components/ui/Alert.svelte';
   import OfferPreviewCard from '$lib/features/offers/components/OfferPreviewCard.svelte';
-  import { createOffer, publishOffer } from '$lib/services/supabase/offers';
-  import { auth } from '$lib/stores/auth.svelte';
-  import { toasts } from '$lib/stores/toasts.svelte';
+  import { showDemoAction } from '$lib/demo/actions';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { offerSchema } from '$lib/validation/offer';
   import type { OfferType } from '$lib/types/database';
 
@@ -57,19 +55,8 @@
       return;
     }
     saving = true;
-    try {
-      const created = await createOffer({
-        ...parsed.data,
-        organization_profile_id: auth.profile.id,
-      });
-      if (publish) await publishOffer(created.id);
-      toasts.success(publish ? 'Angebot veröffentlicht' : 'Entwurf gespeichert');
-      await goto('/offers');
-    } catch (err) {
-      error = err instanceof Error ? err.message : 'Speichern fehlgeschlagen';
-    } finally {
-      saving = false;
-    }
+    showDemoAction(publish ? 'Angebot veröffentlichen' : 'Entwurf speichern');
+    saving = false;
   }
 </script>
 

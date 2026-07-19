@@ -18,11 +18,20 @@
     applicant: ApplicantView;
     onaccept?: (id: string) => void;
     onreject?: (id: string) => void;
+    oncomplete?: (id: string) => void;
     onmessage?: (id: string) => void;
     onview?: (id: string) => void;
     class?: string;
   }
-  const { applicant, onaccept, onreject, onmessage, onview, class: klass = '' }: Props = $props();
+  const {
+    applicant,
+    onaccept,
+    onreject,
+    oncomplete,
+    onmessage,
+    onview,
+    class: klass = '',
+  }: Props = $props();
 
   const a = $derived(applicant.application);
   const p = $derived(applicant.profile);
@@ -71,6 +80,10 @@
       >
       <Button variant="primary" leadingIcon="check" onclick={() => onaccept?.(a.id)}
         >Annehmen</Button
+      >
+    {:else if a.status === 'accepted'}
+      <Button variant="primary" leadingIcon="task_alt" onclick={() => oncomplete?.(a.id)}
+        >Abschließen</Button
       >
     {/if}
   </div>

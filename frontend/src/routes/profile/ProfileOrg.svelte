@@ -3,13 +3,10 @@
   import ProfileHeaderCard from '$lib/features/profile/components/ProfileHeaderCard.svelte';
   import EditableField from '$lib/features/profile/components/EditableField.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
-  import Button from '$lib/components/ui/Button.svelte';
-  import { getOrganizationProfile, updateOwnProfile } from '$lib/services/supabase/profiles';
-  import { signOut } from '$lib/services/supabase/auth';
-  import { DEMO_MODE } from '$lib/config/demo';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { getOrganizationProfile } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
-  import { goto } from '$app/navigation';
   import type { OrganizationProfileRow } from '$lib/types/database';
 
   let loading = $state(true);
@@ -31,19 +28,13 @@
 
   async function saveBio(next: string) {
     if (!auth.profile) return;
-    await updateOwnProfile(auth.profile.id, { bio: next });
-    await auth.refresh();
-    toasts.success('Profil aktualisiert');
+    void next;
+    showDemoAction('Profil bearbeiten');
   }
   async function saveCity(next: string) {
     if (!auth.profile) return;
-    await updateOwnProfile(auth.profile.id, { city: next });
-    await auth.refresh();
-    toasts.success('Profil aktualisiert');
-  }
-  async function logout() {
-    await signOut();
-    await goto('/login');
+    void next;
+    showDemoAction('Profil bearbeiten');
   }
 </script>
 
@@ -60,13 +51,8 @@
       city={auth.profile.city}
       averageRating={auth.profile.average_rating}
       ratingCount={auth.profile.rating_count}
-    >
-      {#snippet actions()}
-        {#if !DEMO_MODE}
-          <Button variant="outlined" leadingIcon="logout" onclick={logout}>Abmelden</Button>
-        {/if}
-      {/snippet}
-    </ProfileHeaderCard>
+      onedit={() => showDemoAction('Profil bearbeiten')}
+    />
 
     <EditableField
       label="Über uns"
