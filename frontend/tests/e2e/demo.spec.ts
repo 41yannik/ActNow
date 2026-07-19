@@ -23,11 +23,11 @@ test('portfolio entry and both roles work without login or foreign requests', as
   await expect(page.getByText('keine echte Plattform')).toBeVisible();
 
   await page.getByRole('button', { name: 'Als Helferin erkunden' }).click();
-  await expect(page).toHaveURL(/\/discover$/);
+  await expect(page).toHaveURL(/\/discover\/?$/);
   await expect(page.getByText(/Hallo Anna/)).toBeVisible();
 
   await page.getByRole('button', { name: 'SV Sonnenschein (Verein)' }).click();
-  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(page).toHaveURL(/\/dashboard\/?$/);
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
   expect(foreignRequests).toEqual([]);
