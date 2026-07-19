@@ -5,8 +5,9 @@
   import EmptyState from '$lib/components/ui/EmptyState.svelte';
   import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
   import Button from '$lib/components/ui/Button.svelte';
-  import { listOrgOffers, publishOffer } from '$lib/services/supabase/offers';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { listOrgOffers } from '$lib/demo/repository';
+  import { showDemoAction } from '$lib/demo/actions';
+  import { demoSession as auth } from '$lib/demo/session.svelte';
   import { toasts } from '$lib/stores/toasts.svelte';
   import { goto } from '$app/navigation';
   import type { OfferRow as OfferRowType } from '$lib/types/database';
@@ -70,21 +71,10 @@
           {#each offers as o (o.id)}
             <OfferRow
               offer={o}
-              href={`/offers/${o.id}/edit`}
-              onedit={(id) => goto(`/offers/${id}/edit`)}
+              onedit={() => showDemoAction('Angebot bearbeiten')}
               onview_applications={(id) => goto(`/offers/${id}/applications`)}
-              onpublish={async (id) => {
-                try {
-                  await publishOffer(id);
-                  toasts.success('Angebot veröffentlicht');
-                  await load();
-                } catch (err) {
-                  toasts.error(
-                    err instanceof Error ? err.message : 'Veröffentlichen fehlgeschlagen',
-                  );
-                }
-              }}
-              ondelete={() => toasts.warning('Löschen wird noch nicht unterstützt')}
+              onpublish={() => showDemoAction('Angebot veröffentlichen')}
+              ondelete={() => showDemoAction('Angebot löschen')}
             />
           {/each}
         </tbody>

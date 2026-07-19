@@ -1,7 +1,10 @@
 # API Contract – ActNow
 
-Status: Draft 1  
-Ziel: Definition, wie das Frontend mit dem Supabase-Backend kommuniziert.
+> **Historisches Architekturdokument:** Dieser Vertrag beschreibt den früheren Produktentwurf und
+> wird von der statischen Portfolio-Demo nicht verwendet.
+
+Status: archivierter Entwurf<br>
+Ziel: Dokumentation des früheren Frontend-/Backend-Vertrags.
 
 Dieses Dokument beschreibt den API-Vertrag zwischen Frontend und Backend für die ActNow-App. Das Backend basiert auf Supabase, also Postgres, Supabase Auth, Row Level Security, Storage und optional Realtime.
 
@@ -1223,4 +1226,3 @@ Für eine erste Version reichen diese API-Bausteine:
 10. Ratings
 11. Saved Offers
 12. Realtime für Messages und Application Status
-

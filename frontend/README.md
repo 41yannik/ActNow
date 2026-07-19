@@ -1,42 +1,37 @@
-# sv
+# ActNow Portfolio-Demo
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Das Frontend ist eine vollständig statische, interaktive Portfolio-Demo. Alle sichtbaren Daten
+sind fiktive TypeScript-Fixtures. Es gibt keine Anmeldung, kein Backend, keine Datenübertragung und
+keine dauerhaften Änderungen im Browser.
 
-## Creating a project
+## Lokale Entwicklung
 
-If you're seeing this, you've probably already done this step. Congrats!
+Voraussetzungen: Node.js 22 und Corepack.
 
-```sh
-# create a new project
-npx sv create my-app
+```bash
+corepack pnpm install --frozen-lockfile
+corepack pnpm dev
 ```
 
-To recreate this project with the same configuration:
+Die App benötigt keine `.env`-Datei und keine Zugangsdaten.
 
-```sh
-# recreate this project
-pnpm dlx sv@0.15.3 create --template minimal --types ts --install pnpm frontend
+## Qualitätsprüfung
+
+```bash
+corepack pnpm lint
+corepack pnpm check
+corepack pnpm exec playwright install chromium
+corepack pnpm test:e2e
+corepack pnpm build
+corepack pnpm preview
 ```
 
-## Developing
+Der statische Build wird nach `frontend/build/` geschrieben und über GitHub Pages veröffentlicht.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Demo-Verhalten
 
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- Beide Rollen sind ohne Login über die Startseite oder die Demo-Leiste erreichbar.
+- Navigation, Filter, Tabs, Formulare und Swipe-Deck funktionieren lokal.
+- Schreibende Aktionen zeigen einen Demo-Hinweis und verändern keine Daten.
+- Ein Reload stellt den Fixture-Ausgangszustand wieder her.
+- Fonts und Icons werden mit dem Build ausgeliefert; es gibt keine externen Laufzeitanfragen.

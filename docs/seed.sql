@@ -5,15 +5,8 @@
 --   psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f docs/seed.sql
 -- =============================================================================
 --
--- Seed accounts — DEV USE ONLY.
--- Passwords are set via a post-insert UPDATE using pgcrypto (see bottom of this file).
--- DO NOT use a hardcoded hash; bcrypt must be generated at apply-time.
---   admin@actnow.test      / actnow-dev
---   helper1@actnow.test    / actnow-dev
---   helper2@actnow.test    / actnow-dev
---   helper3@actnow.test    / actnow-dev
---   verein1@actnow.test    / actnow-dev
---   verein2@actnow.test    / actnow-dev
+-- Seed accounts — HISTORICAL LOCAL DOCUMENTATION ONLY.
+-- They intentionally have no shared or known password and are not used by the portfolio demo.
 --
 -- =============================================================================
 
@@ -25,7 +18,7 @@ begin;
 set local session_replication_role = replica;
 
 -- ---- auth.users -----------------------------------------------------------
--- Minimal columns; bcrypt hash of "actnow-dev".
+-- Minimal columns with deliberately unusable placeholder hashes.
 -- Token columns must be '' not NULL — GoTrue's Scan fails on NULL strings.
 insert into auth.users
   (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -450,12 +443,5 @@ select public.recompute_offer_accepted_count(id) from public.offers;
 
 -- ---- Re-enable triggers (explicit reset; `set local` would also unwind) --
 set local session_replication_role = origin;
-
--- ---- Set real bcrypt passwords for seed accounts --------------------------
--- Must run AFTER session_replication_role is reset (triggers back on).
--- pgcrypto gen_salt produces a fresh salt each apply, so hashes differ each run.
-UPDATE auth.users
-SET encrypted_password = crypt('actnow-dev', gen_salt('bf', 10))
-WHERE email LIKE '%@actnow.test';
 
 commit;

@@ -29,7 +29,7 @@
   const likeOpacity = $derived(Math.min(Math.max(dragX, 0) / threshold, 1));
   const nopeOpacity = $derived(Math.min(Math.max(-dragX, 0) / threshold, 1));
 
-  // TODO(backend): friends / distance / SOS / calendar-fit are mock — see mockEnrich.ts
+  // Deterministic presentation details for the static fixture — see mockEnrich.ts.
   const meta = $derived(enrichOffer(offer.id));
 
   const scheduleText = $derived(

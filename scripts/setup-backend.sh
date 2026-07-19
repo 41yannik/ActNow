@@ -10,8 +10,7 @@
 #
 # WHAT IT DOES:
 #   1. Starts Supabase (postgres, auth, storage)
-#   2. Applies supabase/migrations/ + supabase/seed.sql via `supabase db reset`
-#      (test accounts with password 'actnow-dev')
+#   2. Reconstructs the historical migrations and passwordless seed data.
 
 set -euo pipefail
 
@@ -81,12 +80,11 @@ success "Migrations and seed data applied"
 echo ""
 printf "${GREEN}${BOLD}Backend is ready!${NC}\n"
 echo ""
-echo "Test accounts (password: 'actnow-dev'):"
+echo "Historical seed accounts (no shared login password):"
 echo "  - admin@actnow.test (admin)"
 echo "  - helper1@actnow.test (helper)"
 echo "  - verein1@actnow.test (organization)"
 echo ""
 echo "Supabase Studio: http://localhost:54323"
 echo ""
-echo "Frontend is running on http://localhost:5173"
-echo "Try registering a new account!"
+echo "This archive stack is not used by the static portfolio demo."

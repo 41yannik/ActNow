@@ -23,9 +23,13 @@
 >
   <Icon name="description" size={24} class="text-primary" />
   <div class="min-w-0 flex-1">
-    <button type="button" class="block text-left" onclick={() => onopen?.(document.id)}>
+    {#if onopen}
+      <button type="button" class="block text-left" onclick={() => onopen(document.id)}>
+        <p class="font-label-md text-label-md truncate text-on-surface">{document.title}</p>
+      </button>
+    {:else}
       <p class="font-label-md text-label-md truncate text-on-surface">{document.title}</p>
-    </button>
+    {/if}
     <p class="text-[12px] text-on-surface-variant">
       {document.expires_at ? `Gültig bis ${formatDate(document.expires_at)}` : 'Unbefristet'}
     </p>

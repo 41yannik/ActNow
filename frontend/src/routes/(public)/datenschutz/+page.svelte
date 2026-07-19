@@ -2,85 +2,78 @@
   import { goto } from '$app/navigation';
 </script>
 
-<svelte:head><title>Datenschutzerklärung · ActNow</title></svelte:head>
+<svelte:head><title>Datenschutz · ActNow Portfolio-Demo</title></svelte:head>
 
-<div class="min-h-screen bg-surface flex flex-col">
-  <!-- Navigation -->
-  <div class="p-lg border-b border-outline">
-    <button onclick={() => goto('/')} class="text-primary hover:underline font-body-md">
+<div class="min-h-screen bg-surface">
+  <div class="border-b border-outline p-lg">
+    <button onclick={() => goto('/')} class="font-body-md text-primary hover:underline">
       ← Zurück zur Startseite
     </button>
   </div>
 
-  <!-- Content -->
-  <div class="flex-1 p-lg max-w-2xl mx-auto w-full">
-    <h1 class="text-display-lg font-display-lg mb-lg">Datenschutzerklärung</h1>
+  <main class="mx-auto w-full max-w-2xl space-y-lg p-lg text-body-md font-body-md text-on-surface">
+    <h1 class="text-display-lg font-display-lg">Datenschutzerklärung</h1>
 
-    <div class="space-y-lg text-body-md font-body-md text-on-surface">
-      <section class="space-y-md">
-        <h2 class="text-title-lg font-title-lg">1. Verantwortlicher</h2>
-        <p>
-          Die Verantwortliche Person für die Verarbeitung Ihrer personenbezogenen Daten ist ActNow.
-          Kontaktieren Sie uns unter den Kontaktinformationen in unserem
-          <a href="/impressum" class="text-primary hover:underline">Impressum</a>.
-        </p>
-      </section>
-
-      <section class="space-y-md">
-        <h2 class="text-title-lg font-title-lg">2. Datenverarbeitung</h2>
-        <p>
-          ActNow erhebt und verarbeitet Daten, um die Plattform zu betreiben und Ihnen unsere
-          Dienste bereitzustellen. Dies umfasst:
-        </p>
-        <ul class="list-disc list-inside space-y-sm">
-          <li>Registrierungsdaten (Name, E-Mail, Passwort)</li>
-          <li>Profildaten und Präferenzen</li>
-          <li>Aktivitätsdaten auf der Plattform</li>
-          <li>Kommunikationsdaten</li>
-        </ul>
-      </section>
-
-      <section class="space-y-md">
-        <h2 class="text-title-lg font-title-lg">3. Ihre Rechte</h2>
-        <p>Sie haben das Recht:</p>
-        <ul class="list-disc list-inside space-y-sm">
-          <li>Auskunft über Ihre personenbezogenen Daten zu erhalten</li>
-          <li>Unrichtige Daten korrigieren zu lassen</li>
-          <li>Die Löschung Ihrer Daten zu verlangen</li>
-          <li>Der Verarbeitung Ihrer Daten zu widersprechen</li>
-        </ul>
-      </section>
-
-      <section class="space-y-md">
-        <h2 class="text-title-lg font-title-lg">4. Datensicherheit</h2>
-        <p>
-          Wir schützen Ihre Daten durch angemessene technische und organisatorische
-          Sicherheitsmaßnahmen. Trotz unserer Bemühungen können wir keine absolute Sicherheit
-          garantieren.
-        </p>
-      </section>
-
-      <section class="space-y-md">
-        <h2 class="text-title-lg font-title-lg">5. Speicherdauer</h2>
-        <p>
-          Ihre personenbezogenen Daten werden so lange gespeichert, wie nötig, um die Dienste
-          bereitzustellen oder wie gesetzlich erforderlich. Bei Kontolöschung werden Ihre Daten
-          gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.
-        </p>
-      </section>
-
-      <section class="space-y-md">
-        <h2 class="text-title-lg font-title-lg">6. Kontakt</h2>
-        <p>
-          Für Fragen zum Datenschutz kontaktieren Sie uns über das Kontaktformular oder schreiben
-          Sie uns an die im <a href="/impressum" class="text-primary hover:underline">Impressum</a> angegebene
-          E-Mail-Adresse.
-        </p>
-      </section>
-
-      <p class="text-on-surface-variant pt-lg border-t border-outline">
-        Letzte Aktualisierung: Juni 2026
+    <section class="space-y-sm">
+      <h2 class="text-title-lg font-title-lg">1. Verantwortlicher</h2>
+      <p>
+        Verantwortlich ist der Betreiber des Portfolios yannik-h-huber.de. Die vollständigen
+        Kontakt- und Anbieterangaben stehen im
+        <a
+          href="https://yannik-h-huber.de/impressum/"
+          class="text-primary hover:underline"
+          rel="external"
+        >
+          zentralen Portfolio-Impressum
+        </a>.
       </p>
-    </div>
-  </div>
+    </section>
+
+    <section class="space-y-sm">
+      <h2 class="text-title-lg font-title-lg">2. Art der Website</h2>
+      <p>
+        ActNow ist eine statische, interaktive Portfolio-Demo eines Masterprojekts. Es gibt keine
+        Registrierung, Benutzerkonten, Datenbank oder Übertragung von Formular-, Profil- oder
+        Nachrichteneingaben. Alle dargestellten Inhalte sind fiktive Beispieldaten.
+      </p>
+    </section>
+
+    <section class="space-y-sm">
+      <h2 class="text-title-lg font-title-lg">3. Lokale Speicherung und externe Inhalte</h2>
+      <p>
+        Die Demo speichert keinen Anwendungszustand in Cookies, Local Storage, Session Storage oder
+        IndexedDB. Schriften, Symbole und Bilder werden zusammen mit der Website ausgeliefert; es
+        werden dafür keine externen Font- oder Mediendienste aufgerufen.
+      </p>
+    </section>
+
+    <section class="space-y-sm">
+      <h2 class="text-title-lg font-title-lg">4. Hosting</h2>
+      <p>
+        Die statischen Dateien werden über GitHub Pages bereitgestellt. Beim Abruf können durch den
+        Hostinganbieter technisch erforderliche Zugriffsdaten wie IP-Adresse, Zeitpunkt, aufgerufene
+        Datei und Browserinformationen verarbeitet werden. Einzelheiten ergeben sich aus den
+        Datenschutzinformationen von GitHub.
+      </p>
+    </section>
+
+    <section class="space-y-sm">
+      <h2 class="text-title-lg font-title-lg">5. Kontakt und Betroffenenrechte</h2>
+      <p>
+        Fragen zum Datenschutz und gesetzliche Betroffenenanfragen können an die im Portfolio
+        genannte Kontaktadresse gerichtet werden. Ergänzend gilt die
+        <a
+          href="https://yannik-h-huber.de/datenschutz/"
+          class="text-primary hover:underline"
+          rel="external"
+        >
+          zentrale Datenschutzerklärung
+        </a>.
+      </p>
+    </section>
+
+    <p class="border-t border-outline pt-lg text-on-surface-variant">
+      Technischer Stand: Juli 2026. Diese Vorlage ersetzt keine individuelle rechtliche Prüfung.
+    </p>
+  </main>
 </div>

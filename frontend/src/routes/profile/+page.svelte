@@ -1,14 +1,11 @@
 <script lang="ts">
-  // Role-aware profile router. Renders helper or org variant based on auth.role.
+  // Role-aware profile router for the local portfolio demo.
   import HelperProfile from './ProfileHelper.svelte';
   import OrgProfile from './ProfileOrg.svelte';
-  import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte';
-  import { auth } from '$lib/stores/auth.svelte';
+  import { demoSession } from '$lib/demo/session.svelte';
 </script>
 
-{#if auth.loading || !auth.profile}
-  <div class="flex justify-center py-lg"><LoadingSpinner /></div>
-{:else if auth.role === 'organization'}
+{#if demoSession.role === 'organization'}
   <OrgProfile />
 {:else}
   <HelperProfile />
