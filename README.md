@@ -80,3 +80,7 @@ I wrote most of the commits and led the production hardening and the portfolio r
 - Supabase services for applications, messages, notifications and saved offers
 - tooling and CI: ESLint, Prettier, GitHub Actions, static build
 - conversion into the read-only portfolio demo with role switcher and GitHub Pages deployment
+
+## License
+
+[MIT](LICENSE)
