@@ -9,7 +9,7 @@
 ![Svelte](https://img.shields.io/badge/Svelte-5-ff3e00)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
 
-**[Try the interactive demo](https://actnow.yannik-h-huber.de)**: no sign-up needed. Switch between the helper view (Anna) and the organisation view (SV Sonnenschein) in the top bar. The demo runs on fictional data and saves nothing.
+**[Try the interactive demo](https://actnow.yannik-h-huber.de)** (also on [Hugging Face Spaces](https://huggingface.co/spaces/41yannik/actnow)): no sign-up needed. Switch between the helper view (Anna) and the organisation view (SV Sonnenschein) in the top bar. The demo runs on fictional data and saves nothing.
 
 | Helper view: discover and swipe | Organisation view: dashboard |
 |---|---|
